@@ -1,0 +1,50 @@
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.image-background {
+  flex-basis: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 400px;
+  margin: 0 10px;
+}
+
+.form-container {
+  padding: 20px;
+  background-color: #e3e2e2;
+  flex-basis: 50%;
+  border-radius: 0.2rem;
+}
+
+.radio-control {
+  display: inline-block;
+  margin-right: 0.5rem;
+
+  input {
+    margin-left: 0.5rem;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.select-control {
+  display: block;
+  margin-top: 0.5rem;
+  height: 30px;
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 0.2rem;
+}
+
+.error {
+  font-size: small;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+}

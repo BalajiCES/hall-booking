@@ -1,0 +1,39 @@
+$primary-color: #0d6efd;
+
+.signin-container {
+  max-width: 750px;
+  margin: 10px auto;
+  background-color: #f5f5fb;
+  padding: 25px;
+}
+
+.form-group {
+  margin: 10px;
+
+  .form-contorl {
+    display: block;
+    margin: 1rem 0;
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 0.2rem;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+}
+
+button {
+  display: inline-block;
+  margin: 10px;
+  border: none;
+  height: 2rem;
+  padding: 10px;
+  color: white;
+  background-color: $primary-color;
+  border-radius: 0.2rem;
+}
+
+.link {
+  text-decoration: none;
+  color: white;
+}

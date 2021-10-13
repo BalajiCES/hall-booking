@@ -1,0 +1,58 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  // background-color: #fffff3;
+}
+
+nav {
+  background-color: grey;
+  padding: 10px 5px;
+
+  ul {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    list-style: none;
+  }
+
+  ul li {
+    cursor: pointer;
+    margin-right: 20px;
+    color: black;
+  }
+
+  :hover {
+    color: #b7c9e9;
+  }
+}
+
+.hall-title {
+  text-align: center;
+}
+
+.hall-tile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #fff;
+  background: linear-gradient(110deg, #fdcd3b 60%, #ffed4b 60%);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 0.3rem;
+
+  .title {
+    font-size: 24px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+
+  .button-container > button {
+    background-color: #00c851;
+  }
+}
