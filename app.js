@@ -4,6 +4,7 @@ import userRoutes from './routes/user-routes';
 import hallRoutes from './routes/hall-routes';
 import AppError from './utils/appError';
 import globalErrorHanlder from './controller/error-controller';
+import bookRoutes from './routes/book-routes';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use('/halls', hallRoutes);
 app.use('/user', userRoutes);
+app.use('/book', bookRoutes);
 
 // all other undefined paths
 app.all('*', (req, res, next) => {

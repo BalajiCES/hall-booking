@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { REGISTER_HALL, PROFILE } from '../../../routes';
+import { REGISTER_HALL, BOOKING_REQUEST } from '../../../routes';
 import register from '../register-hall/data/register-actions';
 import { AuthID } from '../../../util/helper-functions';
 import './dashboard.scss';
 
 function AdminDashboard() {
-  const [id, setId] = useState(AuthID());
+  const [id] = useState(AuthID());
   const dispatch = useDispatch();
-  const {
-    data = {},
-    error = false,
-    loading = false
-  } = useSelector((state) => state.registerReducer.listHalls);
+  const { data = {}, loading = false } = useSelector(
+    (state) => state.registerReducer.listHalls
+  );
   const { hall = [] } = data;
   console.log('Register', data);
 
   useEffect(() => {
-    console.log('I am called');
     dispatch({
       type: register.LIST_REGISTER_ID_REQUEST,
       payload: id
@@ -35,7 +32,9 @@ function AdminDashboard() {
           <Link to={`/profile/${id}`} className="link">
             <li>Profile</li>
           </Link>
-          <li href="/">Booking Request</li>
+          <Link to={BOOKING_REQUEST} className="link">
+            <li href="/">Booking Request</li>
+          </Link>
           <li href="/">Booking History</li>
         </ul>
       </nav>

@@ -5,9 +5,14 @@ const registerHallAPI = async (url, data) => {
   return response;
 };
 
+const listAllHalls = async (url) => {
+  const response = await fetchGET(url);
+  return response;
+};
+
 const listHallById = async (url, data) => {
   const response = await fetchGET(url, data);
   return response;
 };
 
-export { registerHallAPI, listHallById };
+export { registerHallAPI, listHallById, listAllHalls };
