@@ -8,6 +8,7 @@ const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRED_IN
   });
+
 // 1) SIGN UP
 const signUp = catchAsync(async (req, res) => {
   const newUser = await User.create(req.body);
@@ -33,7 +34,7 @@ const login = catchAsync(async (req, res, next) => {
   }
   // 2) check if user exist and pasword is correct
   const user = await User.findOne({ email }).select('+password');
-  console.log(user);
+  // console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
@@ -77,6 +78,19 @@ const protect = catchAsync(async (req, res, next) => {
   return next();
 });
 
+const updateUser = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user
+    }
+  });
+});
+
 const getSingleUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id);
@@ -88,4 +102,4 @@ const getSingleUser = catchAsync(async (req, res, next) => {
   });
 });
 
-export { signUp, login, protect, getSingleUser };
+export { signUp, login, protect, getSingleUser, updateUser };

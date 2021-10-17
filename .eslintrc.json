@@ -25,8 +25,9 @@
         "object-curly-newline": ["off", { "ObjectPattern": {"multiline": true }, "ImportDeclaration": "never", "ExportDeclaration": "never" }],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "comma-dangle": ["error", "never"],
-        "operator-linebreak": [2, "after"],
-        "react/jsx-one-expression-per-line": ["off",{ "allow": "single-child" }]
-
+        "operator-linebreak": "off",
+        "react/jsx-one-expression-per-line": ["off",{ "allow": "single-child" }],
+        "implicit-arrow-linebreak": "off",
+        "react/prop-types":"off"
     }
 }

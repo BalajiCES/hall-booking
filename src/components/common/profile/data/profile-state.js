@@ -1,7 +1,17 @@
 const intialState = {
   profileData: {
     loading: false,
-    data: {},
+    formInitialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      gender: '',
+      dob: '',
+      age: '',
+      role: '',
+      password: '',
+      passwordConfirm: ''
+    },
     error: false
   }
 };

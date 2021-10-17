@@ -1,4 +1,4 @@
-import { fetchGET, fetchPOST } from './fetchAPI';
+import { fetchGET, fetchPOST, fetchPATCH } from './fetchAPI';
 
 const signinAPI = async (url, data) => {
   const response = await fetchPOST(url, data);
@@ -15,4 +15,9 @@ const listSingleUser = async (url, data) => {
   return response;
 };
 
-export { signinAPI, signupAPI, listSingleUser };
+const updateUser = async (url, data) => {
+  const response = await fetchPATCH(url, data);
+  return response;
+};
+
+export { signinAPI, signupAPI, listSingleUser, updateUser };
