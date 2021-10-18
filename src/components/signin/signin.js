@@ -1,12 +1,17 @@
-import React from 'react';
-import { useFormik } from 'formik';
+import React, { useState } from 'react';
+import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import signin from './data/signin-actions';
+import { Input } from '../common/Fields/fields';
 import './signin.scss';
 
 function Signin() {
+  const [initialValues, setinitialValues] = useState({
+    email: '',
+    password: ''
+  });
   const dispatch = useDispatch();
   const history = useHistory();
   const signinReducer = useSelector((state) => state.signinReducer);
@@ -21,79 +26,56 @@ function Signin() {
     password: yup.string().required('Password is Required')
   });
 
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched } =
-    useFormik({
-      initialValues: {
-        email: '',
-        password: ''
-      },
-      validationSchema,
-      onSubmit: (value) => {
-        console.log('values', value);
-        dispatch({
-          type: signin.SIGNIN_REQUEST,
-          payload: values,
-          history
-        });
-      }
+  const handleSubmit = (values) => {
+    console.log('values', values);
+    dispatch({
+      type: signin.SIGNIN_REQUEST,
+      payload: values,
+      history
     });
-
+  };
   return (
     <div className="signin-container">
       <div>
         <h1>Sign In</h1>
         <p>
           To keep connected with us please login with your personal information
-          by name and mobile number
+          by email and password
         </p>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">
-              Email
-              <input
-                type="email"
-                placeholder="Enter Email"
-                id="email"
-                className="form-contorl"
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {() => (
+            <Form>
+              <Input
+                label="Email"
+                className="form-control"
                 name="email"
-                onChange={handleChange}
-                value={values.email}
-                onBlur={handleBlur}
+                type="email"
+                id="email"
+                placeholder="Enter Email"
               />
-            </label>
-            {touched.email && errors.email && (
-              <p className="error">{errors.email}</p>
-            )}
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="password">
-              Password
-              <input
-                type="password"
-                placeholder="Enter Password"
-                id="password"
-                className="form-contorl"
+              <Input
+                label="Password"
+                className="form-control"
                 name="password"
-                onChange={handleChange}
-                value={values.password}
-                onBlur={handleBlur}
+                type="password"
+                id="password"
+                placeholder="Enter Password"
               />
-            </label>
-            {touched.password && errors.password && (
-              <p className="error">{errors.password}</p>
-            )}
-          </div>
 
-          <div>
-            <button type="submit">Submit</button>
-            <button type="button" className="secondary">
-              <Link to="/signup" className="link">
-                Create Account
-              </Link>
-            </button>
-          </div>
-        </form>
+              <button type="submit">Submit</button>
+              <button type="button" className="secondary">
+                <Link to="/signup" className="link">
+                  Create Account
+                </Link>
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

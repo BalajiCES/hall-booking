@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
+import React, { useEffect } from 'react';
+import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import profile from './data/profile-actions';
 import signup from '../../signup/data/signup-actions';
+import { Input, RadioButtons, Select } from '../Fields/fields';
 import './profile.scss';
 
 function Profile() {
@@ -16,14 +17,6 @@ function Profile() {
 
   // Profile View
   const { id } = useParams();
-  if (id) {
-    useEffect(() => {
-      dispatch({
-        type: profile.PROFILE_REQUEST,
-        payload: id
-      });
-    }, []);
-  }
 
   const validationSchema = yup.object().shape({
     // remove => model
@@ -43,41 +36,35 @@ function Profile() {
       : yup.string()
   });
 
-  const {
-    handleSubmit,
-    handleChange,
-    handleBlur,
-    values,
-    errors,
-    touched,
-    setFieldValue,
-    setFieldTouched
-  } = useFormik({
-    // create model
-    initialValues: formInitialValues,
-    enableReinitialize: true,
-    validationSchema,
-    onSubmit: (value) => {
-      console.log('values', value);
-      if (id) {
-        dispatch({
-          type: profile.PROFILE_UPDATE_REQUEST,
-          payload: value,
-          id
-        });
-      } else {
-        dispatch({
-          type: signup.SIGNUP_REQUEST,
-          payload: value,
-          history
-        });
-      }
+  const handleSubmit = (values) => {
+    console.log('values', values);
+    if (id) {
+      dispatch({
+        type: profile.PROFILE_UPDATE_REQUEST,
+        payload: values,
+        id
+      });
+    } else {
+      dispatch({
+        type: signup.SIGNUP_REQUEST,
+        payload: values,
+        history
+      });
     }
-  });
+  };
 
-  console.log('Values', values, errors);
+  const genderChoices = [
+    { key: 'Male', value: 'male' },
+    { key: 'Female', value: 'female' }
+  ];
 
-  const handleChangeDate = (event) => {
+  const roleChoices = [
+    { key: 'Choose Type', value: '' },
+    { key: 'Admin', value: 'admin' },
+    { key: 'User', value: 'user' }
+  ];
+
+  const handleChangeDate = (event, setFieldValue, setFieldTouched) => {
     const { value } = event.target;
     setFieldValue('dob', value);
     setFieldTouched('dob', true);
@@ -88,208 +75,121 @@ function Profile() {
     setFieldTouched('age', true);
   };
 
+  useEffect(() => {
+    if (id) {
+      dispatch({
+        type: profile.PROFILE_REQUEST,
+        payload: id
+      });
+    } else {
+      dispatch({
+        type: profile.PROFILE_DATA_RESET
+      });
+    }
+  }, [id]);
+
   return (
     <div className="form-container">
       {id ? <h1> Profile </h1> : <h1>GET STARTED</h1>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="firstName">
-            First name
-            <input
-              className="form-contorl"
-              type="text"
-              name="firstName"
-              id="firstName"
-              placeholder="Enter First Name"
-              onChange={handleChange}
-              value={values.firstName}
-              onBlur={handleBlur}
-            />
-          </label>
-          {touched.firstName && errors.firstName && (
-            <p className="error">{errors.firstName}</p>
-          )}
-        </div>
+      <Formik
+        initialValues={formInitialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {(formik) => {
+          const { setFieldValue, setFieldTouched } = formik;
+          return (
+            <Form>
+              <Input
+                label="First Name"
+                className="form-control"
+                name="firstName"
+                id="firstName"
+                placeholder="Enter First Name"
+              />
+              <Input
+                label="Last Name"
+                className="form-control"
+                name="lastName"
+                id="lastName"
+                placeholder="Enter Last Name"
+              />
+              <Input
+                label="Email"
+                className="form-control"
+                name="email"
+                id="email"
+                type="email"
+                placeholder="Enter Email"
+                disabled={id}
+              />
 
-        <div className="form-group">
-          <label htmlFor="lastName">
-            Last name
-            <input
-              className="form-contorl"
-              type="text"
-              name="lastName"
-              id="lastName"
-              placeholder="Enter Last Name"
-              onChange={handleChange}
-              value={values.lastName}
-              onBlur={handleBlur}
-            />
-          </label>
-          {touched.lastName && errors.lastName && (
-            <p className="error">{errors.lastName}</p>
-          )}
-        </div>
+              <RadioButtons
+                label="Choose Gender"
+                className="form-control"
+                name="gender"
+                options={genderChoices}
+              />
 
-        <div className="form-group">
-          <label htmlFor="email">
-            Email
-            <input
-              className="form-contorl"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Enter Email"
-              onChange={handleChange}
-              value={values.email}
-              onBlur={handleBlur}
-              disabled={id}
-            />
-          </label>
-          {touched.email && errors.email && (
-            <p className="error">{errors.email}</p>
-          )}
-        </div>
+              <Input
+                label="Choose Date Of Birth"
+                className="form-control"
+                name="dob"
+                type="date"
+                id="dob"
+                onChange={
+                  (event) =>
+                    handleChangeDate(event, setFieldValue, setFieldTouched)
+                  // eslint-disable-next-line react/jsx-curly-newline
+                }
+              />
 
-        <div className="form-group">
-          <p>Choose Gender</p>
-          <label htmlFor="male" className="radio-control">
-            Male
-            <input
-              type="radio"
-              id="male"
-              name="gender"
-              onChange={handleChange}
-              value="male"
-              checked={values.gender === 'male'}
-              onBlur={handleBlur}
-            />
-          </label>
-          <label htmlFor="female" className="radio-control">
-            Female
-            <input
-              type="radio"
-              id="female"
-              name="gender"
-              onChange={handleChange}
-              value="female"
-              checked={values.gender === 'female'}
-              onBlur={handleBlur}
-            />
-          </label>
-          <label htmlFor="others" className="radio-control">
-            Others
-            <input
-              type="radio"
-              id="others"
-              name="gender"
-              onChange={handleChange}
-              value="others"
-              checked={values.gender === 'others'}
-              onBlur={handleBlur}
-            />
-          </label>
-          {touched.gender && errors.gender && (
-            <p className="error">{errors.gender}</p>
-          )}
-        </div>
+              <Input
+                label="Age"
+                className="form-control"
+                name="age"
+                type="number"
+                id="age"
+                placeholder="Enter Age"
+              />
 
-        <div className="form-group">
-          <label htmlFor="dob">
-            Date Of Birth
-            <input
-              type="date"
-              name="dob"
-              id="dob"
-              className="form-contorl"
-              onChange={handleChangeDate}
-              value={values.dob}
-              onBlur={handleBlur}
-            />
-          </label>
-          {touched.dob && errors.dob && <p className="error">{errors.dob}</p>}
-        </div>
+              <Select
+                label="Role"
+                className="select-control"
+                name="role"
+                id="role"
+                options={roleChoices}
+                disabled={id}
+              />
 
-        <div className="form-group">
-          <label htmlFor="age">
-            Age
-            <input
-              type="number"
-              name="age"
-              id="age"
-              placeholder="Your age"
-              className="form-contorl"
-              onChange={handleChange}
-              value={values.age}
-              onBlur={handleBlur}
-            />
-          </label>
-          {touched.age && errors.age && <p className="error">{errors.age}</p>}
-        </div>
+              {!id && (
+                <>
+                  <Input
+                    label="Passowrd"
+                    className="form-control"
+                    name="password"
+                    type="password"
+                    id="password"
+                    placeholder="Enter Password"
+                  />
 
-        <div className="form-group">
-          <label htmlFor="role">
-            Role
-            <select
-              name="role"
-              id="role"
-              className="select-control"
-              onChange={handleChange}
-              value={values.role}
-              onBlur={handleBlur}
-              disabled={id}
-            >
-              <option>Choose Type</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
-          </label>
-          {touched.role && errors.role && (
-            <p className="error">{errors.role}</p>
-          )}
-        </div>
-        {!id && (
-          <>
-            <div className="form-group">
-              <label htmlFor="password">
-                Password
-                <input
-                  className="form-contorl"
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Enter Password"
-                  onChange={handleChange}
-                  value={values.password}
-                  onBlur={handleBlur}
-                />
-              </label>
-              {touched.password && errors.password && (
-                <p className="error">{errors.password}</p>
+                  <Input
+                    label="Confirm Passowrd"
+                    className="form-control"
+                    name="passwordConfirm"
+                    type="password"
+                    id="passwordConfirm"
+                    placeholder="Enter Confirm Password"
+                  />
+                </>
               )}
-            </div>
 
-            <div className="form-group">
-              <label htmlFor="confirm-password">
-                Confirm Password
-                <input
-                  className="form-contorl"
-                  type="password"
-                  name="passwordConfirm"
-                  id="confirm-password"
-                  placeholder="Enter Confirm Password"
-                  onChange={handleChange}
-                  value={values.passwordConfirm}
-                  onBlur={handleBlur}
-                />
-              </label>
-              {touched.passwordConfirm && errors.passwordConfirm && (
-                <p className="error">{errors.passwordConfirm}</p>
-              )}
-            </div>
-          </>
-        )}
-        <button type="submit">{id ? 'Update' : 'Register'}</button>
-      </form>
+              <button type="submit">{id ? 'Update' : 'Register'}</button>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 }

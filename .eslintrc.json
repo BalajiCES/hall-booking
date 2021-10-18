@@ -28,6 +28,7 @@
         "operator-linebreak": "off",
         "react/jsx-one-expression-per-line": ["off",{ "allow": "single-child" }],
         "implicit-arrow-linebreak": "off",
-        "react/prop-types":"off"
+        "react/prop-types":"off",
+        "prefer-template": "off"
     }
 }
