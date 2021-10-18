@@ -15,9 +15,9 @@ function* signInApiCall(action) {
     yield put({ type: signin.SIGNIN_DATA_SUCCESS, payload: res });
 
     // store that in local session for further api calls
-    localStorage.setItem('TOKEN', res.token);
-    localStorage.setItem('ID', res.userId);
-    localStorage.setItem('ROLE', res.role);
+    sessionStorage.setItem('TOKEN', res.token);
+    sessionStorage.setItem('ID', res.userId);
+    sessionStorage.setItem('ROLE', res.role);
     if (res.role === 'admin') {
       action.history.push(ADMIN_DASHBOARD);
     } else {

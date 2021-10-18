@@ -20,11 +20,13 @@ function BookingRequest() {
   };
 
   useEffect(() => {
-    dispatch({
-      type: bookingRequests.BOOKING_REQUEST_REQUEST,
-      payload: authId
-    });
-  }, []);
+    if (authId) {
+      dispatch({
+        type: bookingRequests.BOOKING_REQUEST_REQUEST,
+        payload: authId
+      });
+    }
+  }, [authId]);
 
   const statusChange = (event, id) => {
     const { target } = event;
@@ -41,30 +43,36 @@ function BookingRequest() {
   return (
     <div>
       {!loading &&
-        data.map((bookingData) => {
-          const {
-            _id,
-            bookedDate,
-            bookingStatus: status,
-            hallId,
-            userId
-          } = bookingData;
-          const { hallName, onwedBy } = hallId;
-          const { firstName } = onwedBy;
-          const { firstName: userFirstName } = userId;
-          return (
-            <Bookings
-              bookingId={_id}
-              hallName={hallName}
-              ownerName={firstName}
-              userName={userFirstName}
-              date={bookedDate}
-              status={status}
-              userType="Admin"
-              statusChange={statusChange}
-            />
-          );
-        })}
+        data
+          .filter((bookingData) => {
+            const { bookingStatus: status } = bookingData;
+            return status === 'Pending';
+          })
+          .map((bookingData) => {
+            const {
+              _id,
+              bookedDate,
+              bookingStatus: status,
+              hallId,
+              userId
+            } = bookingData;
+            const { hallName, onwedBy } = hallId;
+            const { firstName } = onwedBy;
+            const { firstName: userFirstName } = userId;
+            return (
+              <Bookings
+                key={_id}
+                bookingId={_id}
+                hallName={hallName}
+                ownerName={firstName}
+                userName={userFirstName}
+                date={bookedDate}
+                status={status}
+                userType="Admin"
+                statusChange={statusChange}
+              />
+            );
+          })}
     </div>
   );
 }

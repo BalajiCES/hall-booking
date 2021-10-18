@@ -94,6 +94,25 @@ function profileReducer(state = intialState, actions) {
         }
       };
 
+    case profile.PROFILE_DATA_RESET:
+      return {
+        profileData: {
+          loading: false,
+          formInitialValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            gender: '',
+            dob: '',
+            age: '',
+            role: '',
+            password: '',
+            passwordConfirm: ''
+          },
+          error: false
+        }
+      };
+
     default:
       return state;
   }

@@ -30,23 +30,48 @@ const listBookingByAdminId = catchAsync(async (req, res) => {
     const bookingDetails = await Book.findOne({ hallId: _id });
     return bookingDetails;
   });
-  Promise.all(bookingList).then((result) => {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        bookings: result
-      }
-    });
+  const filterdValue = await Promise.all(bookingList);
+  const list = filterdValue.filter((data) => data != null);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bookings: list
+    }
   });
 });
 
 const changeBookingStatus = catchAsync(async (req, res) => {
+  const { bookingStatus } = req.body;
+  console.log('Req Body', req.body.bookingStatus);
+
+  if (bookingStatus === 'Approved') {
+    const currBooking = await Book.findOne(
+      { _id: req.params.id },
+      {
+        hallId: 1
+      }
+    );
+    const { _id } = currBooking.hallId;
+    console.log('CurrBooking', currBooking, _id);
+    await Hall.findByIdAndUpdate(
+      _id,
+      {
+        status: 'Booked'
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+  }
+
+  // it will be applicable to all the case
   const booking = await Book.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
   });
 
-  console.log('Booking Status', booking);
+  // console.log('Booking Status', booking);
   res.status(201).json({
     status: 'success',
     data: {

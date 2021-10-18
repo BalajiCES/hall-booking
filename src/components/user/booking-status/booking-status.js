@@ -23,27 +23,32 @@ function BookingStatus() {
   return (
     <div>
       {!loading &&
-        data.map((bookingData) => {
-          const {
-            bookedDate,
-            bookingStatus: status,
-            hallId,
-            userId
-          } = bookingData;
-          const { hallName, onwedBy } = hallId;
-          const { firstName } = onwedBy;
-          const { firstName: userFirstName } = userId;
-          return (
-            <Bookings
-              hallName={hallName}
-              ownerName={firstName}
-              userName={userFirstName}
-              date={bookedDate}
-              status={status}
-              userType="User"
-            />
-          );
-        })}
+        data
+          .filter((bookingData) => {
+            const { bookingStatus: status } = bookingData;
+            return status === 'Pending';
+          })
+          .map((bookingData) => {
+            const {
+              bookedDate,
+              bookingStatus: status,
+              hallId,
+              userId
+            } = bookingData;
+            const { hallName, onwedBy } = hallId;
+            const { firstName } = onwedBy;
+            const { firstName: userFirstName } = userId;
+            return (
+              <Bookings
+                hallName={hallName}
+                ownerName={firstName}
+                userName={userFirstName}
+                date={bookedDate}
+                status={status}
+                userType="User"
+              />
+            );
+          })}
     </div>
   );
 }

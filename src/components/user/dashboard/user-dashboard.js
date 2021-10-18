@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import user from './data/user-dashboard-actions';
 import { AuthID } from '../../../util/helper-functions';
-import { BOOKING_STATUS } from '../../../routes';
+import HallCard from '../../common/cards/card';
 
 function UserDashBaord() {
-  const [id] = useState(AuthID());
   const dispatch = useDispatch();
 
   const { data: hallData = {}, loading = false } = useSelector(
@@ -22,7 +20,6 @@ function UserDashBaord() {
     });
 
   const intiateBooking = (hallId) => {
-    console.log('Id', hallId);
     dispatch({
       type: user.USER_BOOKING_REQUEST,
       payload: {
@@ -42,34 +39,20 @@ function UserDashBaord() {
 
   return (
     <div>
-      <nav>
-        <ul>
-          <Link to={`/profile/${id}`} className="link">
-            <li>Profile</li>
-          </Link>
-          <Link to={BOOKING_STATUS} className="link">
-            <li>Booking Status</li>
-          </Link>
-          <li href="/">Booking History</li>
-        </ul>
-      </nav>
       {!loading &&
         halls.map((list) => {
           const { _id, hallName, capacity, price, status } = list;
           return (
-            <div key={_id} className="hall-tile">
-              <h3 className="title">{hallName}</h3>
-              <h3 className="price">&#8377; {price}</h3>
-              <h3 className="capacity">capacity : {capacity}</h3>
-              <p>{status}</p>
-              <div className="button-container">
-                {status !== 'Booked' && status !== 'Selected' && (
-                  <button type="button" onClick={() => intiateBooking(_id)}>
-                    Book Now
-                  </button>
-                )}
-              </div>
-            </div>
+            <HallCard
+              key={_id}
+              id={_id}
+              hallName={hallName}
+              capacity={capacity}
+              price={price}
+              status={status}
+              intiateBooking={intiateBooking}
+              user="User"
+            />
           );
         })}
     </div>
