@@ -1,10 +1,13 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/jsx-props-no-spreading */
 import { Route, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import constant from '../const/const';
+import routes from '../routes';
 
-const AuthHeader = () => sessionStorage.getItem('TOKEN');
-const AuthID = () => sessionStorage.getItem('ID');
-const AuthRole = () => sessionStorage.getItem('ROLE');
+const AuthHeader = () => sessionStorage.getItem(constant.TOKEN);
+const AuthID = () => sessionStorage.getItem(constant.ID);
+const AuthRole = () => sessionStorage.getItem(constant.ROLE);
 
 const PublicRoute = ({ component, ...rest }) => {
   const token = AuthHeader();
@@ -14,9 +17,16 @@ const PublicRoute = ({ component, ...rest }) => {
   }
   return (
     <Redirect
-      to={{ pathname: role === 'Admin' ? '/admin/dashboard' : '/dashboard' }}
+      to={{
+        pathname:
+          role === constant.OWNER ? routes.OWNER_DASHBOARD : routes.DASHBOARD
+      }}
     />
   );
+};
+
+PublicRoute.propTypes = {
+  component: PropTypes.element.isRequired
 };
 
 const ProtectedRoute = ({ component, ...rest }) => {
@@ -24,14 +34,18 @@ const ProtectedRoute = ({ component, ...rest }) => {
   if (token) {
     return <Route {...rest} component={component} />;
   }
-  return <Redirect to={{ pathname: '/' }} />;
+  return <Redirect to={{ pathname: routes.USER_BASE_PATH }} />;
+};
+
+ProtectedRoute.propTypes = {
+  component: PropTypes.element.isRequired
 };
 
 const signOut = (history) => {
   sessionStorage.removeItem('ID');
   sessionStorage.removeItem('ROLE');
   sessionStorage.removeItem('TOKEN');
-  history.push('/');
+  history.push(routes.USER_BASE_PATH);
 };
 
 export { AuthHeader, AuthRole, AuthID, PublicRoute, ProtectedRoute, signOut };

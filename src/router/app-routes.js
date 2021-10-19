@@ -2,9 +2,9 @@ import React from 'react';
 import { Switch, BrowserRouter, Route } from 'react-router-dom';
 import Signin from '../components/signin/signin';
 import Signup from '../components/signup/signup';
-import { SIGNUP, ADMIN_PATH, USER_BASE_PATH } from '../routes';
+import routes from '../routes';
 import { PublicRoute, ProtectedRoute } from '../util/helper-functions';
-import AdminRouteControl from './admin-route-control';
+import RouteControl from './owner-route-control';
 import UserRouterControl from './user-route-control';
 
 function AppRoutes() {
@@ -13,14 +13,14 @@ function AppRoutes() {
       <Switch>
         {/* common */}
         <PublicRoute exact path="/" component={Signin} />
-        <PublicRoute exact path={SIGNUP} component={Signup} />
+        <PublicRoute exact path={routes.SIGNUP} component={Signup} />
 
-        {/* Admin */}
-        <ProtectedRoute path={ADMIN_PATH} component={AdminRouteControl} />
+        {/* Owner */}
+        <ProtectedRoute path={routes.OWNER_PATH} component={RouteControl} />
 
         {/* user */}
         <ProtectedRoute
-          path={USER_BASE_PATH + '*'}
+          path={routes.USER_BASE_PATH + '*'}
           component={UserRouterControl}
         />
 

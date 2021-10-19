@@ -4,7 +4,7 @@ body {
 }
 
 nav {
-  background-color: grey;
+  background-color: #563d7c;
   padding: 10px 5px;
 
   ul {
@@ -17,7 +17,7 @@ nav {
   ul li {
     cursor: pointer;
     margin-right: 20px;
-    color: black;
+    color: white;
   }
 
   :hover {
@@ -45,14 +45,17 @@ nav {
   border-radius: 0.3rem;
 
   .title {
+    flex-basis: 30%;
     font-size: 24px;
   }
 
   .price {
+    flex-basis: 30%;
     font-size: 20px;
   }
 
   .button-container > button {
+    flex-basis: 30%;
     background-color: #00c851;
   }
 }

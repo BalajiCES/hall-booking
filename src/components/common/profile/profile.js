@@ -60,8 +60,8 @@ function Profile() {
 
   const roleChoices = [
     { key: 'Choose Type', value: '' },
-    { key: 'Admin', value: 'admin' },
-    { key: 'User', value: 'user' }
+    { key: 'Owner', value: 'Owner' },
+    { key: 'User', value: 'User' }
   ];
 
   const handleChangeDate = (event, setFieldValue, setFieldTouched) => {

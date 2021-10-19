@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, ErrorMessage } from 'formik';
 // import './fields.scss';
 
@@ -17,6 +18,12 @@ function Input(props) {
     </div>
   );
 }
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
+};
 
 function RadioButtons(props) {
   const { label, className, name, options, ...rest } = props;
@@ -51,6 +58,18 @@ function RadioButtons(props) {
   );
 }
 
+RadioButtons.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    })
+  ).isRequired
+};
+
 function Select(props) {
   const { label, className, name, options, ...rest } = props;
   return (
@@ -69,6 +88,18 @@ function Select(props) {
     </div>
   );
 }
+
+Select.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    })
+  ).isRequired
+};
 
 function Checkboxes(props) {
   const { label, name, options, ...rest } = props;
@@ -101,5 +132,17 @@ function Checkboxes(props) {
     </div>
   );
 }
+
+Checkboxes.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    })
+  ).isRequired
+};
 
 export { Input, RadioButtons, Select, Checkboxes };

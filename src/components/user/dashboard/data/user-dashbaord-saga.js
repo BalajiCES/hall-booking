@@ -2,11 +2,12 @@ import { call, takeEvery, takeLatest, put } from 'redux-saga/effects';
 import user from './user-dashboard-actions';
 import { listAllHalls } from '../../../../api/register-api';
 import { newBooking } from '../../../../api/booking_api';
+import endPoint from '../../../../endpoints';
 
 function* listingAPICall() {
   try {
     yield put({ type: user.USER_DASHBOARD_DATA_LOADING, payload: '' });
-    const res = yield call(listAllHalls, 'http://localhost:5000/halls');
+    const res = yield call(listAllHalls, endPoint.HALLS);
     console.log('Res', res);
     yield put({ type: user.USER_DASHBOARD_DATA_SUCCESS, payload: res });
   } catch (err) {
@@ -17,11 +18,7 @@ function* listingAPICall() {
 function* newBookingAPICall(action) {
   console.log('Action', action.payload);
   try {
-    const res = yield call(
-      newBooking,
-      'http://localhost:5000/book',
-      action.payload
-    );
+    const res = yield call(newBooking, endPoint.BOOK, action.payload);
     console.log(res);
     yield put({ type: user.USER_BOOKING_SUCCESS, payload: res });
     yield call(action.bookingSuccess);

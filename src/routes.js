@@ -1,14 +1,16 @@
-export const SIGNUP = '/signup';
+const routes = {};
 
-export const ADMIN_PATH = '/admin';
-export const ADMIN_DASHBOARD = '/admin/dashboard';
-export const REGISTER_HALL = '/admin/register';
-export const ADMIN_BOOKING_HISTORY = '/admin/booking-history';
-export const BOOKING_REQUEST = '/admin/booking-requests';
-export const ADMIN_PROFILE = '/admin/profile/:id';
+routes.SIGNUP = '/signup';
+routes.OWNER_PATH = '/owner';
+routes.OWNER_DASHBOARD = '/owner/dashboard';
+routes.REGISTER_HALL = '/owner/register';
+routes.OWNER_BOOKING_HISTORY = '/owner/booking-history';
+routes.BOOKING_REQUEST = '/owner/booking-requests';
+routes.OWNER_PROFILE = '/owner/profile/:id';
+routes.USER_BASE_PATH = '/';
+routes.DASHBOARD = '/dashboard';
+routes.BOOKING_STATUS = '/booking-status';
+routes.BOOKING_HISTORY = '/booking-history';
+routes.PROFILE = '/profile/:id';
 
-export const USER_BASE_PATH = '/';
-export const DASHBOARD = '/dashboard';
-export const BOOKING_STATUS = '/booking-status';
-export const BOOKING_HISTORY = '/booking-history';
-export const PROFILE = '/profile/:id';
+export default routes;

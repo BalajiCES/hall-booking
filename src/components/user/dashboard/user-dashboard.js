@@ -39,6 +39,7 @@ function UserDashBaord() {
 
   return (
     <div>
+      <h2 className="hall-title">ALL HALLS</h2>
       {!loading &&
         halls.map((list) => {
           const { _id, hallName, capacity, price, status } = list;

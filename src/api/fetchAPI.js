@@ -34,15 +34,14 @@ const fetchPATCH = async (url, bodyData) => {
   return data;
 };
 
-const fetchGET = async (url, params) => {
-  console.log('fetch GET API', url, params);
+const fetchGET = async (url) => {
+  console.log('fetch GET API', url);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
-    },
-    params: JSON.stringify(params)
+    }
   });
   const data = await response.json();
 

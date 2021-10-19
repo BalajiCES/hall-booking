@@ -1,6 +1,7 @@
 import Book from '../models/book-model';
 import Hall from '../models/hall-model';
 import catchAsync from '../utils/catchAsync';
+import constant from '../src/const/const';
 
 const listBooking = catchAsync(async (req, res) => {
   const bookingList = await Book.find();
@@ -22,7 +23,7 @@ const listBookingByUserId = catchAsync(async (req, res) => {
   });
 });
 
-const listBookingByAdminId = catchAsync(async (req, res) => {
+const listBookingByOwnerId = catchAsync(async (req, res) => {
   const hall = await Hall.find({ onwedBy: req.params.id });
   // console.log('Owner Halls', hall);
   const bookingList = hall.map(async (val) => {
@@ -44,7 +45,7 @@ const changeBookingStatus = catchAsync(async (req, res) => {
   const { bookingStatus } = req.body;
   console.log('Req Body', req.body.bookingStatus);
 
-  if (bookingStatus === 'Approved') {
+  if (bookingStatus === constant.APPROVED) {
     const currBooking = await Book.findOne(
       { _id: req.params.id },
       {
@@ -109,6 +110,6 @@ export {
   createBooking,
   listBooking,
   listBookingByUserId,
-  listBookingByAdminId,
+  listBookingByOwnerId,
   changeBookingStatus
 };
