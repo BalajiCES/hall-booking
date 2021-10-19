@@ -1,15 +1,14 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import profile from './profile-actions';
 import { listSingleUser, updateUser } from '../../../../api/auth-api';
+import endPoint from '../../../../endpoints';
 
 function* profileAPICall(action) {
+  const { payload } = action;
   try {
     yield put({ type: profile.PROFILE_DATA_LOADING, payload: '' });
 
-    const res = yield call(
-      listSingleUser,
-      `http://localhost:5000/user/${action.payload}`
-    );
+    const res = yield call(listSingleUser, `${endPoint.USER}/${payload}`);
     console.log('Res', res);
     yield put({ type: profile.PROFILE_DATA_SUCCESS, payload: res });
   } catch (err) {
@@ -27,17 +26,13 @@ function* updateProfileCall(action) {
     gender = ''
   } = action.payload;
   try {
-    const res = yield call(
-      updateUser,
-      `http://localhost:5000/user/${action.id}`,
-      {
-        firstName,
-        lastName,
-        dob,
-        age,
-        gender
-      }
-    );
+    const res = yield call(updateUser, `${endPoint.USER}/${action.id}`, {
+      firstName,
+      lastName,
+      dob,
+      age,
+      gender
+    });
     console.log('Res', res);
     yield put({ type: profile.PROFILE_UPDATE_SUCCESS, payload: res });
   } catch (err) {

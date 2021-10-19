@@ -1,6 +1,7 @@
 import { put, takeEvery, call } from 'redux-saga/effects';
 import signup from './signup-actions';
 import { signupAPI } from '../../../api/auth-api';
+import endPoint from '../../../endpoints';
 
 // worker saga will be fired on
 function* signupAPICall(action) {
@@ -9,7 +10,7 @@ function* signupAPICall(action) {
     const res = yield call(
       signupAPI,
       // proxy
-      'http://localhost:5000/user/signup',
+      endPoint.SIGNUP,
       action.payload
     );
     console.log('Response', res);
