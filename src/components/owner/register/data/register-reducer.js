@@ -15,15 +15,30 @@ function registerReducer(state = intialState, actions) {
         }
       };
 
-    case register.REGISTER_DATA_SUCCESS:
+    case register.REGISTER_DATA_SUCCESS: {
+      console.log('Payload', payload);
+      const { data = {} } = payload;
+      const { hall = {} } = data;
+      const { hallName, price, type, event, custom, capacity, phoneNumber } =
+        hall;
       return {
         ...state,
         registerData: {
           loading: false,
-          data: payload,
+          data: {
+            hallName,
+            price,
+            capacity,
+            phoneNumber,
+            event,
+            type,
+            custom,
+            onwedBy: ''
+          },
           error: false
         }
       };
+    }
 
     case register.REGISTER_DATA_ERROR:
       return {

@@ -1,0 +1,22 @@
+.filter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .filter-input {
+    flex: 3 1 50%;
+    height: 5px;
+    padding: 10px 5px;
+    border-radius: 0.5rem;
+    font-size: 20px;
+  }
+
+  .filter-col {
+    flex: 2 1 50%;
+    margin: 10px;
+    padding: 3px;
+    height: 25px;
+    border-radius: 0.5rem;
+  }
+}

@@ -13,9 +13,6 @@ const hallSchema = new Schema(
     price: {
       type: Number
     },
-    address: {
-      type: String
-    },
     capacity: {
       type: Number,
       required: [true, 'Please Provide Your Capacity!']
@@ -33,20 +30,37 @@ const hallSchema = new Schema(
       enum: ['Available', 'Selected', 'Booked'],
       default: 'Available'
     },
-    onwedBy: {
+    ownedBy: {
       // email
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, 'Please Provide the Owner Details']
-    }
+    },
+    event: {
+      type: String,
+      enum: ['Marriage', 'Birthday', 'Custom'],
+      required: [true, 'Please Provide the Event Details']
+    },
+    custom: {
+      type: String,
+      default: 'No custom Type'
+    },
+    bookings: [{ type: mongoose.Schema.ObjectId, ref: 'Booking' }]
   },
   { timestamps: true }
 );
 
+hallSchema.index({ hallName: 'text' });
+
 // Query Middleware
 hallSchema.pre(/^find/, function pop(next) {
   this.populate({
-    path: 'onwedBy',
+    path: 'ownedBy',
+    select: '-__v'
+  });
+
+  this.populate({
+    path: 'bookings',
     select: '-__v'
   });
 

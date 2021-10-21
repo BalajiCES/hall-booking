@@ -109,6 +109,7 @@ function Checkboxes(props) {
       <Field name={name}>
         {(formik) => {
           const { field } = formik;
+          console.log('Select Field', field);
           return options.map((option) => (
             <div key={option.key}>
               <label htmlFor={option.value}>
@@ -118,7 +119,7 @@ function Checkboxes(props) {
                   {...field}
                   {...rest}
                   value={option.value}
-                  checked={field.value.includes(option.value)}
+                  checked={field?.value?.includes(option.value)}
                 />
                 {option.key}
               </label>

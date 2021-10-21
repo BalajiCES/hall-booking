@@ -6,15 +6,12 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.queryString };
-    // const excludedFields = ['page', 'sort', 'limits', 'fields'];
-    // excludedFields.forEach((el) => delete queryObj[el]);
-
-    // 2)Advanced Filtering
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-    // find method will return an array of all documents
-    this.query = this.query.find(JSON.parse(queryStr));
+    console.log('QueryObj', queryObj, queryObj?.hallName);
+    if (queryObj !== undefined) {
+      this.query = this.query.find({ $text: { $search: queryObj?.hallName } });
+    } else {
+      this.query = this.query.find();
+    }
 
     return this;
   }

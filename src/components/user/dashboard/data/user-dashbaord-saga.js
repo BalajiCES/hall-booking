@@ -4,10 +4,12 @@ import { listAllHalls } from '../../../../api/register-api';
 import { newBooking } from '../../../../api/booking_api';
 import endPoint from '../../../../endpoints';
 
-function* listingAPICall() {
+function* listingAPICall(action) {
+  console.log('action', action);
+  const { payload } = action;
   try {
     yield put({ type: user.USER_DASHBOARD_DATA_LOADING, payload: '' });
-    const res = yield call(listAllHalls, endPoint.HALLS);
+    const res = yield call(listAllHalls, endPoint.HALLS, payload);
     console.log('Res', res);
     yield put({ type: user.USER_DASHBOARD_DATA_SUCCESS, payload: res });
   } catch (err) {

@@ -15,7 +15,7 @@ function OwnerNavbar() {
         <Link to={routes.REGISTER_HALL} className="link">
           <li>Register Hall</li>
         </Link>
-        <Link to={`/profile/${id}`} className="link">
+        <Link to={`/owner/profile/${id}`} className="link">
           <li>Profile</li>
         </Link>
         <Link to={routes.BOOKING_REQUEST} className="link">

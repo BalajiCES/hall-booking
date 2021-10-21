@@ -2,15 +2,17 @@ import express from 'express';
 import {
   createHall,
   getAllHalls,
-  getHall,
+  getHallByOwnerId,
   updateHall,
-  deleteHall
+  deleteHall,
+  getSingleHall
 } from '../controller/hall-controller';
 
 const router = express.Router();
 
 // REST API
 router.route('/').get(getAllHalls).post(createHall);
-router.route('/:id').get(getHall).patch(updateHall).delete(deleteHall);
+router.route('/:id').get(getSingleHall).patch(updateHall).delete(deleteHall);
+router.route('/owner/:id').get(getHallByOwnerId);
 
 export default router;

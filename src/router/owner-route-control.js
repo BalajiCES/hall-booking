@@ -15,6 +15,11 @@ function RouteControl() {
       <Switch>
         <Route exact path={routes.OWNER_DASHBOARD} component={OwnerDashboard} />
         <Route exact path={routes.REGISTER_HALL} component={RegisterHall} />
+        <Route
+          exact
+          path={routes.REGISTER_HALL_EDIT}
+          component={RegisterHall}
+        />
         <Route exact path={routes.BOOKING_REQUEST} component={BookingRequest} />
         <Route exact path={routes.OWNER_PROFILE} component={Profile} />
         <Route

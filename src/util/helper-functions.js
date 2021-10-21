@@ -26,7 +26,7 @@ const PublicRoute = ({ component, ...rest }) => {
 };
 
 PublicRoute.propTypes = {
-  component: PropTypes.element.isRequired
+  component: PropTypes.elementType.isRequired
 };
 
 const ProtectedRoute = ({ component, ...rest }) => {
@@ -38,13 +38,13 @@ const ProtectedRoute = ({ component, ...rest }) => {
 };
 
 ProtectedRoute.propTypes = {
-  component: PropTypes.element.isRequired
+  component: PropTypes.elementType.isRequired
 };
 
 const signOut = (history) => {
-  sessionStorage.removeItem('ID');
-  sessionStorage.removeItem('ROLE');
-  sessionStorage.removeItem('TOKEN');
+  sessionStorage.removeItem(constant.ID);
+  sessionStorage.removeItem(constant.ROLE);
+  sessionStorage.removeItem(constant.TOKEN);
   history.push(routes.USER_BASE_PATH);
 };
 

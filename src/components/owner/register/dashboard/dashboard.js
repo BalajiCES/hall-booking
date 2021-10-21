@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import register from '../data/register-actions';
 import { AuthID } from '../../../../util/helper-functions';
 import './dashboard.scss';
@@ -8,11 +9,16 @@ import HallCard from '../../../common/cards/card';
 function OwnerDashboard() {
   const [id] = useState(AuthID());
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const { data = {}, loading = false } = useSelector(
     (state) => state.registerReducer.listHalls
   );
   const { hall = [] } = data;
-  console.log('Register', data);
+
+  const hallEdit = (hallId) => {
+    history.push(`/owner/register/${hallId}`);
+  };
 
   useEffect(() => {
     dispatch({
@@ -33,6 +39,7 @@ function OwnerDashboard() {
               hallName={hallName}
               capacity={capacity}
               price={price}
+              hallEdit={() => hallEdit(_id)}
             />
           );
         })}

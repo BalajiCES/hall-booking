@@ -10,10 +10,16 @@ function HallCard({
   status,
   user,
   intiateBooking,
+  hallEdit,
   id
 }) {
   return (
     <div className="hall-tile">
+      {user !== constant.USER && (
+        <button type="button" onClick={hallEdit}>
+          Edit
+        </button>
+      )}
       <h3 className="title">{hallName}</h3>
       <h3 className="price">&#8377; {price}</h3>
       <h3 className="capacity">capacity : {capacity}</h3>
@@ -31,18 +37,20 @@ function HallCard({
 }
 
 HallCard.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
   hallName: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   capacity: PropTypes.number.isRequired,
   status: PropTypes.string,
   user: PropTypes.string,
-  intiateBooking: PropTypes.func
+  intiateBooking: PropTypes.func,
+  hallEdit: PropTypes.func
 };
 
 HallCard.defaultProps = {
   id: 0,
   intiateBooking: () => {},
+  hallEdit: () => {},
   status: '',
   user: ''
 };
