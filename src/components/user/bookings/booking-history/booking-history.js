@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import bookingStatus from '../data/booking-status-action';
 import Bookings from '../../../common/booking/bookings';
 import { AuthID } from '../../../../util/helper-functions';
+import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
+import CustomLoader from '../../../../util/common';
 
 function BookingHistory() {
   const [authId, setauthId] = useState(AuthID());
@@ -23,7 +25,8 @@ function BookingHistory() {
   return (
     <div>
       <h2 className="hall-title">All BOOKING HISTORY</h2>
-      {!loading &&
+      <center>{loading && <CustomLoader loading={loading} />}</center>
+      {!loading && Array(data) ? (
         data.map((bookingData) => {
           const {
             bookedDate,
@@ -31,8 +34,8 @@ function BookingHistory() {
             hallId,
             userId
           } = bookingData;
-          const { hallName, onwedBy } = hallId;
-          const { firstName } = onwedBy;
+          const { hallName, ownedBy } = hallId;
+          const { firstName } = ownedBy;
           const { firstName: userFirstName } = userId;
           return (
             <Bookings
@@ -45,7 +48,10 @@ function BookingHistory() {
               userType="User"
             />
           );
-        })}
+        })
+      ) : (
+        <NotFound style={{ height: '300px', width: '100%' }} />
+      )}
     </div>
   );
 }

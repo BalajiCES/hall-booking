@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 import './card.scss';
 import constant from '../../../const/const';
 
@@ -11,26 +13,38 @@ function HallCard({
   user,
   intiateBooking,
   hallEdit,
+  type,
   id
 }) {
   return (
     <div className="hall-tile">
-      {user !== constant.USER && (
-        <button type="button" onClick={hallEdit}>
-          Edit
-        </button>
-      )}
       <h3 className="title">{hallName}</h3>
-      <h3 className="price">&#8377; {price}</h3>
-      <h3 className="capacity">capacity : {capacity}</h3>
+      {/* <h3 className={`status ${status}`}>{status}</h3> */}
+      <h3 className="price">
+        <FontAwesomeIcon icon={faRupeeSign} className="mr-2" /> {price}
+      </h3>
+      <h3 className="capacity">
+        <FontAwesomeIcon icon={faUsers} className="mr-2" />
+        {capacity}
+      </h3>
       {user === constant.USER && (
         <div className="button-container">
-          {status !== 'Booked' && status !== 'Selected' && (
-            <button type="button" onClick={() => intiateBooking(id)}>
-              Book Now
-            </button>
-          )}
+          <button
+            className="primary"
+            type="button"
+            onClick={() => {
+              intiateBooking({ id, hallName, price, capacity, status, type });
+            }}
+          >
+            Book Hall
+          </button>
         </div>
+      )}
+
+      {user !== constant.USER && (
+        <button className="edit primary" type="button" onClick={hallEdit}>
+          Edit
+        </button>
       )}
     </div>
   );
@@ -43,6 +57,7 @@ HallCard.propTypes = {
   capacity: PropTypes.number.isRequired,
   status: PropTypes.string,
   user: PropTypes.string,
+  type: PropTypes.string,
   intiateBooking: PropTypes.func,
   hallEdit: PropTypes.func
 };
@@ -52,7 +67,8 @@ HallCard.defaultProps = {
   intiateBooking: () => {},
   hallEdit: () => {},
   status: '',
-  user: ''
+  user: '',
+  type: ''
 };
 
 export default HallCard;

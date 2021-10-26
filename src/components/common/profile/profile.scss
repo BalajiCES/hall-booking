@@ -1,47 +1,67 @@
-$primary-color: #0d6efd;
+$primary-color: #f56038;
+$title-color: #660000;
 
-.form-group {
-  margin: 10px 0;
+label {
+  font-size: 16px;
+  font-weight: 600;
+}
+.ml-2 {
+  margin-left: 10px;
+  color: $title-color;
 }
 
 .form-control {
+  margin-top: 10px;
   display: block;
-  margin-top: 1rem;
   height: 2.5rem;
   width: 100%;
   border-radius: 0.2rem;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(163, 155, 155);
   padding: 0.5rem;
   box-sizing: border-box;
 }
 
+.profile-container {
+  max-width: 750px;
+  margin: 10px auto;
+  padding: 25px;
+
+  h2 {
+    text-transform: uppercase;
+    color: $title-color;
+  }
+}
+
 button {
   display: inline-block;
-  margin: 10px;
+  margin: 10px 5px;
   border: none;
-  height: 2rem;
+  height: 2.5rem;
   padding: 10px;
   color: white;
-  background-color: $primary-color;
   border-radius: 0.2rem;
+}
+
+.primary {
+  background-color: $primary-color;
 }
 
 .form-container {
   margin: 10px;
   padding: 20px;
-  background-color: #e3e2e2;
+  background-color: #fcffa6;
   flex-basis: 50%;
   border-radius: 0.2rem;
 
-  h1 {
-    text-align: center;
+  h2 {
     text-transform: uppercase;
+    color: $title-color;
   }
 }
 
 .radio-control {
   display: inline-block;
-  margin-right: 0.5rem;
+  margin-top: 10px;
 
   input {
     margin-left: 0.5rem;
@@ -53,7 +73,7 @@ button {
 .select-control {
   display: block;
   margin: 0.5rem 0;
-  height: 30px;
+  height: 2.5rem;
   border: 1px solid #ccc;
   width: 100%;
   padding: 0.2rem;

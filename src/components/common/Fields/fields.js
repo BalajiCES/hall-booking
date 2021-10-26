@@ -1,11 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, ErrorMessage } from 'formik';
-// import './fields.scss';
 
 function Input(props) {
-  // console.log('Props', props);
   const { name, className, label, ...rest } = props;
 
   return (
@@ -33,7 +30,6 @@ function RadioButtons(props) {
       <Field name={name}>
         {(formik) => {
           const { field } = formik;
-          // console.log('Field', field);
           return options.map((option) => (
             <div key={option.key} className="form-group ">
               <label htmlFor={option.value}>

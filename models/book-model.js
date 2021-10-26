@@ -10,6 +10,10 @@ const bookingSchema = new Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User'
     },
+    hallId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Hall'
+    },
     bookedDate: {
       type: Date,
       required: [true, 'Please Provide Your Booked Date!'],
@@ -23,6 +27,20 @@ const bookingSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Query Middleware
+bookingSchema.pre(/^find/, function pop(next) {
+  this.populate({
+    path: 'userId',
+    select: '-__v'
+  });
+
+  this.populate({
+    path: 'hallId',
+    select: '-__V'
+  });
+  next();
+});
 
 const Booking = mongoose.model('Booking', bookingSchema);
 

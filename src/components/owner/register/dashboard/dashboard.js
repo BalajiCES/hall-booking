@@ -5,6 +5,7 @@ import register from '../data/register-actions';
 import { AuthID } from '../../../../util/helper-functions';
 import './dashboard.scss';
 import HallCard from '../../../common/cards/card';
+import CustomLoader from '../../../../util/common';
 
 function OwnerDashboard() {
   const [id] = useState(AuthID());
@@ -17,7 +18,7 @@ function OwnerDashboard() {
   const { hall = [] } = data;
 
   const hallEdit = (hallId) => {
-    history.push(`/owner/register/${hallId}`);
+    history.push(`/owner/edit-hall/${hallId}`);
   };
 
   useEffect(() => {
@@ -30,6 +31,7 @@ function OwnerDashboard() {
   return (
     <div>
       <h2 className="hall-title">ALL REGISTERED HALLS</h2>
+      <center>{loading && <CustomLoader loading={loading} />}</center>
       {!loading &&
         hall.map((hallData) => {
           const { _id, hallName, capacity, price } = hallData;

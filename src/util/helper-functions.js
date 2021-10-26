@@ -48,4 +48,35 @@ const signOut = (history) => {
   history.push(routes.USER_BASE_PATH);
 };
 
-export { AuthHeader, AuthRole, AuthID, PublicRoute, ProtectedRoute, signOut };
+const getAlertToast = (type, text = '', timer = 5000) => ({
+  toast: true,
+  position: 'bottom',
+  titleText: text,
+  type: text,
+  showConfirmButton: false,
+  timer
+});
+
+const getConfirm = (
+  type = 'success',
+  text = '',
+  confirmButtonText = 'Yes'
+) => ({
+  type,
+  text,
+  showCancelButton: true,
+  confirmButtonColor: '000',
+  cancelButtonColor: '#939392',
+  confirmButtonText
+});
+
+export {
+  AuthHeader,
+  AuthRole,
+  AuthID,
+  PublicRoute,
+  ProtectedRoute,
+  signOut,
+  getAlertToast,
+  getConfirm
+};

@@ -18,11 +18,14 @@ function Bookings(props) {
 
   return (
     <div className="booking-container">
-      <h2>Hall Name : {hallName}</h2>
-      <p>Owner Name : {ownerName}</p>
-      <h3>Booked by : {userName}</h3>
-      <h4>Booked Date: {moment(date).format('LLLL')}</h4>
-      {userType === constant.OWNER && <p>Status : {status} </p>}
+      {userType === constant.OWNER && (
+        <h4 className={`status top ${status} `}>Status : {status} </h4>
+      )}
+      <h1>{hallName}</h1>
+      <h4>Owner Name : {ownerName}</h4>
+      <h4>Booked by : {userName}</h4>
+      <h4>Booked Date: {moment(date).format('MM-DD-YYYY')}</h4>
+
       {userType === constant.OWNER ? (
         <select
           name="status"
@@ -34,7 +37,7 @@ function Bookings(props) {
           <option value="Rejected">Reject</option>
         </select>
       ) : (
-        <p>Status : {status} </p>
+        <h4 className={`status  ${status} `}>Status : {status} </h4>
       )}
     </div>
   );
@@ -45,14 +48,15 @@ Bookings.propTypes = {
   ownerName: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  bookingId: PropTypes.string.isRequired,
+  bookingId: PropTypes.string,
   status: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
   statusChange: PropTypes.func
 };
 
 Bookings.defaultProps = {
-  statusChange: () => {}
+  statusChange: () => {},
+  bookingId: ''
 };
 
 export default Bookings;

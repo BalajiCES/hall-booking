@@ -1,18 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Formik } from 'formik';
+import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import './register-hall.scss';
 import register from '../data/register-actions';
-import { AuthID } from '../../../../util/helper-functions';
+import {
+  AuthID,
+  getAlertToast,
+  getConfirm
+} from '../../../../util/helper-functions';
 import { Input, Checkboxes, Select } from '../../../common/Fields/fields';
 import constant from '../../../../const/const';
+import CustomLoader from '../../../../util/common';
 
 function RegisterHall() {
-  const { data = {} } = useSelector(
-    (state) => state.registerReducer.registerData
-  );
+  const {
+    loading = false,
+    data = {},
+    error = false
+  } = useSelector((state) => state.registerReducer.registerData);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -35,17 +43,26 @@ function RegisterHall() {
   const handleSubmit = (values) => {
     console.log('values', values);
     const newValue = { ...values, ownedBy: AuthID() };
-    if (!id) {
-      dispatch({
-        type: register.REGISTER_REQUEST,
-        payload: newValue,
-        history
+    if (id) {
+      Swal.fire(
+        getConfirm('warning', 'Are you sure do you want to update?')
+      ).then((result) => {
+        if (result.value) {
+          dispatch({
+            type: register.REGISTER_UPDATE_REQUEST,
+            payload: newValue,
+            id,
+            history
+          });
+          Swal.fire(
+            getAlertToast('success', 'Your Hall is succesfully updated')
+          );
+        }
       });
     } else {
       dispatch({
-        type: register.REGISTER_UPDATE_REQUEST,
+        type: register.REGISTER_REQUEST,
         payload: newValue,
-        id,
         history
       });
     }
@@ -69,14 +86,22 @@ function RegisterHall() {
         type: register.REGISTER_LOADING_REQUEST,
         payload: id
       });
+    } else {
+      dispatch({
+        type: register.REGISTER_RESET_DATA
+      });
     }
   }, [id]);
 
   return (
     <div>
       <div className="register-container">
+        {loading && (
+          <center>{loading && <CustomLoader loading={loading} />}</center>
+        )}
+        {error && <center>{Swal.fire(getAlertToast('error', error))}</center>}
         <div className="form-container">
-          <h1>Register Hall</h1>
+          <h2>Register Hall</h2>
 
           <Formik
             initialValues={data}
@@ -89,68 +114,83 @@ function RegisterHall() {
               console.log(values);
               return (
                 <Form>
-                  <Input
-                    label="Hall name"
-                    className="form-control"
-                    type="text"
-                    name="hallName"
-                    id="hallName"
-                    placeholder="Enter First Name"
-                  />
-
-                  <Input
-                    label="Price"
-                    className="form-control"
-                    type="number"
-                    name="price"
-                    id="price"
-                    placeholder="Enter Last Name"
-                  />
-
-                  <Input
-                    label="Capacity"
-                    className="form-control"
-                    type="number"
-                    name="capacity"
-                    id="capacity"
-                    placeholder="Enter Capacity"
-                  />
-
-                  <Input
-                    label="Phone Number"
-                    className="form-control"
-                    type="number"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    placeholder="Enter PhoneNumber"
-                  />
-
-                  <Select
-                    label="Choose Event Type"
-                    name="event"
-                    options={eventTypeChoices}
-                    className="select-control"
-                  />
-
-                  {values.event === constant.CUSTOM && (
+                  <div className="input-wrapper">
                     <Input
-                      label="Enter Event Name"
+                      label="Hall name"
                       className="form-control"
                       type="text"
-                      name="custom"
-                      id="custom"
-                      placeholder="Enter here..."
+                      name="hallName"
+                      id="hallName"
+                      placeholder="Enter First Name"
+                      disabled={id}
                     />
+                  </div>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Price"
+                      className="form-control"
+                      type="number"
+                      name="price"
+                      id="price"
+                      placeholder="Enter Last Name"
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Capacity"
+                      className="form-control"
+                      type="number"
+                      name="capacity"
+                      id="capacity"
+                      placeholder="Enter Capacity"
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Phone Number"
+                      className="form-control"
+                      type="number"
+                      name="phoneNumber"
+                      id="phoneNumber"
+                      placeholder="Enter PhoneNumber"
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <Select
+                      label="Choose Event Type"
+                      name="event"
+                      options={eventTypeChoices}
+                      className="select-control"
+                      disabled={id}
+                    />
+                  </div>
+
+                  {values.event === constant.CUSTOM && (
+                    <div className="input-wrapper">
+                      <Input
+                        label="Enter Event Name"
+                        className="form-control"
+                        type="text"
+                        name="custom"
+                        id="custom"
+                        placeholder="Enter here..."
+                        disabled={id}
+                      />
+                    </div>
                   )}
+                  <div className="input-wrapper">
+                    <Checkboxes
+                      label="Choose Hall Type"
+                      className="radio-control"
+                      name="type"
+                      options={hallTypeChoices}
+                      disabled={id}
+                    />
+                  </div>
 
-                  <Checkboxes
-                    label="Choose Hall Type"
-                    className="radio-control"
-                    name="type"
-                    options={hallTypeChoices}
-                  />
-
-                  <button type="submit">{id ? 'Update' : 'Register'}</button>
+                  <button type="submit" className="primary">
+                    {id ? 'Update' : 'Register'}
+                  </button>
                 </Form>
               );
             }}

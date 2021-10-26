@@ -14,60 +14,18 @@ const createHall = catchAsync(async (req, res) => {
 
 // GET ALL HALLS
 const getAllHalls = catchAsync(async (req, res) => {
-  let query = Hall.find();
-
-  // filter based on strength
-  if (req.query.capacity) {
-    console.log('I am there', req.query.capacity);
-    if (req.query.capacity === 'default') {
-      query = Hall.find({});
-    } else {
-      query = Hall.find({ capacity: req.query.capacity });
-    }
-  }
-
-  // search based on hall name
-  if (req.query.search) {
-    console.log(req.query.search);
-    query = Hall.find({
-      $text: { $search: req.query.search }
-    });
-  }
-
-  // filter based on event
-  if (req.query.event) {
-    if (req.query.event === 'default') {
-      query = Hall.find({});
-    } else {
-      query = Hall.find({ event: req.query.event });
-    }
-  }
-
-  // filter based on price
-  if (req.query.sort) {
-    if (req.query.sort === 'high-to-low') {
-      query = query.sort('-price');
-    } else if (req.query.sort === 'low-to-high') {
-      query = query.sort('price');
-    } else {
-      query = query.sort('-createdAt');
-    }
-  }
-
-  // filter based on type
-  if (req.query.type) {
-    if (req.query.type === 'default') {
-      query = Hall.find({});
-    } else {
-      query = Hall.find({ type: req.query.type });
-    }
-  }
-
-  const halls = await query;
+  const features = new APIFeatures(Hall.find({}), req.query)
+    .search()
+    .filterByStrength()
+    .filterByEvent()
+    .filterByPrice()
+    .filterByType()
+    .filterByDate();
+  const halls = await features.query;
 
   res.status(200).json({
     status: 'success',
-    results: halls.length,
+    // results: halls.length,
     data: {
       halls
     }

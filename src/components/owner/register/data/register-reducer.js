@@ -23,6 +23,7 @@ function registerReducer(state = intialState, actions) {
         hall;
       return {
         ...state,
+        loading: true,
         registerData: {
           loading: false,
           data: {
@@ -39,6 +40,16 @@ function registerReducer(state = intialState, actions) {
         }
       };
     }
+
+    case register.REGISTER_RESET_DATA:
+      return {
+        ...state,
+        registerData: {
+          loading: false,
+          data: {},
+          error: false
+        }
+      };
 
     case register.REGISTER_DATA_ERROR:
       return {

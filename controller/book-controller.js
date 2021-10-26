@@ -1,7 +1,9 @@
+/* eslint-disable consistent-return */
 import Book from '../models/book-model';
 import Hall from '../models/hall-model';
 import catchAsync from '../utils/catchAsync';
 import constant from '../src/const/const';
+import AppError from '../utils/appError';
 
 const listBooking = catchAsync(async (req, res) => {
   const bookingList = await Book.find();
@@ -81,12 +83,30 @@ const changeBookingStatus = catchAsync(async (req, res) => {
   });
 });
 
-const createBooking = catchAsync(async (req, res) => {
+const createBooking = catchAsync(async (req, res, next) => {
+  console.log('Req', req.body);
+  const date = new Date(req.body.bookedDate).toISOString();
+  // User id , hallid , booked date , booking status
+
+  // if incase one user booked this hall on this date we need to prevent that
+  const checkExisitingBooking = await Book.findOne({
+    hallId: req.body.hallId,
+    bookedDate: date
+  });
+
+  if (checkExisitingBooking != null) {
+    return next(
+      new AppError('This Hall is already Booked on this Date !', 400)
+    );
+  }
+
+  // create a new booking
   const newBooking = await Book.create(req.body);
 
+  // we consider this hall data for that particular date only
   Hall.findByIdAndUpdate(
-    req.body.hallId,
-    { status: 'Selected' },
+    { _id: req.body.hallId },
+    { status: 'Selected', $push: { bookings: newBooking } },
     {
       new: true,
       runValidators: true

@@ -40,3 +40,5 @@ class PersonModel {
       .required('Confirm Password is Required');
   }
 }
+
+export default PersonModel;

@@ -1,8 +1,10 @@
 import { call, takeEvery, takeLatest, put } from 'redux-saga/effects';
+import Swal from 'sweetalert2';
 import user from './user-dashboard-actions';
 import { listAllHalls } from '../../../../api/register-api';
 import { newBooking } from '../../../../api/booking_api';
 import endPoint from '../../../../endpoints';
+import { getAlertToast } from '../../../../util/helper-functions';
 
 function* listingAPICall(action) {
   console.log('action', action);
@@ -23,9 +25,11 @@ function* newBookingAPICall(action) {
     const res = yield call(newBooking, endPoint.BOOK, action.payload);
     console.log(res);
     yield put({ type: user.USER_BOOKING_SUCCESS, payload: res });
-    yield call(action.bookingSuccess);
+    yield call(action.closeBooking);
+    yield call(action.reloadHalls);
   } catch (err) {
-    console.log(err);
+    console.log('err', err);
+    Swal.fire(getAlertToast('error', err.message));
   }
 }
 

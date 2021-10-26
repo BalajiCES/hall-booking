@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import bookingRequests from '../data/booking-requests-actions';
 import Bookings from '../../../common/booking/bookings';
 import { AuthID } from '../../../../util/helper-functions';
+import CustomLoader from '../../../../util/common';
+import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
+import './booking-history.scss';
 
 function OwnerBookingHistory() {
   const [authId, setauthId] = useState(AuthID());
@@ -26,7 +29,10 @@ function OwnerBookingHistory() {
 
   return (
     <div>
-      {!loading &&
+      <h2 className="hall-title">ALL BOOKING HISTORY</h2>
+      <center>{loading && <CustomLoader loading={loading} />}</center>
+
+      {!loading && Array(data) ? (
         data.map((bookingData) => {
           const {
             _id,
@@ -35,8 +41,8 @@ function OwnerBookingHistory() {
             hallId,
             userId
           } = bookingData;
-          const { hallName, onwedBy } = hallId;
-          const { firstName } = onwedBy;
+          const { hallName, ownedBy } = hallId;
+          const { firstName } = ownedBy;
           const { firstName: userFirstName } = userId;
           return (
             <Bookings
@@ -50,7 +56,10 @@ function OwnerBookingHistory() {
               userType="User"
             />
           );
-        })}
+        })
+      ) : (
+        <NotFound style={{ height: '300px', width: '100%' }} />
+      )}
     </div>
   );
 }

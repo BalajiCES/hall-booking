@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
+import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import profile from './data/profile-actions';
 import signup from '../../signup/data/signup-actions';
 import { Input, RadioButtons, Select } from '../Fields/fields';
 import './profile.scss';
+import CustomLoader from '../../../util/common';
+import { getAlertToast, getConfirm } from '../../../util/helper-functions';
 
 function Profile() {
-  const { formInitialValues = {} } = useSelector(
+  const { formInitialValues = {}, loading = false } = useSelector(
     (state) => state.profileReducer.profileData
   );
   const dispatch = useDispatch();
@@ -39,10 +42,20 @@ function Profile() {
   const handleSubmit = (values) => {
     console.log('values', values);
     if (id) {
-      dispatch({
-        type: profile.PROFILE_UPDATE_REQUEST,
-        payload: values,
-        id
+      Swal.fire(
+        getConfirm('warning', 'Are you sure do you want to update?')
+      ).then((result) => {
+        if (result.value) {
+          dispatch({
+            type: profile.PROFILE_UPDATE_REQUEST,
+            payload: values,
+            id,
+            history
+          });
+          Swal.fire(
+            getAlertToast('success', 'Your profile is succesfully updated')
+          );
+        }
       });
     } else {
       dispatch({
@@ -89,107 +102,125 @@ function Profile() {
   }, [id]);
 
   return (
-    <div className="form-container">
-      {id ? <h1> Profile </h1> : <h1>GET STARTED</h1>}
-      <Formik
-        initialValues={formInitialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize
-      >
-        {(formik) => {
-          const { setFieldValue, setFieldTouched } = formik;
-          return (
-            <Form>
-              <Input
-                label="First Name"
-                className="form-control"
-                name="firstName"
-                id="firstName"
-                placeholder="Enter First Name"
-              />
-              <Input
-                label="Last Name"
-                className="form-control"
-                name="lastName"
-                id="lastName"
-                placeholder="Enter Last Name"
-              />
-              <Input
-                label="Email"
-                className="form-control"
-                name="email"
-                id="email"
-                type="email"
-                placeholder="Enter Email"
-                disabled={id}
-              />
-
-              <RadioButtons
-                label="Choose Gender"
-                className="form-control"
-                name="gender"
-                options={genderChoices}
-              />
-
-              <Input
-                label="Choose Date Of Birth"
-                className="form-control"
-                name="dob"
-                type="date"
-                id="dob"
-                onChange={
-                  (event) =>
-                    handleChangeDate(event, setFieldValue, setFieldTouched)
-                  // eslint-disable-next-line react/jsx-curly-newline
-                }
-              />
-
-              <Input
-                label="Age"
-                className="form-control"
-                name="age"
-                type="number"
-                id="age"
-                placeholder="Enter Age"
-              />
-
-              <Select
-                label="Role"
-                className="select-control"
-                name="role"
-                id="role"
-                options={roleChoices}
-                disabled={id}
-              />
-
-              {!id && (
-                <>
+    <div className={`${id ? 'profile-container' : 'form-container'}`}>
+      <center>{loading && <CustomLoader loading={loading} />}</center>
+      <div className="form-container">
+        {id ? <h2> Profile </h2> : <h1>GET STARTED</h1>}
+        <Formik
+          initialValues={formInitialValues}
+          S
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {(formik) => {
+            const { setFieldValue, setFieldTouched } = formik;
+            return (
+              <Form>
+                <div className="input-wrapper">
                   <Input
-                    label="Passowrd"
+                    label="First Name"
                     className="form-control"
-                    name="password"
-                    type="password"
-                    id="password"
-                    placeholder="Enter Password"
+                    name="firstName"
+                    id="firstName"
+                    placeholder="Enter First Name"
                   />
+                </div>
 
+                <div className="input-wrapper">
                   <Input
-                    label="Confirm Passowrd"
+                    label="Last Name"
                     className="form-control"
-                    name="passwordConfirm"
-                    type="password"
-                    id="passwordConfirm"
-                    placeholder="Enter Confirm Password"
+                    name="lastName"
+                    id="lastName"
+                    placeholder="Enter Last Name"
                   />
-                </>
-              )}
+                </div>
+                <div className="input-wrapper">
+                  <Input
+                    label="Email"
+                    className="form-control"
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="Enter Email"
+                    disabled={id}
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <RadioButtons
+                    label="Choose Gender"
+                    className="form-control"
+                    name="gender"
+                    options={genderChoices}
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <Input
+                    label="Choose Date Of Birth"
+                    className="form-control"
+                    name="dob"
+                    type="date"
+                    id="dob"
+                    onChange={(event) => {
+                      handleChangeDate(event, setFieldValue, setFieldTouched);
+                    }}
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <Input
+                    label="Age"
+                    className="form-control"
+                    name="age"
+                    type="number"
+                    id="age"
+                    placeholder="Enter Age"
+                  />
+                </div>
+                <div className="input-wrapper">
+                  <Select
+                    label="Role"
+                    className="select-control"
+                    name="role"
+                    id="role"
+                    options={roleChoices}
+                    disabled={id}
+                  />
+                </div>
 
-              <button type="submit">{id ? 'Update' : 'Register'}</button>
-            </Form>
-          );
-        }}
-      </Formik>
+                {!id && (
+                  <>
+                    <div className="input-wrapper">
+                      <Input
+                        label="Passowrd"
+                        className="form-control"
+                        name="password"
+                        type="password"
+                        id="password"
+                        placeholder="Enter Password"
+                      />
+                    </div>
+                    <div className="input-wrapper">
+                      <Input
+                        label="Confirm Passowrd"
+                        className="form-control"
+                        name="passwordConfirm"
+                        type="password"
+                        id="passwordConfirm"
+                        placeholder="Enter Confirm Password"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <button className="primary" type="submit">
+                  {id ? 'Update' : 'Register'}
+                </button>
+              </Form>
+            );
+          }}
+        </Formik>
+      </div>
     </div>
   );
 }

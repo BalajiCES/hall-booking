@@ -33,8 +33,8 @@ function* updateProfileCall(action) {
       age,
       gender
     });
-    console.log('Res', res);
     yield put({ type: profile.PROFILE_UPDATE_SUCCESS, payload: res });
+    action.history.push('/');
   } catch (err) {
     console.log(err);
   }

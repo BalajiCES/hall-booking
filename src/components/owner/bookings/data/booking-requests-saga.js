@@ -37,7 +37,7 @@ function* changeBookingStatusAPICall(action) {
   try {
     const res = yield call(
       changeBookingStatus,
-      `${endPoint.BOOK}${action.id}`,
+      `${endPoint.BOOK}/${action.id}`,
       {
         bookingStatus: action.payload
       }

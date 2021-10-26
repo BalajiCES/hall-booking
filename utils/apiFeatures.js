@@ -1,93 +1,103 @@
+import moment from 'moment';
+import Booking from '../models/book-model';
+
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
   }
 
-  filter() {
-    const queryObj = { ...this.queryString };
-    console.log('QueryObj', queryObj, queryObj?.hallName);
-    if (queryObj !== undefined) {
-      this.query = this.query.find({ $text: { $search: queryObj?.hallName } });
-    } else {
-      this.query = this.query.find();
+  search() {
+    if (this.queryString.search) {
+      console.log(this.queryString.search);
+      this.query = this.query.find({
+        $text: { $search: this.queryString.search }
+      });
     }
-
     return this;
   }
 
-  sort() {
+  filterByStrength() {
+    if (this.queryString.capacity) {
+      if (this.queryString.capacity === 'default') {
+        this.query = this.query.find({});
+      } else {
+        const queryStr = JSON.parse(this.queryString.capacity);
+        const { key } = queryStr;
+        let { value } = queryStr;
+        value = parseInt(value, 10);
+        if (key === '$lt') {
+          this.query = this.query.find({ capacity: { $lt: value } });
+        } else if (key === '$gt') {
+          this.query = this.query.find({ capacity: { $gt: value } });
+        }
+      }
+    }
+    return this;
+  }
+
+  filterByEvent() {
+    if (this.queryString.event) {
+      if (this.queryString.event === 'default') {
+        this.query = this.query.find({});
+      } else {
+        this.query = this.query.find({ event: this.queryString.event });
+      }
+    }
+    return this;
+  }
+
+  filterByPrice() {
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(',').join(' ');
-      this.query = this.query.sort(sortBy);
-    } else {
-      this.query = this.query.sort('-createdAt');
+      if (this.queryString.sort === 'high-to-low') {
+        this.query = this.query.sort('-price');
+      } else if (this.queryString.sort === 'low-to-high') {
+        this.query = this.query.sort('price');
+      } else {
+        this.query = this.query.sort('-createdAt');
+      }
     }
-
     return this;
   }
 
-  limitFileds() {
-    if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(',').join(' ');
-      this.query = this.query.select(fields);
-    } else {
-      this.query = this.query.select('-__v');
+  filterByType() {
+    if (this.queryString.type) {
+      if (this.queryString.type === 'default') {
+        this.query = this.query.find({});
+      } else {
+        this.query = this.query.find({ type: this.queryString.type });
+      }
     }
-
     return this;
   }
 
-  pagination() {
-    const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 10;
-    const skip = (page - 1) * limit;
+  filterByDate() {
+    if (this.queryString.date) {
+      console.log(
+        'Date',
+        this.queryString.date,
+        new Date(this.queryString.date)
+      );
+      // this.query = this.query.find({
+      //   'bookings.bookedDate': {
+      //     $eq: new Date(this.queryString.date)
+      //   }
+      // });
+      // start today
+      const start = moment().startOf('day');
+      // end today
+      const end = moment(this.queryString.date).endOf('day');
 
-    this.query = this.query.skip(skip).limit(limit);
-
+      console.log('StartDay', start, 'EndDay', end);
+      this.query = this.query.populate('bookings').find({
+        bookedDate: {
+          $gte: start,
+          $lte: end
+        }
+      });
+    }
     return this;
   }
 }
 
 export default APIFeatures;
-
-//  // 1)Filtering
-//  const queryObj = { ...req.query };
-
-//  // 2)Advanced Filtering
-//  console.log(req.query);
-//  let queryStr = JSON.stringify(queryObj);
-//  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-//  console.log(queryStr);
-
-//  let query = Hall.find(JSON.parse(queryStr));
-
-//  // 3) Sorting
-//  if (req.query.sort) {
-//    const sortBy = req.query.sort.split(',').join(' ');
-//    query = query.sort(sortBy);
-//  } else {
-//    // default sort
-//    query = query.sort('-createdAt');
-//  }
-
-//  // 4)Projection
-//  if (req.query.fields) {
-//    const fields = req.query.fields.split(',').join(' ');
-//    query = query.select(fields);
-//  } else {
-//    query = query.select('-__v');
-//  }
-
-//  // 5)Pagination
-//  const page = req.query.page * 1 || 1;
-//  const limit = req.query.limit * 1 || 10;
-//  const skip = (page - 1) * limit;
-
-//  // page=3&limit=10 1-10 page 1, 11-20 page 2 , 21-30 page 3
-//  query = query.skip(skip).limit(limit);
-
-//  if (req.query.page) {
-//    const numHalls = await Hall.countDocuments();
-//    if (skip >= numHalls) throw new Error('This page does not exist');
-//  }

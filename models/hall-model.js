@@ -17,10 +17,6 @@ const hallSchema = new Schema(
       type: Number,
       required: [true, 'Please Provide Your Capacity!']
     },
-    phoneNumber: {
-      type: Number,
-      required: [true, 'Please Provide Your Mobile number!']
-    },
     type: {
       type: [String],
       required: [true, 'Please Provide Your Hall Type!']
@@ -45,7 +41,12 @@ const hallSchema = new Schema(
       type: String,
       default: 'No custom Type'
     },
-    bookings: [{ type: mongoose.Schema.ObjectId, ref: 'Booking' }]
+    bookings: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Booking'
+      }
+    ]
   },
   { timestamps: true }
 );
@@ -58,12 +59,6 @@ hallSchema.pre(/^find/, function pop(next) {
     path: 'ownedBy',
     select: '-__v'
   });
-
-  this.populate({
-    path: 'bookings',
-    select: '-__v'
-  });
-
   next();
 });
 

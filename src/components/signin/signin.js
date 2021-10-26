@@ -67,7 +67,9 @@ function Signin() {
                 placeholder="Enter Password"
               />
 
-              <button type="submit">Submit</button>
+              <button type="submit" className="primary">
+                Submit
+              </button>
               <button type="button" className="secondary">
                 <Link to="/signup" className="link">
                   Create Account

@@ -1,22 +1,95 @@
-.filter {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-wrap: wrap;
+#sideMenu {
+  width: 250px;
+}
 
-  .filter-input {
-    flex: 3 1 50%;
-    height: 5px;
-    padding: 10px 5px;
-    border-radius: 0.5rem;
+#close-sidemenu {
+  width: 0px;
+}
+
+.main {
+  margin-left: 250px;
+}
+
+.close-main {
+  margin-left: 0px;
+}
+
+.icon {
+  color: #000;
+}
+
+.navbar {
+  background-color: #eee;
+  overflow: hidden;
+  height: 65px;
+
+  a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 17px;
+    padding: 14px 10px;
+  }
+
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .filter-text {
+    color: black;
+    cursor: pointer;
+  }
+}
+
+.sidebar-content {
+  position: relative;
+}
+
+.side-nav {
+  height: 100vh;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  opacity: 0.9;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.3s;
+
+  .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0px;
+  }
+
+  .external {
+    background-color: green;
+  }
+
+  .filter {
+    padding: 10px 20px 10px 30px;
     font-size: 20px;
-  }
+    color: #ccc;
+    display: block;
+    transition: 0.2s;
 
-  .filter-col {
-    flex: 2 1 50%;
-    margin: 10px;
-    padding: 3px;
-    height: 25px;
-    border-radius: 0.5rem;
+    .filter-input {
+      height: 30px;
+    }
+
+    .filter-select {
+      height: 25px;
+      width: 100%;
+      font-size: 14px;
+    }
   }
+}
+
+.main {
+  transition: margin-left 0.5s;
+  overflow: hidden;
 }
