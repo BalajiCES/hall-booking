@@ -11,17 +11,15 @@ import {
 import constant from '../../../../const/const';
 import CustomLoader from '../../../../util/common';
 import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
+import errors from '../../../../const/error';
 
 function BookingRequest() {
-  const [authId, setauthId] = useState(AuthID());
+  const [authId] = useState(AuthID());
   const dispatch = useDispatch();
 
-  const {
-    loading = false,
-    data = [],
-    error = false
-  } = useSelector((state) => state.bookingRequestReducer.bookingData);
-  console.log('Erros', error);
+  const { loading = false, data = [] } = useSelector(
+    (state) => state.bookingRequestReducer.bookingData
+  );
 
   const reListingRequests = () => {
     dispatch({
@@ -33,9 +31,7 @@ function BookingRequest() {
   const statusChange = (event, id) => {
     const { target } = event;
     const { value } = target;
-    Swal.fire(
-      getConfirm('warning', 'Are you sure do you want to update the status?')
-    ).then((result) => {
+    Swal.fire(getConfirm(constant.WARNING, errors.update)).then((result) => {
       if (result.value) {
         dispatch({
           type: bookingRequests.BOOKING_STATUS_CHANGED_REQUEST,
@@ -43,7 +39,7 @@ function BookingRequest() {
           id,
           reListingRequests
         });
-        Swal.fire(getAlertToast('success', 'status is succesfully updated'));
+        Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessUpdate));
       }
     });
   };

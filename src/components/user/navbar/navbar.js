@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import constant from '../../../const/const';
+import errors from '../../../const/error';
 import routes from '../../../routes';
 import { AuthID, getConfirm, signOut } from '../../../util/helper-functions';
 
@@ -19,27 +21,35 @@ function NavBar() {
       <ul>
         <Link
           to={routes.DASHBOARD}
-          className={`${activeMenu.includes('dashboard') ? 'active' : ''} link`}
+          className={`${
+            activeMenu.includes('dashboard') ? `${constant.ACTIVE}` : ''
+          } ${constant.LINK}`}
         >
           <li>Dashboard</li>
         </Link>
         <Link
           to={`/profile/${id}`}
-          className={`${activeMenu.includes('profile') ? 'active' : ''} link`}
+          className={`${
+            activeMenu.includes('profile') ? `${constant.ACTIVE}` : ''
+          } ${constant.LINK}`}
         >
           <li>Profile</li>
         </Link>
         <Link
           to={routes.BOOKING_STATUS}
-          className={`${activeMenu.includes('status') ? 'active' : ''} link `}
+          className={`${
+            activeMenu.includes('status') ? `${constant.ACTIVE}` : ''
+          } ${constant.LINK} `}
         >
           <li>Booking Status</li>
         </Link>
         <Link
           to={routes.BOOKING_HISTORY}
           className={`${
-            activeMenu.includes('history') ? 'link active' : ''
-          } link`}
+            activeMenu.includes('history')
+              ? `${constant.LINK} ${constant.ACTIVE}`
+              : ''
+          } ${constant.LINK}`}
         >
           <li>Booking History</li>
         </Link>
@@ -47,13 +57,13 @@ function NavBar() {
           className="secondary"
           type="button"
           onClick={() => {
-            Swal.fire(
-              getConfirm('warning', 'Are you sure do you want to signout?')
-            ).then((result) => {
-              if (result.value) {
-                signOut(history);
+            Swal.fire(getConfirm(constant.WARNING, errors.signOut)).then(
+              (result) => {
+                if (result.value) {
+                  signOut(history);
+                }
               }
-            });
+            );
           }}
         >
           SignOut

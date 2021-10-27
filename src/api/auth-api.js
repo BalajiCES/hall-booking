@@ -11,7 +11,6 @@ const signupAPI = async (url, data) => {
 };
 
 const listSingleUser = async (url, data) => {
-  console.log('Url', url);
   const response = await fetchGET(url, data);
   return response;
 };

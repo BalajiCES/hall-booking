@@ -7,12 +7,10 @@ import endPoint from '../../../../endpoints';
 import { getAlertToast } from '../../../../util/helper-functions';
 
 function* listingAPICall(action) {
-  console.log('action', action);
   const { payload } = action;
   try {
     yield put({ type: user.USER_DASHBOARD_DATA_LOADING, payload: '' });
     const res = yield call(listAllHalls, endPoint.HALLS, payload);
-    console.log('Res', res);
     yield put({ type: user.USER_DASHBOARD_DATA_SUCCESS, payload: res });
   } catch (err) {
     yield put({ type: user.USER_DASHBOARD_DATA_ERROR, payload: err });
@@ -20,7 +18,6 @@ function* listingAPICall(action) {
 }
 
 function* newBookingAPICall(action) {
-  console.log('Action', action.payload);
   try {
     const res = yield call(newBooking, endPoint.BOOK, action.payload);
     console.log(res);
@@ -28,7 +25,6 @@ function* newBookingAPICall(action) {
     yield call(action.closeBooking);
     yield call(action.reloadHalls);
   } catch (err) {
-    console.log('err', err);
     Swal.fire(getAlertToast('error', err.message));
   }
 }

@@ -16,7 +16,6 @@ function registerReducer(state = intialState, actions) {
       };
 
     case register.REGISTER_DATA_SUCCESS: {
-      console.log('Payload', payload);
       const { data = {} } = payload;
       const { hall = {} } = data;
       const { hallName, price, type, event, custom, capacity, phoneNumber } =

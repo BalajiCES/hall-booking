@@ -2,6 +2,7 @@ import { call, takeEvery, put } from 'redux-saga/effects';
 import profile from './profile-actions';
 import { listSingleUser, updateUser } from '../../../../api/auth-api';
 import endPoint from '../../../../endpoints';
+import routes from '../../../../routes';
 
 function* profileAPICall(action) {
   const { payload } = action;
@@ -9,7 +10,6 @@ function* profileAPICall(action) {
     yield put({ type: profile.PROFILE_DATA_LOADING, payload: '' });
 
     const res = yield call(listSingleUser, `${endPoint.USER}/${payload}`);
-    console.log('Res', res);
     yield put({ type: profile.PROFILE_DATA_SUCCESS, payload: res });
   } catch (err) {
     console.log(err);
@@ -34,7 +34,7 @@ function* updateProfileCall(action) {
       gender
     });
     yield put({ type: profile.PROFILE_UPDATE_SUCCESS, payload: res });
-    action.history.push('/');
+    action.history.push(routes.HOME);
   } catch (err) {
     console.log(err);
   }

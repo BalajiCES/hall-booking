@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
+import constant from '../constant/constant';
+import errors from '../constant/erros';
 
 const { Schema } = mongoose;
 
@@ -16,13 +18,13 @@ const bookingSchema = new Schema(
     },
     bookedDate: {
       type: Date,
-      required: [true, 'Please Provide Your Booked Date!'],
-      validate: [validator.isDate, 'Please Provide a valid Date']
+      required: [true, errors.bookedDate],
+      validate: [validator.isDate, errors.validateDate]
     },
     bookingStatus: {
       type: String,
-      enum: ['Pending', 'Approved', 'Rejected'],
-      default: 'Pending'
+      enum: [constant.PENDING, constant.APPROVED, constant.REJECTED],
+      default: constant.PENDING
     }
   },
   { timestamps: true }

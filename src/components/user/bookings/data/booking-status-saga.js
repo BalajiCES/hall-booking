@@ -11,13 +11,11 @@ function* bookingStatusAPICall(action) {
       bookingListByUserID,
       `${endPoint.BOOK_USER}/${action.payload}`
     );
-    console.log('Res', res);
     yield put({
       type: bookingStatus.BOOKING_STATUS_DATA_SUCCESS,
       payload: res
     });
   } catch (err) {
-    console.log(err);
     yield put({ type: bookingStatus.BOOKING_STATUS_DATA_ERROR, payload: err });
   }
 }

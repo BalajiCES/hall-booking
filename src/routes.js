@@ -1,5 +1,6 @@
 const routes = {};
 
+routes.HOME = '/';
 routes.SIGNUP = '/signup';
 routes.OWNER_PATH = '/owner';
 routes.OWNER_DASHBOARD = '/owner/dashboard';
@@ -13,5 +14,7 @@ routes.DASHBOARD = '/dashboard';
 routes.BOOKING_STATUS = '/booking-status';
 routes.BOOKING_HISTORY = '/booking-history';
 routes.PROFILE = '/profile/:id';
+routes.EDIT_HALLS = '/owner/edit-hall';
+routes.OWNER_PROFILE_PATH = '/owner/profile';
 
 export default routes;

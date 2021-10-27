@@ -15,6 +15,8 @@ import { Input, Select } from '../../common/Fields/fields';
 import './user-dashbaord.scss';
 import BookModal from '../bookings/booking-page/book-modal';
 import CustomLoader from '../../../util/common';
+import errors from '../../../const/error';
+import constant from '../../../const/const';
 
 function UserDashBaord() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -36,7 +38,7 @@ function UserDashBaord() {
   };
 
   const reloadHalls = () => {
-    Swal.fire(getAlertToast('sucess', 'Your hall is successfully booked'));
+    Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessBooked));
     dispatch({
       type: user.USER_DASHBOARD_REQUEST
     });
@@ -44,10 +46,10 @@ function UserDashBaord() {
 
   const bookingSuccess = (date) => {
     if (!date) {
-      Swal.fire(getAlertToast('sucess', 'Please select the date and Book'));
+      Swal.fire(getAlertToast(constant.SUCCESS, errors.errorBooked));
       return;
     }
-    Swal.fire(getConfirm('warning', 'Are you sure do you want to book?')).then(
+    Swal.fire(getConfirm(constant.SUCCESS, errors.confirmBook)).then(
       (result) => {
         if (result.value) {
           dispatch({
@@ -66,15 +68,14 @@ function UserDashBaord() {
   };
 
   const intiateBooking = (datas) => {
-    console.log('datas', datas);
     setModalOpen(!modalOpen);
     setHallState(datas);
   };
 
   const priceOptions = [
     { key: 'Sort by: Price', value: 'default' },
-    { key: 'Low To High', value: 'low-to-high' },
-    { key: 'High To Low', value: 'high-to-low' }
+    { key: 'Low To High', value: 'lowToHigh' },
+    { key: 'High To Low', value: 'highToLow' }
   ];
 
   const eventOptions = [
@@ -87,7 +88,7 @@ function UserDashBaord() {
   const typeOptions = [
     { key: 'Type by: Hall', value: 'default' },
     { key: 'A/c', value: 'ac' },
-    { key: 'Non-A/c', value: 'non-ac' }
+    { key: 'Non-A/c', value: 'nonAc' }
   ];
 
   const strengthOptions = [
@@ -126,13 +127,11 @@ function UserDashBaord() {
   };
 
   const filterDate = (event) => {
-    console.log('event', event.target.value);
     const { value } = event.target;
     setFilterObj({ ...filterObj, date: value });
   };
 
   const applyFilters = () => {
-    console.log('filter String', filterObj);
     dispatch({
       type: user.USER_DASHBOARD_REQUEST,
       payload: filterObj

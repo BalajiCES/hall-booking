@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Booking from '../models/book-model';
+import constant from '../constant/constant';
 
 class APIFeatures {
   constructor(query, queryString) {
@@ -19,7 +19,7 @@ class APIFeatures {
 
   filterByStrength() {
     if (this.queryString.capacity) {
-      if (this.queryString.capacity === 'default') {
+      if (this.queryString.capacity === constant.default) {
         this.query = this.query.find({});
       } else {
         const queryStr = JSON.parse(this.queryString.capacity);
@@ -38,7 +38,7 @@ class APIFeatures {
 
   filterByEvent() {
     if (this.queryString.event) {
-      if (this.queryString.event === 'default') {
+      if (this.queryString.event === constant.default) {
         this.query = this.query.find({});
       } else {
         this.query = this.query.find({ event: this.queryString.event });
@@ -49,9 +49,9 @@ class APIFeatures {
 
   filterByPrice() {
     if (this.queryString.sort) {
-      if (this.queryString.sort === 'high-to-low') {
+      if (this.queryString.sort === 'highToLow') {
         this.query = this.query.sort('-price');
-      } else if (this.queryString.sort === 'low-to-high') {
+      } else if (this.queryString.sort === 'lowToHigh') {
         this.query = this.query.sort('price');
       } else {
         this.query = this.query.sort('-createdAt');
@@ -62,7 +62,7 @@ class APIFeatures {
 
   filterByType() {
     if (this.queryString.type) {
-      if (this.queryString.type === 'default') {
+      if (this.queryString.type === constant.default) {
         this.query = this.query.find({});
       } else {
         this.query = this.query.find({ type: this.queryString.type });

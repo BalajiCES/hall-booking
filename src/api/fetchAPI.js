@@ -5,7 +5,6 @@ function objectToQueryString(obj) {
 }
 
 const fetchPOST = async (url, bodyData) => {
-  console.log('fetch API', url, bodyData);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -23,7 +22,6 @@ const fetchPOST = async (url, bodyData) => {
 };
 
 const fetchPATCH = async (url, bodyData) => {
-  console.log('fetch API', url, bodyData);
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {
@@ -41,9 +39,7 @@ const fetchPATCH = async (url, bodyData) => {
 };
 
 const fetchGET = async (url, queryData = {}) => {
-  console.log('Url', url, 'queryData', queryData);
   const queryObj = objectToQueryString(queryData);
-  console.log('NewUrl', url, queryObj);
   const response = await fetch(url + '?' + queryObj, {
     method: 'GET',
     headers: {

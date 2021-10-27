@@ -8,7 +8,7 @@ import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
 import './booking-history.scss';
 
 function OwnerBookingHistory() {
-  const [authId, setauthId] = useState(AuthID());
+  const [authId] = useState(AuthID());
   const dispatch = useDispatch();
 
   const { loading = false, data = [] } = useSelector(
@@ -17,15 +17,12 @@ function OwnerBookingHistory() {
 
   useEffect(() => {
     if (authId) {
-      console.log('AuthID', authId, typeof authId);
       dispatch({
         type: bookingRequests.BOOKING_REQUEST_REQUEST,
         payload: authId
       });
     }
   }, [authId]);
-
-  console.log('Data', data);
 
   return (
     <div>

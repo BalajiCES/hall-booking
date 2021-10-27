@@ -1,8 +1,10 @@
 import React from 'react';
+import { Formik } from 'formik';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import './bookings.scss';
 import constant from '../../../const/const';
+import { Select } from '../Fields/fields';
 
 function Bookings(props) {
   const {
@@ -16,6 +18,12 @@ function Bookings(props) {
     userName
   } = props;
 
+  const options = [
+    { key: 'Change Status', value: '' },
+    { key: 'Approve', value: 'Approved' },
+    { key: 'Reject', value: 'Rejected' }
+  ];
+
   return (
     <div className="booking-container">
       {userType === constant.OWNER && (
@@ -27,15 +35,16 @@ function Bookings(props) {
       <h4>Booked Date: {moment(date).format('MM-DD-YYYY')}</h4>
 
       {userType === constant.OWNER ? (
-        <select
-          name="status"
-          className="select-control"
-          onChange={(e) => statusChange(e, bookingId)}
-        >
-          <option> Change Status</option>
-          <option value="Approved">Approve</option>
-          <option value="Rejected">Reject</option>
-        </select>
+        <Formik>
+          {() => (
+            <Select
+              name="status"
+              className="select-control"
+              onChange={(e) => statusChange(e, bookingId)}
+              options={options}
+            />
+          )}
+        </Formik>
       ) : (
         <h4 className={`status  ${status} `}>Status : {status} </h4>
       )}

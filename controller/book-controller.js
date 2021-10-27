@@ -2,7 +2,7 @@
 import Book from '../models/book-model';
 import Hall from '../models/hall-model';
 import catchAsync from '../utils/catchAsync';
-import constant from '../src/const/const';
+import constant from '../constant/constant';
 import AppError from '../utils/appError';
 
 const listBooking = catchAsync(async (req, res) => {
@@ -16,7 +16,9 @@ const listBooking = catchAsync(async (req, res) => {
 });
 
 const listBookingByUserId = catchAsync(async (req, res) => {
-  const bookingList = await Book.find({ userId: req.params.id });
+  const { params = {} } = req;
+  const { id } = params;
+  const bookingList = await Book.find({ userId: id });
   res.status(200).json({
     status: 'success',
     data: {
@@ -26,13 +28,16 @@ const listBookingByUserId = catchAsync(async (req, res) => {
 });
 
 const listBookingByOwnerId = catchAsync(async (req, res) => {
-  const hall = await Hall.find({ onwedBy: req.params.id });
-  // console.log('Owner Halls', hall);
+  const { params = {} } = req;
+  const { id } = params;
+  const hall = await Hall.find({ onwedBy: id });
+
   const bookingList = hall.map(async (val) => {
     const { _id } = val;
     const bookingDetails = await Book.findOne({ hallId: _id });
     return bookingDetails;
   });
+
   const filterdValue = await Promise.all(bookingList);
   const list = filterdValue.filter((data) => data != null);
   res.status(200).json({
@@ -45,7 +50,6 @@ const listBookingByOwnerId = catchAsync(async (req, res) => {
 
 const changeBookingStatus = catchAsync(async (req, res) => {
   const { bookingStatus } = req.body;
-  console.log('Req Body', req.body.bookingStatus);
 
   if (bookingStatus === constant.APPROVED) {
     const currBooking = await Book.findOne(
@@ -55,7 +59,6 @@ const changeBookingStatus = catchAsync(async (req, res) => {
       }
     );
     const { _id } = currBooking.hallId;
-    console.log('CurrBooking', currBooking, _id);
     await Hall.findByIdAndUpdate(
       _id,
       {
@@ -74,7 +77,6 @@ const changeBookingStatus = catchAsync(async (req, res) => {
     runValidators: true
   });
 
-  // console.log('Booking Status', booking);
   res.status(201).json({
     status: 'success',
     data: {
@@ -84,7 +86,6 @@ const changeBookingStatus = catchAsync(async (req, res) => {
 });
 
 const createBooking = catchAsync(async (req, res, next) => {
-  console.log('Req', req.body);
   const date = new Date(req.body.bookedDate).toISOString();
   // User id , hallid , booked date , booking status
 
@@ -122,8 +123,6 @@ const createBooking = catchAsync(async (req, res, next) => {
       hall: newBooking
     }
   });
-
-  console.log('ReqId', req.body.hallId);
 });
 
 export {

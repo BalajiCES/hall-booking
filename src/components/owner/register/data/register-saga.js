@@ -13,7 +13,6 @@ function* registerAPICall(action) {
   try {
     yield put({ type: register.REGISTER_DATA_LOADING, payload: '' });
     const res = yield call(registerHallAPI, endPoint.HALLS, action.payload);
-    console.log('Res', res);
     action.history.push(routes.OWNER_DASHBOARD);
     yield put({ type: register.REGISTER_DATA_SUCCESS, payload: res });
   } catch (err) {
@@ -28,7 +27,6 @@ function* listSingleHall(action) {
       listSingleHallById,
       `${endPoint.HALLS}/${action.payload}`
     );
-    console.log('Res', res);
     yield put({ type: register.REGISTER_DATA_SUCCESS, payload: res });
   } catch (err) {
     console.log(err);
@@ -44,7 +42,6 @@ function* updateSigleHall(action) {
       `${endPoint.HALLS}/${id}`,
       payload
     );
-    console.log('Res', res);
     yield put({ type: register.REGISTER_DATA_SUCCESS, payload: res });
     action.history.push(routes.OWNER_DASHBOARD);
   } catch (err) {

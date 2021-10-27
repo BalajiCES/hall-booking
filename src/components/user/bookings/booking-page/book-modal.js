@@ -8,6 +8,8 @@ function BookModal(props) {
   const [formDate, setFormDate] = useState('');
 
   const { show, closeBooking, hallState, bookingSuccess } = props;
+  const { hallName, price, capacity, type } = hallState;
+
   if (!show) {
     return null;
   }
@@ -27,20 +29,20 @@ function BookModal(props) {
         aria-hidden="true"
       >
         <div className="modal-header">
-          <h4 className="modal-title">{hallState.hallName}</h4>
+          <h4 className="modal-title">{hallName}</h4>
         </div>
         <div className="modal-body">
           <p>
             The Price of the hall is
-            <span className="bold">{hallState.price}</span>
+            <span className="bold">{price}</span>
           </p>
           <p>
             The maximum Capacity of the hall is
-            <span className="bold">{hallState.capacity}</span>
+            <span className="bold">{capacity}</span>
           </p>
           <p>
             This hall is haing{' '}
-            <span className="bold hall-type">{`${hallState.type} `}</span>
+            <span className="bold hall-type">{`${type} `}</span>
           </p>
           <p>Please select a Date to book a hall</p>
           <Formik>

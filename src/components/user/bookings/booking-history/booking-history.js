@@ -7,13 +7,12 @@ import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
 import CustomLoader from '../../../../util/common';
 
 function BookingHistory() {
-  const [authId, setauthId] = useState(AuthID());
+  const [authId] = useState(AuthID());
   const dispatch = useDispatch();
 
   const { loading = false, data = [] } = useSelector(
     (state) => state.bookingStatusReducer.bookingData
   );
-  // console.log('Data Status ', data, typeof data, Array.isArray(data));
 
   useEffect(() => {
     dispatch({

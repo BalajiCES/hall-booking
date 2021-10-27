@@ -10,6 +10,8 @@ import { Input, RadioButtons, Select } from '../Fields/fields';
 import './profile.scss';
 import CustomLoader from '../../../util/common';
 import { getAlertToast, getConfirm } from '../../../util/helper-functions';
+import errors from '../../../const/error';
+import constant from '../../../const/const';
 
 function Profile() {
   const { formInitialValues = {}, loading = false } = useSelector(
@@ -23,28 +25,22 @@ function Profile() {
 
   const validationSchema = yup.object().shape({
     // remove => model
-    firstName: yup.string().required('First Name is Required'),
+    firstName: yup.string().required(errors.firstName),
     lastName: yup.string(),
-    email: yup
-      .string()
-      .email('Email is Not Valid')
-      .required('Email is Required'),
-    gender: yup.string().required('Please Choose your Gender'),
-    dob: yup.string().required('Please Choose your DOB'),
+    email: yup.string().email(errors.email).required(errors.validEmail),
+    gender: yup.string().required(errors.gender),
+    dob: yup.string().required(errors.dob),
     age: yup.number(),
-    role: yup.string().required('Please Choose Your Role'),
-    password: yup.string().required('Password is Required'),
+    role: yup.string().required(errors.role),
+    password: yup.string().required(errors.password),
     passwordConfirm: !id
-      ? yup.string().required('Confirm Password is Required')
+      ? yup.string().required(errors.confirmPassword)
       : yup.string()
   });
 
   const handleSubmit = (values) => {
-    console.log('values', values);
     if (id) {
-      Swal.fire(
-        getConfirm('warning', 'Are you sure do you want to update?')
-      ).then((result) => {
+      Swal.fire(getConfirm(constant.SUCCESS, errors.update)).then((result) => {
         if (result.value) {
           dispatch({
             type: profile.PROFILE_UPDATE_REQUEST,
@@ -52,9 +48,7 @@ function Profile() {
             id,
             history
           });
-          Swal.fire(
-            getAlertToast('success', 'Your profile is succesfully updated')
-          );
+          Swal.fire(getAlertToast(constant.SUCCESS, errors.profileSucess));
         }
       });
     } else {
@@ -79,13 +73,13 @@ function Profile() {
 
   const handleChangeDate = (event, setFieldValue, setFieldTouched) => {
     const { value } = event.target;
-    setFieldValue('dob', value);
-    setFieldTouched('dob', true);
+    setFieldValue(constant.DOB, value);
+    setFieldTouched(constant.DOB, true);
     const today = new Date();
     const birthDate = new Date(value);
     const age = today.getFullYear() - birthDate.getFullYear();
-    setFieldValue('age', age);
-    setFieldTouched('age', true);
+    setFieldValue(constant.AGE, age);
+    setFieldTouched(constant.AGE, true);
   };
 
   useEffect(() => {
@@ -108,7 +102,6 @@ function Profile() {
         {id ? <h2> Profile </h2> : <h1>GET STARTED</h1>}
         <Formik
           initialValues={formInitialValues}
-          S
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
           enableReinitialize

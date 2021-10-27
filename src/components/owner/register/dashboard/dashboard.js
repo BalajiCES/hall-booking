@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import register from '../data/register-actions';
 import { AuthID } from '../../../../util/helper-functions';
-import './dashboard.scss';
 import HallCard from '../../../common/cards/card';
 import CustomLoader from '../../../../util/common';
+import './dashboard.scss';
+import routes from '../../../../routes';
 
 function OwnerDashboard() {
   const [id] = useState(AuthID());
@@ -18,7 +19,7 @@ function OwnerDashboard() {
   const { hall = [] } = data;
 
   const hallEdit = (hallId) => {
-    history.push(`/owner/edit-hall/${hallId}`);
+    history.push(`${routes.EDIT_HALLS}/${hallId}`);
   };
 
   useEffect(() => {

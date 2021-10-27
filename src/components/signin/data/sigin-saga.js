@@ -9,7 +9,6 @@ function* signInApiCall(action) {
   try {
     yield put({ type: signin.SIGNIN_DATA_LOADING, payload: '' });
     const res = yield call(signinAPI, endPoint.LOGIN, action.payload);
-    console.log('Res', res);
     yield put({ type: signin.SIGNIN_DATA_SUCCESS, payload: res });
 
     // store that in local session for further api calls
@@ -22,7 +21,6 @@ function* signInApiCall(action) {
       action.history.push(routes.DASHBOARD);
     }
   } catch (err) {
-    console.log(err);
     yield put({ type: signin.SIGNIN_DATA_ERROR, payload: err });
   }
 }

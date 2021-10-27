@@ -14,6 +14,7 @@ import {
 import { Input, Checkboxes, Select } from '../../../common/Fields/fields';
 import constant from '../../../../const/const';
 import CustomLoader from '../../../../util/common';
+import errors from '../../../../const/error';
 
 function RegisterHall() {
   const {
@@ -28,25 +29,22 @@ function RegisterHall() {
   const { id } = useParams();
 
   const validationSchema = yup.object().shape({
-    hallName: yup.string().required('Hall Name is Required'),
-    price: yup.number().required('Price is Required'),
-    capacity: yup.number().required('Capacity is Required'),
-    phoneNumber: yup.number().required('Phone Number is Required'),
-    event: yup.string().required('Event type is requiured'),
+    hallName: yup.string().required(errors.hallName),
+    price: yup.number().required(errors.price),
+    capacity: yup.number().required(errors.capacity),
+    phoneNumber: yup.number().required(errors.phoneNumber),
+    event: yup.string().required(errors.event),
     type: yup
       .array()
-      .min(1, 'You can not leave this blank')
-      .required('Please choose your Hall Type')
+      .min(1, errors.validateType)
+      .required(errors.hallType)
       .nullable()
   });
 
   const handleSubmit = (values) => {
-    console.log('values', values);
     const newValue = { ...values, ownedBy: AuthID() };
     if (id) {
-      Swal.fire(
-        getConfirm('warning', 'Are you sure do you want to update?')
-      ).then((result) => {
+      Swal.fire(getConfirm(constant.SUCCESS, errors.update)).then((result) => {
         if (result.value) {
           dispatch({
             type: register.REGISTER_UPDATE_REQUEST,
@@ -54,9 +52,7 @@ function RegisterHall() {
             id,
             history
           });
-          Swal.fire(
-            getAlertToast('success', 'Your Hall is succesfully updated')
-          );
+          Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessUpdate));
         }
       });
     } else {
@@ -70,7 +66,7 @@ function RegisterHall() {
 
   const hallTypeChoices = [
     { key: 'Ac', value: 'ac' },
-    { key: 'Non/Ac', value: 'non-ac' }
+    { key: 'Non/Ac', value: 'nonAc' }
   ];
 
   const eventTypeChoices = [
@@ -111,7 +107,6 @@ function RegisterHall() {
           >
             {(formik) => {
               const { values } = formik;
-              console.log(values);
               return (
                 <Form>
                   <div className="input-wrapper">

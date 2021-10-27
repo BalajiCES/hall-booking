@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import errors from '../constant/erros';
+import constant from '../constant/constant';
 
 const { Schema } = mongoose;
 
@@ -9,49 +11,49 @@ const userSchema = new Schema(
   {
     firstName: {
       type: String,
-      required: [true, 'Please tell us Your name!']
+      required: [true, errors.firstName]
     },
     lastName: {
       type: String
     },
     email: {
       type: String,
-      required: [true, 'Please Provide Your Email!'],
+      required: [true, errors.email],
       unique: true,
       lowercase: true,
-      validate: [validator.isEmail, 'Please Provide a valid email']
+      validate: [validator.isEmail, errors.validateEmail]
     },
     gender: {
       type: String,
-      required: [true, 'Please Provide Your  of Date of Birth!']
+      required: [true, errors.gender]
     },
     dob: {
       type: String,
-      required: [true, 'Please Provide Your Date of Birth!'],
-      validate: [validator.isDate, 'Please Provide a valid Date']
+      required: [true, errors.dob],
+      validate: [validator.isDate]
     },
     age: {
       type: Number
     },
     role: {
       type: String,
-      enum: ['user', 'owner'],
-      required: [true, 'Please Provide Your Role!']
+      enum: [constant.USER, constant.OWNER],
+      required: [true, errors.role]
     },
     password: {
       type: String,
-      required: [true, 'Please Provide a Password!'],
+      required: [true, errors.password],
       minlength: 8
     },
     passwordConfirm: {
       type: String,
-      required: [true, 'Please confirm your password'],
+      required: [true, errors.confirmPassword],
       validate: {
         // This only works on CREATE and SAVE!!!
         validator(el) {
           return el === this.password;
         },
-        message: 'Password are not the same!'
+        message: errors.validatePassword
       }
     }
   },

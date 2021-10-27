@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import constant from '../constant/constant';
+import errors from '../constant/erros';
 
 const { Schema } = mongoose;
 
@@ -7,7 +9,7 @@ const hallSchema = new Schema(
   {
     hallName: {
       type: String,
-      required: [true, 'Please tell us Your Hall name!'],
+      required: [true, errors.hallName],
       unique: true
     },
     price: {
@@ -15,31 +17,30 @@ const hallSchema = new Schema(
     },
     capacity: {
       type: Number,
-      required: [true, 'Please Provide Your Capacity!']
+      required: [true, errors.capacity]
     },
     type: {
       type: [String],
-      required: [true, 'Please Provide Your Hall Type!']
+      required: [true, errors.hallType]
     },
     status: {
       type: String,
-      enum: ['Available', 'Selected', 'Booked'],
-      default: 'Available'
+      enum: [constant.AVAILABLE, constant.SELECTED, constant.BOOKED],
+      default: constant.AVAILABLE
     },
     ownedBy: {
-      // email
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Please Provide the Owner Details']
+      required: [true, errors.ownerDetails]
     },
     event: {
       type: String,
-      enum: ['Marriage', 'Birthday', 'Custom'],
-      required: [true, 'Please Provide the Event Details']
+      enum: [constant.MARRIAGE, constant.BIRTHDAY, constant.CUSTOM],
+      required: [true, errors.event]
     },
     custom: {
       type: String,
-      default: 'No custom Type'
+      default: errors.custom
     },
     bookings: [
       {

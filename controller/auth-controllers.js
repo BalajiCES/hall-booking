@@ -4,7 +4,6 @@ import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 
 const signToken = (id) =>
-  // eslint-disable-next-line implicit-arrow-linebreak
   jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRED_IN
   });
@@ -34,7 +33,6 @@ const login = catchAsync(async (req, res, next) => {
   }
   // 2) check if user exist and pasword is correct
   const user = await User.findOne({ email }).select('+password');
-  // console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
@@ -53,18 +51,20 @@ const login = catchAsync(async (req, res, next) => {
 
 // 3) PROTECT ROUTES
 const protect = catchAsync(async (req, res, next) => {
+  const { headers = {} } = req;
+  const { authorization } = headers;
   // 1) Getting token and check if its there
   let token;
-  if (req.headers.authorization) {
-    token = req.headers.authorization;
+  if (authorization) {
+    token = authorization;
   }
+
   if (!token) {
     return next(new AppError('You are not logged in to get Access', 401));
   }
 
   // 2) validate token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  console.log(decoded);
 
   // 3)Check if user still exists
   const currentUser = await User.findById(decoded.id);
@@ -78,8 +78,10 @@ const protect = catchAsync(async (req, res, next) => {
   return next();
 });
 
-const updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+const updateUser = catchAsync(async (req, res) => {
+  const { params = {}, body = {} } = req;
+  const { id } = params;
+  const user = await User.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true
   });
@@ -91,7 +93,7 @@ const updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
-const getSingleUser = catchAsync(async (req, res, next) => {
+const getSingleUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
   res.status(200).json({

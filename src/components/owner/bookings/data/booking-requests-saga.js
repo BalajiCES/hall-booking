@@ -17,13 +17,11 @@ function* bookingRequestAPICall(action) {
       bookingListByUserID,
       `${endPoint.BOOK_OWNER}/${action.payload}`
     );
-    console.log('Res', res);
     yield put({
       type: bookingRequest.BOOKING_REQUEST_DATA_SUCCESS,
       payload: res
     });
   } catch (err) {
-    console.log(err);
     yield put({
       type: bookingRequest.BOOKING_REQUEST_DATA_ERROR,
       payload: err
@@ -32,17 +30,10 @@ function* bookingRequestAPICall(action) {
 }
 
 function* changeBookingStatusAPICall(action) {
-  console.log('Called Once');
-  console.log('Action', action);
   try {
-    const res = yield call(
-      changeBookingStatus,
-      `${endPoint.BOOK}/${action.id}`,
-      {
-        bookingStatus: action.payload
-      }
-    );
-    console.log('Res', res);
+    yield call(changeBookingStatus, `${endPoint.BOOK}/${action.id}`, {
+      bookingStatus: action.payload
+    });
     action.reListingRequests();
   } catch (err) {
     console.log(err);
