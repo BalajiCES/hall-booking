@@ -35,14 +35,16 @@ function OwnerDashboard() {
       <center>{loading && <CustomLoader loading={loading} />}</center>
       {!loading &&
         hall.map((hallData) => {
-          const { _id, hallName, capacity, price } = hallData;
+          const { _id, hallName, capacity, price, type } = hallData;
           return (
             <HallCard
               key={_id}
               hallName={hallName}
               capacity={capacity}
               price={price}
+              type={type}
               hallEdit={() => hallEdit(_id)}
+              user="Owner"
             />
           );
         })}

@@ -11,7 +11,7 @@ import {
   getAlertToast,
   getConfirm
 } from '../../../../util/helper-functions';
-import { Input, Checkboxes, Select } from '../../../common/Fields/fields';
+import { Input, Select, RadioButtons } from '../../../common/Fields/fields';
 import constant from '../../../../const/const';
 import CustomLoader from '../../../../util/common';
 import errors from '../../../../const/error';
@@ -32,13 +32,8 @@ function RegisterHall() {
     hallName: yup.string().required(errors.hallName),
     price: yup.number().required(errors.price),
     capacity: yup.number().required(errors.capacity),
-    phoneNumber: yup.number().required(errors.phoneNumber),
     event: yup.string().required(errors.event),
-    type: yup
-      .array()
-      .min(1, errors.validateType)
-      .required(errors.hallType)
-      .nullable()
+    type: yup.string().required(errors.type)
   });
 
   const handleSubmit = (values) => {
@@ -52,7 +47,6 @@ function RegisterHall() {
             id,
             history
           });
-          Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessUpdate));
         }
       });
     } else {
@@ -140,16 +134,7 @@ function RegisterHall() {
                       placeholder="Enter Capacity"
                     />
                   </div>
-                  <div className="input-wrapper">
-                    <Input
-                      label="Phone Number"
-                      className="form-control"
-                      type="number"
-                      name="phoneNumber"
-                      id="phoneNumber"
-                      placeholder="Enter PhoneNumber"
-                    />
-                  </div>
+
                   <div className="input-wrapper">
                     <Select
                       label="Choose Event Type"
@@ -174,7 +159,7 @@ function RegisterHall() {
                     </div>
                   )}
                   <div className="input-wrapper">
-                    <Checkboxes
+                    <RadioButtons
                       label="Choose Hall Type"
                       className="radio-control"
                       name="type"

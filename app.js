@@ -22,12 +22,12 @@ app.use('/halls', hallRoutes);
 app.use('/user', userRoutes);
 app.use('/book', bookRoutes);
 
+// GLobal Error Handler
+app.use(globalErrorHanlder);
+
 // all other undefined paths
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
-// GLobal Error Handler
-app.use(globalErrorHanlder);
 
 export default app;

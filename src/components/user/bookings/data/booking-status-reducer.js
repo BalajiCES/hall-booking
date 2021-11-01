@@ -6,6 +6,7 @@ function bookingStatusReducer(state = intialState, actions) {
   switch (actions.type) {
     case bookingStatus.BOOKING_STATUS_DATA_LOADING:
       return {
+        ...state,
         bookingData: {
           loading: true,
           data: {},
@@ -13,11 +14,23 @@ function bookingStatusReducer(state = intialState, actions) {
         }
       };
 
+    case bookingStatus.BOOKINGS_SUCCESS_ALL_REQUEST: {
+      const { data = {} } = payload;
+      const { bookings = [] } = data;
+      return {
+        ...state,
+        allBookings: {
+          data: bookings
+        }
+      };
+    }
+
     case bookingStatus.BOOKING_STATUS_DATA_SUCCESS: {
       const { data = {} } = payload;
       const { bookings = [] } = data;
 
       return {
+        ...state,
         bookingData: {
           loading: false,
           data: bookings,
@@ -28,6 +41,7 @@ function bookingStatusReducer(state = intialState, actions) {
 
     case bookingStatus.BOOKING_STATUS_DATA_ERROR:
       return {
+        ...state,
         bookingData: {
           loading: false,
           data: payload,

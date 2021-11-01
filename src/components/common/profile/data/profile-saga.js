@@ -12,7 +12,6 @@ function* profileAPICall(action) {
     const res = yield call(listSingleUser, `${endPoint.USER}/${payload}`);
     yield put({ type: profile.PROFILE_DATA_SUCCESS, payload: res });
   } catch (err) {
-    console.log(err);
     yield put({ type: profile.PROFILE_DATA_ERROR, payload: err });
   }
 }

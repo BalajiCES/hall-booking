@@ -32,6 +32,7 @@ function UserDashBaord() {
 
   const { data = {} } = hallData;
   const { halls = [] } = data;
+  const [hallLisitingData, sethallLisitingData] = useState(halls);
 
   const closeBooking = () => {
     setModalOpen(!modalOpen);
@@ -103,7 +104,15 @@ function UserDashBaord() {
 
   const searchQueryName = (event) => {
     const { value } = event.target;
-    setFilterObj({ ...filterObj, search: value });
+    if (value === '') {
+      sethallLisitingData(halls);
+    } else {
+      const searchTerm = value.toLowerCase();
+      const filterData = halls.filter((hallObj) =>
+        hallObj.hallName.toLowerCase().match(new RegExp(searchTerm, 'g'))
+      );
+      sethallLisitingData(filterData);
+    }
   };
 
   const filterEvent = (event) => {
@@ -124,11 +133,6 @@ function UserDashBaord() {
   const filterStrength = (event) => {
     const { value } = event.target;
     setFilterObj({ ...filterObj, capacity: value });
-  };
-
-  const filterDate = (event) => {
-    const { value } = event.target;
-    setFilterObj({ ...filterObj, date: value });
   };
 
   const applyFilters = () => {
@@ -155,6 +159,12 @@ function UserDashBaord() {
       type: user.USER_DASHBOARD_REQUEST
     });
   }, []);
+
+  useEffect(() => {
+    if (halls) {
+      sethallLisitingData(halls);
+    }
+  }, [hallData]);
 
   return (
     <div className="main-content">
@@ -235,17 +245,6 @@ function UserDashBaord() {
                       />
                     </div>
                   </div>
-                  <div className="cd-filter-block">
-                    <h4>Filter Date</h4>
-                    <div className="cd-filter-content">
-                      <Input
-                        className="filter-select"
-                        name="bookedDate"
-                        type="date"
-                        onChange={filterDate}
-                      />
-                    </div>
-                  </div>
                   <button
                     type="button"
                     className="primary"
@@ -263,7 +262,8 @@ function UserDashBaord() {
       <div className={`${openMenu ? 'main' : 'close-main'}`}>
         <center>{loading && <CustomLoader loading={loading} />}</center>
         {!loading &&
-          halls.map((list) => {
+          hallLisitingData &&
+          hallLisitingData.map((list) => {
             const { _id, hallName, capacity, price, status, type } = list;
             return (
               <HallCard
@@ -280,12 +280,14 @@ function UserDashBaord() {
             );
           })}
       </div>
-      <BookModal
-        show={modalOpen}
-        closeBooking={closeBooking}
-        hallState={hallState}
-        bookingSuccess={bookingSuccess}
-      />
+      {modalOpen && (
+        <BookModal
+          show={modalOpen}
+          closeBooking={closeBooking}
+          hallState={hallState}
+          bookingSuccess={bookingSuccess}
+        />
+      )}
     </div>
   );
 }

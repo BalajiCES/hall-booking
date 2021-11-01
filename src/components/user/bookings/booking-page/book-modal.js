@@ -1,18 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import DatePicker from 'react-datepicker';
+import bookingStatusAction from '../data/booking-status-action';
 import './book-modal.scss';
-import { Formik } from 'formik';
-import { Input } from '../../../common/Fields/fields';
 
 function BookModal(props) {
-  const [formDate, setFormDate] = useState('');
+  const [date, setDate] = useState('');
+  const dispatch = useDispatch();
+  const { data = [] } = useSelector(
+    (state) => state.bookingStatusReducer.allBookings
+  );
+  const [bookingList, setBookingList] = useState(data);
 
   const { show, closeBooking, hallState, bookingSuccess } = props;
-  const { hallName, price, capacity, type } = hallState;
+  const { hallName, price, capacity, type, id } = hallState;
 
   if (!show) {
     return null;
   }
+
+  // Blocked Already Booked Dates
+  const validDates = (allDate) => {
+    const modifiedAllDate = moment(allDate).format('YYYY-MM-DD');
+    const validData = bookingList
+      .filter((bookedDate) => {
+        const { bookingStatus } = bookedDate;
+        return bookingStatus === 'Approved';
+      })
+      .map((ourBookedData) => {
+        const { bookedDate } = ourBookedData;
+        const modifiedOurDates = moment(bookedDate).format('YYYY-MM-DD');
+        return modifiedOurDates;
+      });
+    if (validData.length === 0) {
+      return allDate;
+    }
+    return validData.find((val) => val !== modifiedAllDate);
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: bookingStatusAction.BOOKINGS_ALL_REQUEST,
+      payload: id
+    });
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setBookingList(data);
+    }
+  }, [data]);
+
   return (
     <div
       className="modal"
@@ -45,22 +85,22 @@ function BookModal(props) {
             <span className="bold hall-type">{`${type} `}</span>
           </p>
           <p>Please select a Date to book a hall</p>
-          <Formik>
-            {() => (
-              <Input
-                name="date"
-                type="date"
-                className="form-control"
-                onChange={(event) => setFormDate(event.target.value)}
-              />
-            )}
-          </Formik>
+          <div className="date-conatiner">
+            <DatePicker
+              className="date-picker"
+              selected={date}
+              onChange={(currDate) => setDate(currDate)}
+              minDate={new Date()}
+              filterDate={validDates}
+              placeholderText="please choose a booking date"
+            />
+          </div>
         </div>
         <div className="modal-footer">
           <button
             type="button"
             className="primary"
-            onClick={() => bookingSuccess(formDate)}
+            onClick={() => bookingSuccess(date)}
           >
             Book Now
           </button>
@@ -73,6 +113,7 @@ function BookModal(props) {
 BookModal.propTypes = {
   show: PropTypes.bool.isRequired,
   hallState: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     hallName: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     capacity: PropTypes.number.isRequired,

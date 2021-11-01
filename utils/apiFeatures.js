@@ -1,20 +1,9 @@
-import moment from 'moment';
 import constant from '../constant/constant';
 
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
-  }
-
-  search() {
-    if (this.queryString.search) {
-      console.log(this.queryString.search);
-      this.query = this.query.find({
-        $text: { $search: this.queryString.search }
-      });
-    }
-    return this;
   }
 
   filterByStrength() {
@@ -67,34 +56,6 @@ class APIFeatures {
       } else {
         this.query = this.query.find({ type: this.queryString.type });
       }
-    }
-    return this;
-  }
-
-  filterByDate() {
-    if (this.queryString.date) {
-      console.log(
-        'Date',
-        this.queryString.date,
-        new Date(this.queryString.date)
-      );
-      // this.query = this.query.find({
-      //   'bookings.bookedDate': {
-      //     $eq: new Date(this.queryString.date)
-      //   }
-      // });
-      // start today
-      const start = moment().startOf('day');
-      // end today
-      const end = moment(this.queryString.date).endOf('day');
-
-      console.log('StartDay', start, 'EndDay', end);
-      this.query = this.query.populate('bookings').find({
-        bookedDate: {
-          $gte: start,
-          $lte: end
-        }
-      });
     }
     return this;
   }

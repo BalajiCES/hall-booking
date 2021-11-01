@@ -1,3 +1,5 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+
 .modal {
   position: fixed;
   left: 0;
@@ -41,4 +43,11 @@
 
 .hall-type {
   text-transform: uppercase;
+}
+
+.date-conatiner {
+  .date-picker {
+    width: 220px;
+    height: 30px;
+  }
 }

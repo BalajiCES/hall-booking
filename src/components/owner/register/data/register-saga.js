@@ -1,4 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
+import Swal from 'sweetalert2';
 import register from './register-actions';
 import {
   registerHallAPI,
@@ -8,6 +9,9 @@ import {
 } from '../../../../api/register-api';
 import endPoint from '../../../../endpoints';
 import routes from '../../../../routes';
+import { getAlertToast } from '../../../../util/helper-functions';
+import constant from '../../../../const/const';
+import errors from '../../../../const/error';
 
 function* registerAPICall(action) {
   try {
@@ -15,6 +19,7 @@ function* registerAPICall(action) {
     const res = yield call(registerHallAPI, endPoint.HALLS, action.payload);
     action.history.push(routes.OWNER_DASHBOARD);
     yield put({ type: register.REGISTER_DATA_SUCCESS, payload: res });
+    Swal.fire(getAlertToast(constant.SUCCESS, errors.hallSuccess));
   } catch (err) {
     yield put({ type: register.REGISTER_DATA_ERROR, payload: err });
   }
@@ -43,6 +48,7 @@ function* updateSigleHall(action) {
       payload
     );
     yield put({ type: register.REGISTER_DATA_SUCCESS, payload: res });
+    Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessUpdate));
     action.history.push(routes.OWNER_DASHBOARD);
   } catch (err) {
     console.log(err);

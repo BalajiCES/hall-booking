@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import bookingRequests from '../data/booking-requests-actions';
 import Bookings from '../../../common/booking/bookings';
 import { AuthID } from '../../../../util/helper-functions';
@@ -29,31 +30,36 @@ function OwnerBookingHistory() {
       <h2 className="hall-title">ALL BOOKING HISTORY</h2>
       <center>{loading && <CustomLoader loading={loading} />}</center>
 
-      {!loading && Array(data) ? (
-        data.map((bookingData) => {
-          const {
-            _id,
-            bookedDate,
-            bookingStatus: status,
-            hallId,
-            userId
-          } = bookingData;
-          const { hallName, ownedBy } = hallId;
-          const { firstName } = ownedBy;
-          const { firstName: userFirstName } = userId;
-          return (
-            <Bookings
-              key={_id}
-              bookingId={_id}
-              hallName={hallName}
-              ownerName={firstName}
-              userName={userFirstName}
-              date={bookedDate}
-              status={status}
-              userType="User"
-            />
-          );
-        })
+      {!loading && data ? (
+        data
+          .filter((bookingData) => {
+            const { bookedDate } = bookingData;
+            return moment(bookedDate).isBefore(new Date().toDateString());
+          })
+          .map((bookingData) => {
+            const {
+              _id,
+              bookedDate,
+              bookingStatus: status,
+              hallId,
+              userId
+            } = bookingData;
+            const { hallName, ownedBy } = hallId;
+            const { firstName, lastName } = ownedBy;
+            const { firstName: userFirstName, lastName: userLastName } = userId;
+            return (
+              <Bookings
+                key={_id}
+                bookingId={_id}
+                hallName={hallName}
+                ownerName={firstName + lastName}
+                userName={userFirstName + userLastName}
+                date={bookedDate}
+                status={status}
+                userType="User"
+              />
+            );
+          })
       ) : (
         <NotFound style={{ height: '300px', width: '100%' }} />
       )}

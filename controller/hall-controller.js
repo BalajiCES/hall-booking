@@ -2,6 +2,7 @@ import Hall from '../models/hall-model';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';
 
+// Register a new Hall
 const createHall = catchAsync(async (req, res) => {
   const { body = {} } = req;
   const newHall = await Hall.create(body);
@@ -17,12 +18,11 @@ const createHall = catchAsync(async (req, res) => {
 const getAllHalls = catchAsync(async (req, res) => {
   const { query = {} } = req;
   const features = new APIFeatures(Hall.find({}), query)
-    .search()
     .filterByStrength()
     .filterByEvent()
     .filterByPrice()
-    .filterByType()
-    .filterByDate();
+    .filterByType();
+
   const halls = await features.query;
 
   res.status(200).json({
@@ -33,7 +33,7 @@ const getAllHalls = catchAsync(async (req, res) => {
   });
 });
 
-// GET ALL OWNER HALLS
+// GET HALLS related to owner
 const getHallByOwnerId = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;

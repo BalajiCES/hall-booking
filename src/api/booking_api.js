@@ -5,6 +5,11 @@ const newBooking = async (url, data) => {
   return response;
 };
 
+const listAllBookings = async (url) => {
+  const response = await fetchGET(url);
+  return response;
+};
+
 const bookingListByUserID = async (url, data) => {
   const response = await fetchGET(url, data);
   return response;
@@ -15,4 +20,9 @@ const changeBookingStatus = async (url, data) => {
   return response;
 };
 
-export { newBooking, bookingListByUserID, changeBookingStatus };
+export {
+  newBooking,
+  bookingListByUserID,
+  changeBookingStatus,
+  listAllBookings
+};

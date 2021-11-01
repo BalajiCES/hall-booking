@@ -47,6 +47,18 @@ const signOut = (history) => {
   history.push(routes.USER_BASE_PATH);
 };
 
+// 28/10/2021
+// 29/10/2021
+const checkDate = (bookedDate) => {
+  const bookingDate = new Date(bookedDate);
+  const currentDate = new Date();
+  return (
+    bookingDate.getFullYear() >= currentDate.getFullYear() &&
+    bookingDate.getDate() >= currentDate.getDate() &&
+    bookingDate.getMonth() >= currentDate.getMonth()
+  );
+};
+
 const getAlertToast = (type, text = '', timer = 5000) => ({
   toast: true,
   position: 'bottom',
@@ -77,5 +89,6 @@ export {
   ProtectedRoute,
   signOut,
   getAlertToast,
-  getConfirm
+  getConfirm,
+  checkDate
 };

@@ -19,7 +19,6 @@ function HallCard({
   return (
     <div className="hall-tile">
       <h3 className="title">{hallName}</h3>
-      {/* <h3 className={`status ${status}`}>{status}</h3> */}
       <h3 className="price">
         <FontAwesomeIcon icon={faRupeeSign} className="mr-2" /> {price}
       </h3>
@@ -27,6 +26,7 @@ function HallCard({
         <FontAwesomeIcon icon={faUsers} className="mr-2" />
         {capacity}
       </h3>
+      <h3 className="type">{type}</h3>
       {user === constant.USER && (
         <div className="button-container">
           <button
@@ -41,7 +41,7 @@ function HallCard({
         </div>
       )}
 
-      {user !== constant.USER && (
+      {user === constant.OWNER && (
         <button className="edit primary" type="button" onClick={hallEdit}>
           Edit
         </button>
@@ -51,7 +51,7 @@ function HallCard({
 }
 
 HallCard.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.number,
   hallName: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   capacity: PropTypes.number.isRequired,

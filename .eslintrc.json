@@ -30,6 +30,7 @@
         "implicit-arrow-linebreak": "off",
         "prefer-template": "off",
         "jsx-curly-newline": "off",
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "function-paren-newline": "off"
     }
 }

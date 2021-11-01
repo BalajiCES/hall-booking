@@ -56,8 +56,15 @@ nav {
   }
 
   .capacity {
-    flex-basis: 80%;
+    flex-basis: 10%;
     font-size: 20px;
+  }
+
+  .type {
+    text-transform: uppercase;
+    flex-basis: 70%;
+    font-size: 20px;
+    color: $primary-color;
   }
 
   .status {

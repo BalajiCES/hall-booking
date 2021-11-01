@@ -16,6 +16,7 @@ errors.dob = 'Please Choose your DOB';
 errors.role = 'Please Choose Your Role';
 errors.password = 'Password is Required';
 errors.confirmPassword = 'Confirm Password is Required';
+errors.type = 'Hall type is required';
 
 // swal
 errors.update = 'Are you sure do you want to update?';
@@ -25,5 +26,6 @@ errors.sucessBooked = 'Your hall is successfully booked';
 errors.errorBooked = 'Please select the date and Book';
 errors.confirmBook = 'Are you sure do you want to book?';
 errors.profileSucess = 'Your profile is succesfully updated';
+errors.hallSuccess = 'Your hall is succesfully created';
 
 export default errors;

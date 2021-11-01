@@ -20,12 +20,12 @@ function* listingAPICall(action) {
 function* newBookingAPICall(action) {
   try {
     const res = yield call(newBooking, endPoint.BOOK, action.payload);
-    console.log(res);
     yield put({ type: user.USER_BOOKING_SUCCESS, payload: res });
     yield call(action.closeBooking);
     yield call(action.reloadHalls);
   } catch (err) {
-    Swal.fire(getAlertToast('error', err.message));
+    const data = JSON.parse(err.message);
+    Swal.fire(getAlertToast('error', data.message));
   }
 }
 

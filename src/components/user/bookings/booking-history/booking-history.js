@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import bookingStatus from '../data/booking-status-action';
 import Bookings from '../../../common/booking/bookings';
@@ -25,29 +26,34 @@ function BookingHistory() {
     <div>
       <h2 className="hall-title">All BOOKING HISTORY</h2>
       <center>{loading && <CustomLoader loading={loading} />}</center>
-      {!loading && Array(data) ? (
-        data.map((bookingData) => {
-          const {
-            bookedDate,
-            bookingStatus: status,
-            hallId,
-            userId
-          } = bookingData;
-          const { hallName, ownedBy } = hallId;
-          const { firstName } = ownedBy;
-          const { firstName: userFirstName } = userId;
-          return (
-            <Bookings
-              key={hallId}
-              hallName={hallName}
-              ownerName={firstName}
-              userName={userFirstName}
-              date={bookedDate}
-              status={status}
-              userType="User"
-            />
-          );
-        })
+      {!loading && data ? (
+        data
+          .filter((bookingData) => {
+            const { bookedDate } = bookingData;
+            return moment(bookedDate).isBefore(new Date().toDateString());
+          })
+          .map((bookingData) => {
+            const {
+              bookedDate,
+              bookingStatus: status,
+              hallId,
+              userId
+            } = bookingData;
+            const { hallName, ownedBy } = hallId;
+            const { firstName, lastName } = ownedBy;
+            const { firstName: userFirstName, lastName: userLastName } = userId;
+            return (
+              <Bookings
+                key={hallId}
+                hallName={hallName}
+                ownerName={firstName + lastName}
+                userName={userFirstName + userLastName}
+                date={bookedDate}
+                status={status}
+                userType="User"
+              />
+            );
+          })
       ) : (
         <NotFound style={{ height: '300px', width: '100%' }} />
       )}

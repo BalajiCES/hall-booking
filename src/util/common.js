@@ -17,7 +17,7 @@ function CustomLoader({ loading }) {
 }
 
 CustomLoader.propTypes = {
-  loading: PropTypes.string.isRequired
+  loading: PropTypes.bool.isRequired
 };
 
 export default CustomLoader;

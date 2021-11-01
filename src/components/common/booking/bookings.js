@@ -34,7 +34,7 @@ function Bookings(props) {
       <h4>Booked by : {userName}</h4>
       <h4>Booked Date: {moment(date).format('MM-DD-YYYY')}</h4>
 
-      {userType === constant.OWNER ? (
+      {userType === constant.OWNER && status === constant.PENDING ? (
         <Formik>
           {() => (
             <Select

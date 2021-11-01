@@ -20,13 +20,13 @@ const hallSchema = new Schema(
       required: [true, errors.capacity]
     },
     type: {
-      type: [String],
+      type: String,
       required: [true, errors.hallType]
     },
     status: {
       type: String,
-      enum: [constant.AVAILABLE, constant.SELECTED, constant.BOOKED],
-      default: constant.AVAILABLE
+      enum: ['Available', 'Selected', 'Booked'],
+      default: 'Available'
     },
     ownedBy: {
       type: mongoose.Schema.ObjectId,
@@ -41,13 +41,7 @@ const hallSchema = new Schema(
     custom: {
       type: String,
       default: errors.custom
-    },
-    bookings: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Booking'
-      }
-    ]
+    }
   },
   { timestamps: true }
 );

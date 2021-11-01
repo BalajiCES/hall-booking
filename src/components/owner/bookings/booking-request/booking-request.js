@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 import bookingRequests from '../data/booking-requests-actions';
 import Bookings from '../../../common/booking/bookings';
 import {
@@ -57,11 +58,11 @@ function BookingRequest() {
     <div>
       <h2 className="hall-title">ALL BOOKING REQUEST</h2>
       <center>{loading && <CustomLoader loading={loading} />}</center>
-      {!loading && Array(data) ? (
+      {!loading && data ? (
         data
           .filter((bookingData) => {
-            const { bookingStatus: status } = bookingData;
-            return status === constant.PENDING;
+            const { bookedDate } = bookingData;
+            return moment(bookedDate).isSameOrAfter(new Date().toDateString());
           })
           .map((bookingData) => {
             const {
@@ -72,15 +73,15 @@ function BookingRequest() {
               userId
             } = bookingData;
             const { hallName, ownedBy } = hallId;
-            const { firstName } = ownedBy;
-            const { firstName: userFirstName } = userId;
+            const { firstName, lastName } = ownedBy;
+            const { firstName: userFirstName, lastName: userLastName } = userId;
             return (
               <Bookings
                 key={_id}
                 bookingId={_id}
                 hallName={hallName}
-                ownerName={firstName}
-                userName={userFirstName}
+                ownerName={firstName + lastName}
+                userName={userFirstName + userLastName}
                 date={bookedDate}
                 status={status}
                 userType="Owner"

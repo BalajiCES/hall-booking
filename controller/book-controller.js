@@ -1,10 +1,51 @@
-/* eslint-disable consistent-return */
 import Book from '../models/book-model';
-import Hall from '../models/hall-model';
 import catchAsync from '../utils/catchAsync';
-import constant from '../constant/constant';
 import AppError from '../utils/appError';
 
+// Create a new Bookings
+// eslint-disable-next-line consistent-return
+const createBooking = catchAsync(async (req, res, next) => {
+  // create a new booking
+  const newBooking = await Book.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      hall: newBooking
+    }
+  });
+});
+
+const checkalreadyBooked = catchAsync(async (req, res, next) => {
+  const date = new Date(req.body.bookedDate).toISOString();
+  // if incase one user booked this hall is already booked on this date
+  const checkExisitingBooking = await Book.findOne({
+    hallId: req.body.hallId,
+    bookedDate: date,
+    bookingStatus: 'Approved'
+  });
+
+  if (checkExisitingBooking) {
+    return true;
+  }
+
+  return false;
+});
+
+// list bookings by hallID
+const listBookingbyHallId = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  const bookingList = await Book.find({ hallId: id });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bookings: bookingList
+    }
+  });
+});
+
+// List all Bookings
 const listBooking = catchAsync(async (req, res) => {
   const bookingList = await Book.find();
   res.status(200).json({
@@ -15,6 +56,7 @@ const listBooking = catchAsync(async (req, res) => {
   });
 });
 
+// List Bookings related to particular user(userID)
 const listBookingByUserId = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;
@@ -27,51 +69,31 @@ const listBookingByUserId = catchAsync(async (req, res) => {
   });
 });
 
+// List Bookings related to particular owner(ownerId)
 const listBookingByOwnerId = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;
-  const hall = await Hall.find({ onwedBy: id });
 
-  const bookingList = hall.map(async (val) => {
-    const { _id } = val;
-    const bookingDetails = await Book.findOne({ hallId: _id });
-    return bookingDetails;
+  const data = await Book.find();
+
+  // Here we filter the booked halls only related to owner id
+  const halls = data.filter((singleHall) => {
+    const { hallId } = singleHall;
+    const { ownedBy } = hallId;
+    const { _id } = ownedBy;
+    return _id.equals(id);
   });
 
-  const filterdValue = await Promise.all(bookingList);
-  const list = filterdValue.filter((data) => data != null);
   res.status(200).json({
     status: 'success',
     data: {
-      bookings: list
+      bookings: halls
     }
   });
 });
 
+// Change the booking status to owner wish
 const changeBookingStatus = catchAsync(async (req, res) => {
-  const { bookingStatus } = req.body;
-
-  if (bookingStatus === constant.APPROVED) {
-    const currBooking = await Book.findOne(
-      { _id: req.params.id },
-      {
-        hallId: 1
-      }
-    );
-    const { _id } = currBooking.hallId;
-    await Hall.findByIdAndUpdate(
-      _id,
-      {
-        status: 'Booked'
-      },
-      {
-        new: true,
-        runValidators: true
-      }
-    );
-  }
-
-  // it will be applicable to all the case
   const booking = await Book.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -85,50 +107,12 @@ const changeBookingStatus = catchAsync(async (req, res) => {
   });
 });
 
-const createBooking = catchAsync(async (req, res, next) => {
-  const date = new Date(req.body.bookedDate).toISOString();
-  // User id , hallid , booked date , booking status
-
-  // if incase one user booked this hall on this date we need to prevent that
-  const checkExisitingBooking = await Book.findOne({
-    hallId: req.body.hallId,
-    bookedDate: date
-  });
-
-  if (checkExisitingBooking != null) {
-    return next(
-      new AppError('This Hall is already Booked on this Date !', 400)
-    );
-  }
-
-  // create a new booking
-  const newBooking = await Book.create(req.body);
-
-  // we consider this hall data for that particular date only
-  Hall.findByIdAndUpdate(
-    { _id: req.body.hallId },
-    { status: 'Selected', $push: { bookings: newBooking } },
-    {
-      new: true,
-      runValidators: true
-    },
-    (err) => {
-      if (err) throw err;
-    }
-  );
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      hall: newBooking
-    }
-  });
-});
-
 export {
   createBooking,
   listBooking,
   listBookingByUserId,
   listBookingByOwnerId,
-  changeBookingStatus
+  changeBookingStatus,
+  checkalreadyBooked,
+  listBookingbyHallId
 };
