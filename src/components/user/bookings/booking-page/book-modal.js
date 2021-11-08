@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import bookingStatusAction from '../data/booking-status-action';
 import './book-modal.scss';
+import constant from '../../../../const/const';
 
+// Destructuring
+const { APPROVED } = constant;
+const { BOOKINGS_ALL_REQUEST } = bookingStatusAction;
+
+// Booking Model Component
 function BookModal(props) {
+  const { show, closeBooking, hallState, bookingSuccess } = props;
+  const { hallName, price, capacity, type, id } = hallState;
   const [date, setDate] = useState('');
   const dispatch = useDispatch();
   const { data = [] } = useSelector(
@@ -14,35 +21,25 @@ function BookModal(props) {
   );
   const [bookingList, setBookingList] = useState(data);
 
-  const { show, closeBooking, hallState, bookingSuccess } = props;
-  const { hallName, price, capacity, type, id } = hallState;
-
   if (!show) {
     return null;
   }
 
   // Blocked Already Booked Dates
-  const validDates = (allDate) => {
-    const modifiedAllDate = moment(allDate).format('YYYY-MM-DD');
-    const validData = bookingList
-      .filter((bookedDate) => {
-        const { bookingStatus } = bookedDate;
-        return bookingStatus === 'Approved';
-      })
-      .map((ourBookedData) => {
-        const { bookedDate } = ourBookedData;
-        const modifiedOurDates = moment(bookedDate).format('YYYY-MM-DD');
-        return modifiedOurDates;
-      });
-    if (validData.length === 0) {
-      return allDate;
-    }
-    return validData.find((val) => val !== modifiedAllDate);
-  };
+  const validData = bookingList
+    .filter((bookedDate) => {
+      const { bookingStatus } = bookedDate;
+      return bookingStatus === APPROVED;
+    })
+    .map((ourBookedData) => {
+      const { bookedDate } = ourBookedData;
+      const modifiedOurDates = new Date(bookedDate);
+      return modifiedOurDates;
+    });
 
   useEffect(() => {
     dispatch({
-      type: bookingStatusAction.BOOKINGS_ALL_REQUEST,
+      type: BOOKINGS_ALL_REQUEST,
       payload: id
     });
   }, []);
@@ -90,8 +87,8 @@ function BookModal(props) {
               className="date-picker"
               selected={date}
               onChange={(currDate) => setDate(currDate)}
+              excludeDates={validData}
               minDate={new Date()}
-              filterDate={validDates}
               placeholderText="please choose a booking date"
             />
           </div>

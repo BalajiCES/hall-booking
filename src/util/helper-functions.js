@@ -28,16 +28,18 @@ PublicRoute.propTypes = {
   component: PropTypes.elementType.isRequired
 };
 
-const ProtectedRoute = ({ component, ...rest }) => {
+const ProtectedRoute = ({ component, access, ...rest }) => {
   const token = AuthHeader();
-  if (token) {
+  const currUser = AuthRole();
+  if (token && currUser === access) {
     return <Route {...rest} component={component} />;
   }
   return <Redirect to={{ pathname: routes.USER_BASE_PATH }} />;
 };
 
 ProtectedRoute.propTypes = {
-  component: PropTypes.elementType.isRequired
+  component: PropTypes.elementType.isRequired,
+  access: PropTypes.elementType.isRequired
 };
 
 const signOut = (history) => {
@@ -45,18 +47,6 @@ const signOut = (history) => {
   sessionStorage.removeItem(constant.ROLE);
   sessionStorage.removeItem(constant.TOKEN);
   history.push(routes.USER_BASE_PATH);
-};
-
-// 28/10/2021
-// 29/10/2021
-const checkDate = (bookedDate) => {
-  const bookingDate = new Date(bookedDate);
-  const currentDate = new Date();
-  return (
-    bookingDate.getFullYear() >= currentDate.getFullYear() &&
-    bookingDate.getDate() >= currentDate.getDate() &&
-    bookingDate.getMonth() >= currentDate.getMonth()
-  );
 };
 
 const getAlertToast = (type, text = '', timer = 5000) => ({
@@ -89,6 +79,5 @@ export {
   ProtectedRoute,
   signOut,
   getAlertToast,
-  getConfirm,
-  checkDate
+  getConfirm
 };

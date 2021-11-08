@@ -1,3 +1,9 @@
+$sideNavColor: #111;
+$filterColor: #ccc;
+$navColor: #eee;
+$navLinkColor: #f2f2f2;
+$navHoverColor: #ddd;
+
 #sideMenu {
   width: 250px;
 }
@@ -15,17 +21,17 @@
 }
 
 .icon {
-  color: #000;
+  color: black;
 }
 
 .navbar {
-  background-color: #eee;
+  background-color: $navColor;
   overflow: hidden;
   height: 65px;
 
   a {
     float: left;
-    color: #f2f2f2;
+    color: $navLinkColor;
     text-align: center;
     text-decoration: none;
     display: block;
@@ -34,7 +40,7 @@
   }
 
   a:hover {
-    background-color: #ddd;
+    background-color: $navHoverColor;
     color: black;
   }
 
@@ -54,7 +60,7 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  background-color: $sideNavColor;
   opacity: 0.9;
   overflow-x: hidden;
   padding-top: 60px;
@@ -73,7 +79,7 @@
   .filter {
     padding: 10px 20px 10px 30px;
     font-size: 20px;
-    color: #ccc;
+    color: $filterColor;
     display: block;
     transition: 0.2s;
 

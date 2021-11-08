@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faRupeeSign } from '@fortawesome/free-solid-svg-icons';
-import './card.scss';
 import constant from '../../../const/const';
+import './card.scss';
+
+// Destructuring
+const { USER, OWNER } = constant;
 
 function HallCard({
   hallName,
@@ -27,7 +30,9 @@ function HallCard({
         {capacity}
       </h3>
       <h3 className="type">{type}</h3>
-      {user === constant.USER && (
+
+      {/* show book now button for only User */}
+      {user === USER && (
         <div className="button-container">
           <button
             className="primary"
@@ -41,7 +46,8 @@ function HallCard({
         </div>
       )}
 
-      {user === constant.OWNER && (
+      {/* show edit halls button for only owner */}
+      {user === OWNER && (
         <button className="edit primary" type="button" onClick={hallEdit}>
           Edit
         </button>

@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import errors from '../constant/erros';
-import constant from '../constant/constant';
 
 const { Schema } = mongoose;
 

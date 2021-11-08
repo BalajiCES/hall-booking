@@ -7,6 +7,7 @@ import watcherHallListingSaga from '../components/user/dashboard/data/user-dashb
 import watcherBookingStatusSaga from '../components/user/bookings/data/booking-status-saga';
 import watcherBookingRequestSaga from '../components/owner/bookings/data/booking-requests-saga';
 
+// combine all sagas
 export default function* rootSaga() {
   yield all([
     watcherSignUpSaga(),

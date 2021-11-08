@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import user from './data/user-dashboard-actions';
 import {
+  AuthHeader,
   AuthID,
   getAlertToast,
   getConfirm
@@ -18,6 +19,12 @@ import CustomLoader from '../../../util/common';
 import errors from '../../../const/error';
 import constant from '../../../const/const';
 
+// Destructuring
+const { USER_DASHBOARD_REQUEST, USER_BOOKING_REQUEST } = user;
+const { SUCCESS, USER } = constant;
+const { sucessBooked, errorBooked, confirmBook } = errors;
+
+// DashBorad Component
 function UserDashBaord() {
   const [modalOpen, setModalOpen] = useState(false);
   const [hallState, setHallState] = useState({});
@@ -34,45 +41,59 @@ function UserDashBaord() {
   const { halls = [] } = data;
   const [hallLisitingData, sethallLisitingData] = useState(halls);
 
+  // Side Menu Functions
   const closeBooking = () => {
     setModalOpen(!modalOpen);
   };
 
-  const reloadHalls = () => {
-    Swal.fire(getAlertToast(constant.SUCCESS, errors.sucessBooked));
+  const openSideMenu = () => {
+    setOpenMenu(!openMenu);
+  };
+
+  const closeSideMenu = () => {
+    setOpenMenu(false);
     dispatch({
-      type: user.USER_DASHBOARD_REQUEST
+      type: USER_DASHBOARD_REQUEST,
+      payload: '/'
     });
   };
 
-  const bookingSuccess = (date) => {
-    if (!date) {
-      Swal.fire(getAlertToast(constant.SUCCESS, errors.errorBooked));
-      return;
-    }
-    Swal.fire(getConfirm(constant.SUCCESS, errors.confirmBook)).then(
-      (result) => {
-        if (result.value) {
-          dispatch({
-            type: user.USER_BOOKING_REQUEST,
-            payload: {
-              userId: AuthID(),
-              hallId: hallState.id,
-              bookedDate: date
-            },
-            closeBooking,
-            reloadHalls
-          });
-        }
-      }
-    );
+  const reloadHalls = () => {
+    Swal.fire(getAlertToast(SUCCESS, sucessBooked));
+    dispatch({
+      type: USER_DASHBOARD_REQUEST
+    });
   };
 
+  // OnClicking Book Now
   const intiateBooking = (datas) => {
     setModalOpen(!modalOpen);
     setHallState(datas);
   };
 
+  const bookingSuccess = (date) => {
+    if (!date) {
+      Swal.fire(getAlertToast(SUCCESS, errorBooked));
+      return;
+    }
+    Swal.fire(getConfirm(SUCCESS, confirmBook)).then((result) => {
+      if (result.value) {
+        dispatch({
+          type: USER_BOOKING_REQUEST,
+          payload: {
+            userId: AuthID(),
+            hallId: hallState.id,
+            bookedDate: date
+          },
+          auth: AuthHeader(),
+          closeBooking,
+          reloadHalls
+        });
+      }
+    });
+  };
+
+  // Filter Field Options
   const priceOptions = [
     { key: 'Sort by: Price', value: 'default' },
     { key: 'Low To High', value: 'lowToHigh' },
@@ -102,19 +123,7 @@ function UserDashBaord() {
     { key: 'Above 2000', value: JSON.stringify({ key: '$gt', value: 2000 }) }
   ];
 
-  const searchQueryName = (event) => {
-    const { value } = event.target;
-    if (value === '') {
-      sethallLisitingData(halls);
-    } else {
-      const searchTerm = value.toLowerCase();
-      const filterData = halls.filter((hallObj) =>
-        hallObj.hallName.toLowerCase().match(new RegExp(searchTerm, 'g'))
-      );
-      sethallLisitingData(filterData);
-    }
-  };
-
+  // Filter Fields Functions
   const filterEvent = (event) => {
     const { value } = event.target;
     setFilterObj({ ...filterObj, event: value });
@@ -135,28 +144,31 @@ function UserDashBaord() {
     setFilterObj({ ...filterObj, capacity: value });
   };
 
+  // Search by Hall Name
+  const searchQueryName = (event) => {
+    const { value } = event.target;
+    if (value === '') {
+      sethallLisitingData(halls);
+    } else {
+      const searchTerm = value.toLowerCase();
+      const filterData = halls.filter((hallObj) =>
+        hallObj.hallName.toLowerCase().match(new RegExp(searchTerm, 'g'))
+      );
+      sethallLisitingData(filterData);
+    }
+  };
+
+  // Onclick Apply Filter
   const applyFilters = () => {
     dispatch({
-      type: user.USER_DASHBOARD_REQUEST,
+      type: USER_DASHBOARD_REQUEST,
       payload: filterObj
-    });
-  };
-
-  const openSideMenu = () => {
-    setOpenMenu(!openMenu);
-  };
-
-  const closeSideMenu = () => {
-    setOpenMenu(false);
-    dispatch({
-      type: user.USER_DASHBOARD_REQUEST,
-      payload: '/'
     });
   };
 
   useEffect(() => {
     dispatch({
-      type: user.USER_DASHBOARD_REQUEST
+      type: USER_DASHBOARD_REQUEST
     });
   }, []);
 
@@ -275,7 +287,7 @@ function UserDashBaord() {
                 status={status}
                 intiateBooking={intiateBooking}
                 type={type}
-                user="User"
+                user={USER}
               />
             );
           })}

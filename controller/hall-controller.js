@@ -14,7 +14,7 @@ const createHall = catchAsync(async (req, res) => {
   });
 });
 
-// GET ALL HALLS
+// GET All Halls
 const getAllHalls = catchAsync(async (req, res) => {
   const { query = {} } = req;
   const features = new APIFeatures(Hall.find({}), query)
@@ -33,7 +33,7 @@ const getAllHalls = catchAsync(async (req, res) => {
   });
 });
 
-// GET HALLS related to owner
+// GET All Halls Related to owner
 const getHallByOwnerId = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;
@@ -46,7 +46,7 @@ const getHallByOwnerId = catchAsync(async (req, res) => {
   });
 });
 
-// Edit Halls
+// GET Single Halls
 const getSingleHall = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;
@@ -59,7 +59,7 @@ const getSingleHall = catchAsync(async (req, res) => {
   });
 });
 
-// Update Halls
+// Update Single Halls
 const updateHall = catchAsync(async (req, res) => {
   const { params = {}, body = {} } = req;
   const { id } = params;
@@ -75,7 +75,7 @@ const updateHall = catchAsync(async (req, res) => {
   });
 });
 
-// Delete Halls
+// Delete Single Halls
 const deleteHall = catchAsync(async (req, res) => {
   const { params = {} } = req;
   const { id } = params;

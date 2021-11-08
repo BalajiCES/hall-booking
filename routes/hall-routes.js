@@ -7,12 +7,17 @@ import {
   deleteHall,
   getSingleHall
 } from '../controller/hall-controller';
+import { protect } from '../controller/auth-controllers';
 
 const router = express.Router();
 
-// REST API
-router.route('/').get(getAllHalls).post(createHall);
-router.route('/:id').get(getSingleHall).patch(updateHall).delete(deleteHall);
+// Hall Route Handler
+router.route('/').get(getAllHalls).post(protect, createHall);
+router
+  .route('/:id')
+  .get(getSingleHall)
+  .patch(protect, updateHall)
+  .delete(protect, deleteHall);
 router.route('/owner/:id').get(getHallByOwnerId);
 
 export default router;

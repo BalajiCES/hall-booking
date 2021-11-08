@@ -3,16 +3,34 @@ import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import profile from './data/profile-actions';
 import signup from '../../signup/data/signup-actions';
 import { Input, RadioButtons, Select } from '../Fields/fields';
 import './profile.scss';
 import CustomLoader from '../../../util/common';
-import { getAlertToast, getConfirm } from '../../../util/helper-functions';
+import { AuthHeader, getConfirm } from '../../../util/helper-functions';
 import errors from '../../../const/error';
 import constant from '../../../const/const';
+import routes from '../../../routes';
 
+// Destructuring
+const {
+  firstName,
+  email,
+  validEmail,
+  gender,
+  dob,
+  role,
+  password,
+  confirmPassword,
+  update
+} = errors;
+const { DOB, AGE } = constant;
+const { PROFILE_REQUEST, PROFILE_DATA_RESET, PROFILE_UPDATE_REQUEST } = profile;
+const { SIGNUP_REQUEST } = signup;
+
+// Profile Compoenent
 function Profile() {
   const { formInitialValues = {}, loading = false } = useSelector(
     (state) => state.profileReducer.profileData
@@ -23,43 +41,43 @@ function Profile() {
   // Profile View
   const { id } = useParams();
 
+  // validation schema
   const validationSchema = yup.object().shape({
-    // remove => model
-    firstName: yup.string().required(errors.firstName),
+    firstName: yup.string().required(firstName),
     lastName: yup.string(),
-    email: yup.string().email(errors.email).required(errors.validEmail),
-    gender: yup.string().required(errors.gender),
-    dob: yup.string().required(errors.dob),
+    email: yup.string().email(email).required(validEmail),
+    gender: yup.string().required(gender),
+    dob: yup.string().required(dob),
     age: yup.number(),
-    role: yup.string().required(errors.role),
-    password: yup.string().required(errors.password),
-    passwordConfirm: !id
-      ? yup.string().required(errors.confirmPassword)
-      : yup.string()
+    role: yup.string().required(role),
+    password: yup.string().required(password),
+    passwordConfirm: !id ? yup.string().required(confirmPassword) : yup.string()
   });
 
+  // onsubmit
   const handleSubmit = (values) => {
     if (id) {
-      Swal.fire(getConfirm(constant.SUCCESS, errors.update)).then((result) => {
+      Swal.fire(getConfirm(constant.SUCCESS, update)).then((result) => {
         if (result.value) {
           dispatch({
-            type: profile.PROFILE_UPDATE_REQUEST,
+            type: PROFILE_UPDATE_REQUEST,
             payload: values,
             id,
-            history
+            history,
+            auth: AuthHeader()
           });
-          Swal.fire(getAlertToast(constant.SUCCESS, errors.profileSucess));
         }
       });
     } else {
       dispatch({
-        type: signup.SIGNUP_REQUEST,
+        type: SIGNUP_REQUEST,
         payload: values,
         history
       });
     }
   };
 
+  // Profile details
   const genderChoices = [
     { key: 'Male', value: 'male' },
     { key: 'Female', value: 'female' }
@@ -71,26 +89,27 @@ function Profile() {
     { key: 'User', value: 'User' }
   ];
 
+  // Age calculation
   const handleChangeDate = (event, setFieldValue, setFieldTouched) => {
     const { value } = event.target;
-    setFieldValue(constant.DOB, value);
-    setFieldTouched(constant.DOB, true);
+    setFieldValue(DOB, value);
+    setFieldTouched(DOB, true);
     const today = new Date();
     const birthDate = new Date(value);
     const age = today.getFullYear() - birthDate.getFullYear();
-    setFieldValue(constant.AGE, age);
-    setFieldTouched(constant.AGE, true);
+    setFieldValue(AGE, age);
+    setFieldTouched(AGE, true);
   };
 
   useEffect(() => {
     if (id) {
       dispatch({
-        type: profile.PROFILE_REQUEST,
+        type: PROFILE_REQUEST,
         payload: id
       });
     } else {
       dispatch({
-        type: profile.PROFILE_DATA_RESET
+        type: PROFILE_DATA_RESET
       });
     }
   }, [id]);
@@ -214,6 +233,16 @@ function Profile() {
           }}
         </Formik>
       </div>
+      {!id ? (
+        <p>
+          Already having Account
+          <Link className="profile-signin" to={routes.HOME}>
+            Signin
+          </Link>
+        </p>
+      ) : (
+        ''
+      )}
     </div>
   );
 }

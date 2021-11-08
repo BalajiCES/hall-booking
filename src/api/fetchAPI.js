@@ -4,12 +4,14 @@ function objectToQueryString(obj) {
     .join('&');
 }
 
-const fetchPOST = async (url, bodyData) => {
+// Custom POST Method
+const fetchPOST = async (url, bodyData, auth) => {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
     },
     body: JSON.stringify(bodyData)
   });
@@ -21,12 +23,14 @@ const fetchPOST = async (url, bodyData) => {
   return data;
 };
 
-const fetchPATCH = async (url, bodyData) => {
+// Custom PATCH Method
+const fetchPATCH = async (url, bodyData, auth) => {
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
     },
     body: JSON.stringify(bodyData)
   });
@@ -38,6 +42,7 @@ const fetchPATCH = async (url, bodyData) => {
   return data;
 };
 
+// Custom GET Method
 const fetchGET = async (url, queryData = {}) => {
   const queryObj = objectToQueryString(queryData);
   const response = await fetch(url + '?' + queryObj, {

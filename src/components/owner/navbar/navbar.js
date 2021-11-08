@@ -6,14 +6,34 @@ import errors from '../../../const/error';
 import routes from '../../../routes';
 import { AuthID, getConfirm, signOut } from '../../../util/helper-functions';
 
+// Destructuring
+const {
+  ACTIVE,
+  LINK,
+  WARNING,
+  DASHBOARD,
+  REGISTER,
+  PROFILE,
+  REQUEST,
+  HISTORY
+} = constant;
+const {
+  OWNER_DASHBOARD,
+  REGISTER_HALL,
+  OWNER_PROFILE_PATH,
+  BOOKING_REQUEST,
+  OWNER_BOOKING_HISTORY
+} = routes;
+
 function OwnerNavbar() {
   const [id] = useState(AuthID());
-  const [activeMenu, setactiveMenu] = useState('dashboard');
+  const [activeMenu, setactiveMenu] = useState(DASHBOARD);
   const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
-    const currentMenu = location.pathname;
+    const { pathname } = location;
+    const currentMenu = pathname;
     setactiveMenu(currentMenu);
   }, [location]);
 
@@ -21,44 +41,42 @@ function OwnerNavbar() {
     <nav>
       <ul>
         <Link
-          to={routes.OWNER_DASHBOARD}
+          to={OWNER_DASHBOARD}
           className={`${
-            activeMenu.includes('dashboard') ? `${constant.ACTIVE}` : ''
-          } ${constant.LINK}`}
+            activeMenu.includes(DASHBOARD) ? `${ACTIVE}` : ''
+          } ${LINK}`}
         >
           <li>DashBoard</li>
         </Link>
         <Link
-          to={routes.REGISTER_HALL}
+          to={REGISTER_HALL}
           className={`${
-            activeMenu.includes('register') ? `${constant.ACTIVE}` : ''
-          } ${constant.LINK}`}
+            activeMenu.includes(REGISTER) ? `${ACTIVE}` : ''
+          } ${LINK}`}
         >
           <li>Register Hall</li>
         </Link>
         <Link
-          to={`${routes.OWNER_PROFILE_PATH}/${id}`}
+          to={`${OWNER_PROFILE_PATH}/${id}`}
           className={`${
-            activeMenu.includes('profile') ? `${constant.ACTIVE}` : ''
-          } ${constant.LINK}`}
+            activeMenu.includes(PROFILE) ? `${ACTIVE}` : ''
+          } ${LINK}`}
         >
           <li>Profile</li>
         </Link>
         <Link
-          to={routes.BOOKING_REQUEST}
+          to={BOOKING_REQUEST}
           className={`${
-            activeMenu.includes('request') ? `${constant.ACTIVE}` : ''
-          } ${constant.LINK} `}
+            activeMenu.includes(REQUEST) ? `${ACTIVE}` : ''
+          } ${LINK} `}
         >
           <li>Booking Request</li>
         </Link>
         <Link
-          to={routes.OWNER_BOOKING_HISTORY}
+          to={OWNER_BOOKING_HISTORY}
           className={`${
-            activeMenu.includes('history')
-              ? `${constant.LINK} ${constant.ACTIVE}`
-              : ''
-          } ${constant.LINK}`}
+            activeMenu.includes(HISTORY) ? `${LINK} ${ACTIVE}` : ''
+          } ${LINK}`}
         >
           <li>Booking History</li>
         </Link>
@@ -66,13 +84,12 @@ function OwnerNavbar() {
           className="secondary"
           type="button"
           onClick={() => {
-            Swal.fire(getConfirm(constant.WARNING, errors.signOut)).then(
-              (result) => {
-                if (result.value) {
-                  signOut(history);
-                }
+            Swal.fire(getConfirm(WARNING, errors.signOut)).then((result) => {
+              const { value } = result;
+              if (value) {
+                signOut(history);
               }
-            );
+            });
           }}
         >
           SignOut

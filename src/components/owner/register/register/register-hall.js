@@ -8,6 +8,7 @@ import './register-hall.scss';
 import register from '../data/register-actions';
 import {
   AuthID,
+  AuthHeader,
   getAlertToast,
   getConfirm
 } from '../../../../util/helper-functions';
@@ -16,6 +17,17 @@ import constant from '../../../../const/const';
 import CustomLoader from '../../../../util/common';
 import errors from '../../../../const/error';
 
+// Destructuring
+const { SUCCESS, CUSTOM } = constant;
+const {
+  REGISTER_UPDATE_REQUEST,
+  REGISTER_REQUEST,
+  REGISTER_LOADING_REQUEST,
+  REGISTER_RESET_DATA
+} = register;
+const { hallName, price, capacity, event, type, update } = errors;
+
+// RegisterHall component
 function RegisterHall() {
   const {
     loading = false,
@@ -28,32 +40,37 @@ function RegisterHall() {
   // Register View
   const { id } = useParams();
 
+  // validation Schema
   const validationSchema = yup.object().shape({
-    hallName: yup.string().required(errors.hallName),
-    price: yup.number().required(errors.price),
-    capacity: yup.number().required(errors.capacity),
-    event: yup.string().required(errors.event),
-    type: yup.string().required(errors.type)
+    hallName: yup.string().required(hallName),
+    price: yup.number().required(price),
+    capacity: yup.number().required(capacity),
+    event: yup.string().required(event),
+    type: yup.string().required(type)
   });
 
+  // onSubmit
   const handleSubmit = (values) => {
     const newValue = { ...values, ownedBy: AuthID() };
     if (id) {
-      Swal.fire(getConfirm(constant.SUCCESS, errors.update)).then((result) => {
-        if (result.value) {
+      Swal.fire(getConfirm(SUCCESS, update)).then((result) => {
+        const { value } = result;
+        if (value) {
           dispatch({
-            type: register.REGISTER_UPDATE_REQUEST,
+            type: REGISTER_UPDATE_REQUEST,
             payload: newValue,
             id,
-            history
+            history,
+            auth: AuthHeader()
           });
         }
       });
     } else {
       dispatch({
-        type: register.REGISTER_REQUEST,
+        type: REGISTER_REQUEST,
         payload: newValue,
-        history
+        history,
+        auth: AuthHeader()
       });
     }
   };
@@ -73,12 +90,12 @@ function RegisterHall() {
   useEffect(() => {
     if (id) {
       dispatch({
-        type: register.REGISTER_LOADING_REQUEST,
+        type: REGISTER_LOADING_REQUEST,
         payload: id
       });
     } else {
       dispatch({
-        type: register.REGISTER_RESET_DATA
+        type: REGISTER_RESET_DATA
       });
     }
   }, [id]);
@@ -101,6 +118,7 @@ function RegisterHall() {
           >
             {(formik) => {
               const { values } = formik;
+              const { event: events } = values;
               return (
                 <Form>
                   <div className="input-wrapper">
@@ -145,7 +163,7 @@ function RegisterHall() {
                     />
                   </div>
 
-                  {values.event === constant.CUSTOM && (
+                  {events === CUSTOM && (
                     <div className="input-wrapper">
                       <Input
                         label="Enter Event Name"

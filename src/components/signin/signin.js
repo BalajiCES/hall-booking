@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Form, Formik } from 'formik';
-import * as yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import signin from './data/signin-actions';
+import { Form, Formik } from 'formik';
+import * as yup from 'yup';
 import { Input } from '../common/Fields/fields';
+import signin from './data/signin-actions';
 import errors from '../../const/error';
 import routes from '../../routes';
 import './signin.scss';
+
+// destructuring
+const { SIGNUP } = routes;
+const { SIGNIN_REQUEST } = signin;
+const { email, validEmail, password } = errors;
 
 function Signin() {
   const [initialValues] = useState({
@@ -17,14 +22,16 @@ function Signin() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  // validation schema
   const validationSchema = yup.object().shape({
-    email: yup.string().email(errors.email).required(errors.validEmail),
-    password: yup.string().required(errors.password)
+    email: yup.string().email(email).required(validEmail),
+    password: yup.string().required(password)
   });
 
+  // onsubmit
   const handleSubmit = (values) => {
     dispatch({
-      type: signin.SIGNIN_REQUEST,
+      type: SIGNIN_REQUEST,
       payload: values,
       history
     });
@@ -66,7 +73,7 @@ function Signin() {
                 Submit
               </button>
               <button type="button" className="secondary">
-                <Link to={routes.SIGNUP} className="link">
+                <Link to={SIGNUP} className="link">
                   Create Account
                 </Link>
               </button>

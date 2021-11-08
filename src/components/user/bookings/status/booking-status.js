@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import Bookings from '../../../common/booking/bookings';
 import bookingStatus from '../data/booking-status-action';
 import { AuthID } from '../../../../util/helper-functions';
 import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
 import CustomLoader from '../../../../util/common';
 
+// Extending DayJS
+dayjs.extend(isSameOrAfter);
+
+// Destructuring
+const { BOOKING_STATUS_REQUEST } = bookingStatus;
+
+// Booking Status component
 function BookingStatus() {
   const [authId] = useState(AuthID());
   const dispatch = useDispatch();
@@ -17,7 +25,7 @@ function BookingStatus() {
 
   useEffect(() => {
     dispatch({
-      type: bookingStatus.BOOKING_STATUS_REQUEST,
+      type: BOOKING_STATUS_REQUEST,
       payload: authId
     });
   }, []);
@@ -30,7 +38,9 @@ function BookingStatus() {
         data
           .filter((bookingData) => {
             const { bookedDate } = bookingData;
-            return moment(bookedDate).isSameOrAfter(new Date().toDateString());
+            return dayjs(bookedDate).isSameOrAfter(
+              dayjs(new Date().toDateString())
+            );
           })
           .map((bookingData) => {
             const {
@@ -43,6 +53,7 @@ function BookingStatus() {
             const { firstName, lastName } = ownedBy;
             const { firstName: userFirstName, lastName: userLastName } = userId;
             return (
+              // custom Bookings Component
               <Bookings
                 hallName={hallName}
                 ownerName={firstName + lastName}

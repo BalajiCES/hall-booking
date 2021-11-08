@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import bookingRequests from '../data/booking-requests-actions';
 import Bookings from '../../../common/booking/bookings';
 import { AuthID } from '../../../../util/helper-functions';
 import CustomLoader from '../../../../util/common';
 import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
-import './booking-history.scss';
 
+// Destructuring
+const { BOOKING_REQUEST_REQUEST } = bookingRequests;
+
+// Booking History Component
 function OwnerBookingHistory() {
   const [authId] = useState(AuthID());
   const dispatch = useDispatch();
@@ -19,7 +22,7 @@ function OwnerBookingHistory() {
   useEffect(() => {
     if (authId) {
       dispatch({
-        type: bookingRequests.BOOKING_REQUEST_REQUEST,
+        type: BOOKING_REQUEST_REQUEST,
         payload: authId
       });
     }
@@ -34,7 +37,7 @@ function OwnerBookingHistory() {
         data
           .filter((bookingData) => {
             const { bookedDate } = bookingData;
-            return moment(bookedDate).isBefore(new Date().toDateString());
+            return dayjs(bookedDate).isBefore(dayjs(new Date().toDateString()));
           })
           .map((bookingData) => {
             const {
@@ -48,6 +51,7 @@ function OwnerBookingHistory() {
             const { firstName, lastName } = ownedBy;
             const { firstName: userFirstName, lastName: userLastName } = userId;
             return (
+              // custom Bookings Component
               <Bookings
                 key={_id}
                 bookingId={_id}

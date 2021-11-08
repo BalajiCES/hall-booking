@@ -3,18 +3,25 @@ import User from '../models/user-model';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 
+// Creating Token
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRED_IN
   });
 
-// 1) SIGN UP
-const signUp = catchAsync(async (req, res) => {
+// SIGN UP
+const signUp = catchAsync(async (req, res, next) => {
+  // Checking this email is already exists
+  const user = await User.find({ email: req.body.email });
+  if (user) {
+    return next(new AppError('This email is already exists', 401));
+  }
+  // creating a new user
   const newUser = await User.create(req.body);
   const { _id } = newUser;
   const token = signToken(_id);
 
-  res.status(201).json({
+  return res.status(201).json({
     status: 'success',
     token,
     data: {
@@ -23,7 +30,7 @@ const signUp = catchAsync(async (req, res) => {
   });
 });
 
-// 2) LOGIN
+// LOGIN
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -49,35 +56,29 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
-// 3) PROTECT ROUTES
+// Protecting Routes Authorization
 const protect = catchAsync(async (req, res, next) => {
   const { headers = {} } = req;
   const { authorization } = headers;
+
   // 1) Getting token and check if its there
   let token;
-  if (authorization) {
-    token = authorization;
+  if (authorization && authorization.startsWith('Bearer')) {
+    const validToken = authorization.split(' ')[1];
+    token = validToken;
   }
 
   if (!token) {
-    return next(new AppError('You are not logged in to get Access', 401));
+    return next(new AppError('Not authorize to access this route', 401));
   }
 
   // 2) validate token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  // 3)Check if user still exists
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return new new AppError(
-      'The user belonging to the user is no longer exist.',
-      401
-    )();
-  }
-  req.user = currentUser;
+  req.user = await User.findById(decoded.id);
   return next();
 });
 
+// Update User
 const updateUser = catchAsync(async (req, res) => {
   const { params = {}, body = {} } = req;
   const { id } = params;
@@ -93,6 +94,7 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+// Get Single User
 const getSingleUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
@@ -104,4 +106,4 @@ const getSingleUser = catchAsync(async (req, res) => {
   });
 });
 
-export { signUp, login, protect, getSingleUser, updateUser };
+export { signUp, login, getSingleUser, updateUser, protect };

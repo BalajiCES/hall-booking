@@ -8,10 +8,13 @@ import OwnerNavbar from '../components/owner/navbar/navbar';
 import Profile from '../components/common/profile/profile';
 import routes from '../routes';
 
+// Owner Layout Structure
 function RouteControl() {
   return (
     <div>
+      {/* Custom Owner Navbar */}
       <OwnerNavbar />
+
       <Switch>
         <Route exact path={routes.OWNER_DASHBOARD} component={OwnerDashboard} />
         <Route exact path={routes.REGISTER_HALL} component={RegisterHall} />
@@ -27,6 +30,7 @@ function RouteControl() {
           path={routes.OWNER_BOOKING_HISTORY}
           component={OwnerBookingHistory}
         />
+
         {/* Custom 404 Error page */}
         <Route path="*" component={() => '404 PAGE NOT FOUND'} />
       </Switch>

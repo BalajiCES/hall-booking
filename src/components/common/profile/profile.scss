@@ -1,5 +1,8 @@
-$primary-color: #f56038;
-$title-color: #660000;
+$primaryColor: #f56038;
+$titleColor: #660000;
+$warning: #dc3545;
+$formColor: #fcffa6;
+$selectControl: #ccc;
 
 label {
   font-size: 16px;
@@ -7,7 +10,7 @@ label {
 }
 .ml-2 {
   margin-left: 10px;
-  color: $title-color;
+  color: $titleColor;
 }
 
 .form-control {
@@ -28,7 +31,7 @@ label {
 
   h2 {
     text-transform: uppercase;
-    color: $title-color;
+    color: $titleColor;
   }
 }
 
@@ -43,19 +46,28 @@ button {
 }
 
 .primary {
-  background-color: $primary-color;
+  background-color: $primaryColor;
 }
 
 .form-container {
   margin: 10px;
   padding: 20px;
-  background-color: #fcffa6;
+  background-color: $formColor;
   flex-basis: 50%;
   border-radius: 0.2rem;
 
   h2 {
     text-transform: uppercase;
-    color: $title-color;
+    color: $titleColor;
+  }
+
+  p {
+    margin-left: 30px;
+    font-size: 18px;
+
+    .profile-signin {
+      margin-left: 10px;
+    }
   }
 }
 
@@ -74,7 +86,7 @@ button {
   display: block;
   margin: 0.5rem 0;
   height: 2.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid $selectControl;
   width: 100%;
   padding: 0.2rem;
 }
@@ -82,7 +94,7 @@ button {
 .error {
   margin: 0.5rem 0;
   font-size: small;
-  color: #dc3545;
+  color: $warning;
   font-weight: bold;
 }
 

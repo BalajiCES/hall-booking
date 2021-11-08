@@ -5,9 +5,15 @@ import register from '../data/register-actions';
 import { AuthID } from '../../../../util/helper-functions';
 import HallCard from '../../../common/cards/card';
 import CustomLoader from '../../../../util/common';
-import './dashboard.scss';
 import routes from '../../../../routes';
+import constant from '../../../../const/const';
 
+// Destructuring
+const { EDIT_HALLS } = routes;
+const { OWNER } = constant;
+const { LIST_REGISTER_ID_REQUEST } = register;
+
+// DashBoard Component
 function OwnerDashboard() {
   const [id] = useState(AuthID());
   const dispatch = useDispatch();
@@ -19,12 +25,12 @@ function OwnerDashboard() {
   const { hall = [] } = data;
 
   const hallEdit = (hallId) => {
-    history.push(`${routes.EDIT_HALLS}/${hallId}`);
+    history.push(`${EDIT_HALLS}/${hallId}`);
   };
 
   useEffect(() => {
     dispatch({
-      type: register.LIST_REGISTER_ID_REQUEST,
+      type: LIST_REGISTER_ID_REQUEST,
       payload: id
     });
   }, []);
@@ -37,6 +43,7 @@ function OwnerDashboard() {
         hall.map((hallData) => {
           const { _id, hallName, capacity, price, type } = hallData;
           return (
+            // Custom Hall Card
             <HallCard
               key={_id}
               hallName={hallName}
@@ -44,7 +51,7 @@ function OwnerDashboard() {
               price={price}
               type={type}
               hallEdit={() => hallEdit(_id)}
-              user="Owner"
+              user={OWNER}
             />
           );
         })}

@@ -5,15 +5,17 @@ import './signup.scss';
 
 function Signup() {
   return (
-    <div className="login-container">
-      <div
-        className="image-background"
-        style={{ backgroundImage: `url(${image})` }}
-      >
-        {' '}
+    <>
+      <div className="login-container">
+        <div
+          className="image-background"
+          style={{ backgroundImage: `url(${image})` }}
+        >
+          {' '}
+        </div>
+        <Profile />
       </div>
-      <Profile />
-    </div>
+    </>
   );
 }
 

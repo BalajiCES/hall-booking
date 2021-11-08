@@ -8,6 +8,7 @@ import bookRoutes from './routes/book-routes';
 
 const app = express();
 
+// All middlewares
 const corsOptions = {
   origin: '*',
   credentials: true,

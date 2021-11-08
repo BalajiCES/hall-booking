@@ -1,5 +1,6 @@
 import constant from '../constant/constant';
 
+// Custom Filter Class
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;

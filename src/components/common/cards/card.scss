@@ -1,13 +1,17 @@
-$title-color: #660000;
-$primary-color: #f56038;
-$nav-color: #4b63b5;
+$titleColor: #660000;
+$primaryColor: #f56038;
+$navColor: #4b63b5;
+$hallColor: #fcffa6;
+$available: #00c851;
+$selected: #b7c9e9;
+$booked: #ff7766;
 
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
 nav {
-  background-color: $nav-color;
+  background-color: $navColor;
   padding: 10px 5px;
 
   ul {
@@ -30,7 +34,7 @@ nav {
 
 .hall-title {
   text-align: center;
-  color: $title-color;
+  color: $titleColor;
 }
 
 .hall-tile {
@@ -40,7 +44,7 @@ nav {
   max-width: 950px;
   margin: 10px auto;
   padding: 10px 20px;
-  background-color: #fcffa6;
+  background-color: $hallColor;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 0.3rem;
 
@@ -64,7 +68,7 @@ nav {
     text-transform: uppercase;
     flex-basis: 70%;
     font-size: 20px;
-    color: $primary-color;
+    color: $primaryColor;
   }
 
   .status {
@@ -77,15 +81,15 @@ nav {
     text-align: center;
 
     &.Available {
-      background-color: #00c851;
+      background-color: $available;
     }
 
     &.Selected {
-      background-color: #b7c9e9;
+      background-color: $selected;
     }
 
     &.Booked {
-      background-color: #ff7766;
+      background-color: $booked;
     }
   }
 
@@ -99,5 +103,5 @@ nav {
 }
 
 .primary {
-  background-color: $primary-color;
+  background-color: $primaryColor;
 }

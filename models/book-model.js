@@ -44,6 +44,7 @@ bookingSchema.pre(/^find/, function pop(next) {
   next();
 });
 
+// create a booking model
 const Booking = mongoose.model('Booking', bookingSchema);
 
 export default Booking;

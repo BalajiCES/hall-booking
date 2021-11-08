@@ -1,22 +1,26 @@
 import { fetchGET, fetchPOST, fetchPATCH } from './fetchAPI';
 
-const newBooking = async (url, data) => {
-  const response = await fetchPOST(url, data);
+// Create Booking API
+const newBooking = async (url, data, auth) => {
+  const response = await fetchPOST(url, data, auth);
   return response;
 };
 
+// List All Booking API
 const listAllBookings = async (url) => {
   const response = await fetchGET(url);
   return response;
 };
 
+// List Booking by UserID API
 const bookingListByUserID = async (url, data) => {
   const response = await fetchGET(url, data);
   return response;
 };
 
-const changeBookingStatus = async (url, data) => {
-  const response = await fetchPATCH(url, data);
+// Changing Booking Status API
+const changeBookingStatus = async (url, data, auth) => {
+  const response = await fetchPATCH(url, data, auth);
   return response;
 };
 

@@ -7,6 +7,7 @@ import hallListingReducer from '../components/user/dashboard/data/user-dashboard
 import bookingStatusReducer from '../components/user/bookings/data/booking-status-reducer';
 import bookingRequestReducer from '../components/owner/bookings/data/booking-requests-reducer';
 
+// combine All Reducers
 export default combineReducers({
   signinReducer,
   signupReducer,
