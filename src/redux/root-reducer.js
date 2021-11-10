@@ -6,6 +6,7 @@ import profileReducer from '../components/common/profile/data/profile-reducer';
 import hallListingReducer from '../components/user/dashboard/data/user-dashboard-reducer';
 import bookingStatusReducer from '../components/user/bookings/data/booking-status-reducer';
 import bookingRequestReducer from '../components/owner/bookings/data/booking-requests-reducer';
+import adminRequestReducer from '../components/admin/dashboard/data/admin-dashboard-reducer';
 
 // combine All Reducers
 export default combineReducers({
@@ -15,5 +16,6 @@ export default combineReducers({
   profileReducer,
   hallListingReducer,
   bookingStatusReducer,
-  bookingRequestReducer
+  bookingRequestReducer,
+  adminRequestReducer
 });

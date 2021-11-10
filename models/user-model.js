@@ -36,7 +36,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ['User', 'Owner'],
+      enum: ['User', 'Owner', 'Admin'],
       required: [true, errors.role]
     },
     password: {

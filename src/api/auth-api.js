@@ -24,4 +24,10 @@ const updateUser = async (url, data, auth) => {
   return response;
 };
 
-export { signinAPI, signupAPI, listSingleUser, updateUser };
+// List all Users
+const listAllUser = async (url) => {
+  const response = await fetchGET(url);
+  return response;
+};
+
+export { signinAPI, signupAPI, listSingleUser, updateUser, listAllUser };

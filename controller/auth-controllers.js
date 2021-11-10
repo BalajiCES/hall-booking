@@ -11,11 +11,6 @@ const signToken = (id) =>
 
 // SIGN UP
 const signUp = catchAsync(async (req, res, next) => {
-  // Checking this email is already exists
-  const user = await User.find({ email: req.body.email });
-  if (user) {
-    return next(new AppError('This email is already exists', 401));
-  }
   // creating a new user
   const newUser = await User.create(req.body);
   const { _id } = newUser;
@@ -106,4 +101,15 @@ const getSingleUser = catchAsync(async (req, res) => {
   });
 });
 
-export { signUp, login, getSingleUser, updateUser, protect };
+// list All User
+const listAllUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
+    }
+  });
+});
+
+export { signUp, login, getSingleUser, updateUser, listAllUsers, protect };

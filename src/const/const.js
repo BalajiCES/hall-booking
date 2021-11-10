@@ -6,6 +6,7 @@ constant.DOB = 'dob';
 constant.AGE = 'age';
 constant.USER = 'User';
 constant.OWNER = 'Owner';
+constant.ADMIN = 'Admin';
 constant.ACTIVE = 'active';
 constant.ROLE = 'ROLE';
 constant.TOKEN = 'TOKEN';

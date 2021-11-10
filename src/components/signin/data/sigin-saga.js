@@ -6,8 +6,8 @@ import endPoint from '../../../endpoints';
 import constant from '../../../const/const';
 
 // Destructuring
-const { TOKEN, ID, ROLE, OWNER } = constant;
-const { OWNER_DASHBOARD, DASHBOARD } = routes;
+const { TOKEN, ID, ROLE, OWNER, ADMIN } = constant;
+const { OWNER_DASHBOARD, DASHBOARD, HALLS_PATH } = routes;
 const {
   SIGNIN_DATA_LOADING,
   SIGNIN_DATA_SUCCESS,
@@ -33,6 +33,8 @@ function* signInApiCall(action) {
     // Navigate to related Dashboard
     if (role === OWNER) {
       history.push(OWNER_DASHBOARD);
+    } else if (role === ADMIN) {
+      history.push(HALLS_PATH);
     } else {
       history.push(DASHBOARD);
     }

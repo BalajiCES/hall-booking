@@ -16,5 +16,8 @@ routes.BOOKING_HISTORY = '/booking-history';
 routes.PROFILE = '/profile/:id';
 routes.EDIT_HALLS = '/owner/edit-hall';
 routes.OWNER_PROFILE_PATH = '/owner/profile';
+routes.ADMIN_PATH = '/admin';
+routes.HALLS_PATH = '/admin/halls';
+routes.USERS_PATH = '/admin/users';
 
 export default routes;

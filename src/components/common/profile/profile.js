@@ -85,6 +85,7 @@ function Profile() {
 
   const roleChoices = [
     { key: 'Choose Type', value: '' },
+    { key: 'Admin', value: 'Admin' },
     { key: 'Owner', value: 'Owner' },
     { key: 'User', value: 'User' }
   ];
@@ -204,7 +205,7 @@ function Profile() {
                   <>
                     <div className="input-wrapper">
                       <Input
-                        label="Passowrd"
+                        label="Password"
                         className="form-control"
                         name="password"
                         type="password"
@@ -214,7 +215,7 @@ function Profile() {
                     </div>
                     <div className="input-wrapper">
                       <Input
-                        label="Confirm Passowrd"
+                        label="Confirm Password"
                         className="form-control"
                         name="passwordConfirm"
                         type="password"
