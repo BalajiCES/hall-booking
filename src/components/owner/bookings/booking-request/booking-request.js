@@ -72,15 +72,16 @@ function BookingRequest() {
       {!loading && data ? (
         data
           .filter((bookingData) => {
-            const { bookedDate } = bookingData;
-            return dayjs(bookedDate).isSameOrAfter(
+            const { startDate } = bookingData;
+            return dayjs(startDate).isSameOrAfter(
               dayjs(new Date().toDateString())
             );
           })
           .map((bookingData) => {
             const {
               _id,
-              bookedDate,
+              startDate,
+              endDate,
               bookingStatus: status,
               hallId,
               userId
@@ -96,7 +97,8 @@ function BookingRequest() {
                 hallName={hallName}
                 ownerName={firstName + lastName}
                 userName={userFirstName + userLastName}
-                date={bookedDate}
+                startDate={startDate}
+                endDate={endDate}
                 status={status}
                 userType="Owner"
                 statusChange={statusChange}

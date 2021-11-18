@@ -1,35 +1,22 @@
 import Book from '../models/book-model';
-import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
+import catchAsync from '../utils/catchAsync';
 
 // Create a new Bookings
-// eslint-disable-next-line consistent-return
 const createBooking = catchAsync(async (req, res, next) => {
+  // check this booking is already in database
+  const data = await Book.findOne(req.body);
+  if (data) {
+    return next(new AppError('This Hall is already booked by you'));
+  }
   // create a new booking
   const newBooking = await Book.create(req.body);
-
-  res.status(201).json({
+  return res.status(201).json({
     status: 'success',
     data: {
       hall: newBooking
     }
   });
-});
-
-const checkalreadyBooked = catchAsync(async (req, res, next) => {
-  const date = new Date(req.body.bookedDate).toISOString();
-  // if incase one user booked this hall is already booked on this date
-  const checkExisitingBooking = await Book.findOne({
-    hallId: req.body.hallId,
-    bookedDate: date,
-    bookingStatus: 'Approved'
-  });
-
-  if (checkExisitingBooking) {
-    return true;
-  }
-
-  return false;
 });
 
 // list bookings by hallID
@@ -94,11 +81,30 @@ const listBookingByOwnerId = catchAsync(async (req, res) => {
 
 // Change the booking status to owner wish
 const changeBookingStatus = catchAsync(async (req, res) => {
+  // changing all other Booking on this booked date to reject
+  const currId = await Book.findOne({ _id: req.params.id });
+  const { hallId, startDate, endDate } = currId;
+  const { _id } = hallId;
+  console.log(_id);
+
+  const rejectStatus = await Book.updateMany(
+    { hallId: _id, startDate, endDate },
+    { bookingStatus: 'Rejected' },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  console.log(rejectStatus);
+
+  // Update the current Booking to Approve or Reject
   const booking = await Book.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
   });
 
+  // send the status to the client
   res.status(201).json({
     status: 'success',
     data: {
@@ -113,6 +119,5 @@ export {
   listBookingByUserId,
   listBookingByOwnerId,
   changeBookingStatus,
-  checkalreadyBooked,
   listBookingbyHallId
 };

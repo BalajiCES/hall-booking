@@ -85,7 +85,6 @@ function Profile() {
 
   const roleChoices = [
     { key: 'Choose Type', value: '' },
-    { key: 'Admin', value: 'Admin' },
     { key: 'Owner', value: 'Owner' },
     { key: 'User', value: 'User' }
   ];

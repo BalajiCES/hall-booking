@@ -71,8 +71,8 @@ function UserDashBaord() {
     setHallState(datas);
   };
 
-  const bookingSuccess = (date) => {
-    if (!date) {
+  const bookingSuccess = (startDate, endDate) => {
+    if (!startDate) {
       Swal.fire(getAlertToast(SUCCESS, errorBooked));
       return;
     }
@@ -83,7 +83,8 @@ function UserDashBaord() {
           payload: {
             userId: AuthID(),
             hallId: hallState.id,
-            bookedDate: date
+            startDate,
+            endDate
           },
           auth: AuthHeader(),
           closeBooking,

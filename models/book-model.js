@@ -16,11 +16,23 @@ const bookingSchema = new Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Hall'
     },
-    bookedDate: {
+    // bookedDate: {
+    //   type: Date,
+    //   required: [true, errors.bookedDate],
+    //   validate: [validator.isDate, errors.validateDate]
+    // },
+    startDate: {
       type: Date,
       required: [true, errors.bookedDate],
       validate: [validator.isDate, errors.validateDate]
     },
+
+    endDate: {
+      type: Date,
+      required: [true, errors.bookedDate],
+      validate: [validator.isDate, errors.validateDate]
+    },
+
     bookingStatus: {
       type: String,
       enum: [constant.PENDING, constant.APPROVED, constant.REJECTED],
@@ -30,7 +42,7 @@ const bookingSchema = new Schema(
   { timestamps: true }
 );
 
-// Query Middleware
+// QUERY middleware
 bookingSchema.pre(/^find/, function pop(next) {
   this.populate({
     path: 'userId',

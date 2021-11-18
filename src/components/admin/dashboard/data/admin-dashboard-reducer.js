@@ -15,7 +15,7 @@ function adminRequestReducer(state = intialState, actions) {
 
     case adminRequests.ADMIN_REQUEST_DATA_SUCCESS: {
       const { data = {} } = payload;
-      console.log('Data', data);
+      // console.log('Data', data);
       const { halls = [] } = data;
       return {
         adminData: {

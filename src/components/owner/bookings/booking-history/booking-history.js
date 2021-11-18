@@ -36,13 +36,14 @@ function OwnerBookingHistory() {
       {!loading && data ? (
         data
           .filter((bookingData) => {
-            const { bookedDate } = bookingData;
-            return dayjs(bookedDate).isBefore(dayjs(new Date().toDateString()));
+            const { startDate } = bookingData;
+            return dayjs(startDate).isBefore(dayjs(new Date().toDateString()));
           })
           .map((bookingData) => {
             const {
               _id,
-              bookedDate,
+              startDate,
+              endDate,
               bookingStatus: status,
               hallId,
               userId
@@ -58,7 +59,8 @@ function OwnerBookingHistory() {
                 hallName={hallName}
                 ownerName={firstName + lastName}
                 userName={userFirstName + userLastName}
-                date={bookedDate}
+                startDate={startDate}
+                endDate={endDate}
                 status={status}
                 userType="User"
               />
