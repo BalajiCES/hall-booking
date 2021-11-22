@@ -5,7 +5,7 @@ const registerState = {
       hallName: '',
       price: '',
       capacity: '',
-      phoneNumber: '',
+      address: '',
       event: '',
       type: '',
       custom: '',

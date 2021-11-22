@@ -17,6 +17,7 @@ function HallCard({
   intiateBooking,
   hallEdit,
   type,
+  address,
   id
 }) {
   return (
@@ -30,7 +31,6 @@ function HallCard({
         {capacity}
       </h3>
       <h3 className="type">{type}</h3>
-
       {/* show book now button for only User */}
       {user === USER && (
         <div className="button-container">
@@ -45,13 +45,15 @@ function HallCard({
           </button>
         </div>
       )}
-
       {/* show edit halls button for only owner */}
       {user === OWNER && (
         <button className="edit primary" type="button" onClick={hallEdit}>
           Edit
         </button>
       )}
+
+      {/* Address */}
+      <h3 className="address">{address}</h3>
     </div>
   );
 }
@@ -61,6 +63,7 @@ HallCard.propTypes = {
   hallName: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   capacity: PropTypes.number.isRequired,
+  address: PropTypes.string,
   status: PropTypes.string,
   user: PropTypes.string,
   type: PropTypes.string,
@@ -72,6 +75,7 @@ HallCard.defaultProps = {
   id: 0,
   intiateBooking: () => {},
   hallEdit: () => {},
+  address: '',
   status: '',
   user: '',
   type: ''

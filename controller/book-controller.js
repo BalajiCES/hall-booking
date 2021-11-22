@@ -56,6 +56,24 @@ const listBookingByUserId = catchAsync(async (req, res) => {
   });
 });
 
+// Delete booking
+const deleteBooking = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  // Not to send any data to client in delete operation
+  const data = await Book.findByIdAndDelete({ _id: id });
+  if (!data) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'No item Found'
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: null
+  });
+});
+
 // List Bookings related to particular owner(ownerId)
 const listBookingByOwnerId = catchAsync(async (req, res) => {
   const { params = {} } = req;
@@ -85,7 +103,6 @@ const changeBookingStatus = catchAsync(async (req, res) => {
   const currId = await Book.findOne({ _id: req.params.id });
   const { hallId, startDate, endDate } = currId;
   const { _id } = hallId;
-  console.log(_id);
 
   const rejectStatus = await Book.updateMany(
     { hallId: _id, startDate, endDate },
@@ -95,8 +112,6 @@ const changeBookingStatus = catchAsync(async (req, res) => {
       runValidators: true
     }
   );
-
-  console.log(rejectStatus);
 
   // Update the current Booking to Approve or Reject
   const booking = await Book.findByIdAndUpdate(req.params.id, req.body, {
@@ -115,6 +130,7 @@ const changeBookingStatus = catchAsync(async (req, res) => {
 
 export {
   createBooking,
+  deleteBooking,
   listBooking,
   listBookingByUserId,
   listBookingByOwnerId,

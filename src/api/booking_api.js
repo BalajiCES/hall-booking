@@ -1,4 +1,4 @@
-import { fetchGET, fetchPOST, fetchPATCH } from './fetchAPI';
+import { fetchGET, fetchPOST, fetchPATCH, fetchDELETE } from './fetchAPI';
 
 // Create Booking API
 const newBooking = async (url, data, auth) => {
@@ -24,9 +24,16 @@ const changeBookingStatus = async (url, data, auth) => {
   return response;
 };
 
+// Delete Booking
+const deleteBooking = async (url, auth) => {
+  const response = await fetchDELETE(url, auth);
+  return response;
+};
+
 export {
   newBooking,
   bookingListByUserID,
   changeBookingStatus,
-  listAllBookings
+  listAllBookings,
+  deleteBooking
 };

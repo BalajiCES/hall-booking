@@ -6,16 +6,20 @@ import {
   eachHourOfInterval,
   isSameDay,
   isWithinInterval,
-  isSameSecond
+  isSameSecond,
+  setMinutes,
+  setHours
 } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import bookingStatusAction from '../data/booking-status-action';
 import './book-modal.scss';
 import constant from '../../../../const/const';
 import { getAlertToast } from '../../../../util/helper-functions';
+import errors from '../../../../const/error';
 
 // Destructuring
-const { APPROVED } = constant;
+const { APPROVED, SUCCESS } = constant;
+const { validBooking, bookedError } = errors;
 const { BOOKINGS_ALL_REQUEST } = bookingStatusAction;
 
 // Booking Model Component
@@ -35,8 +39,8 @@ function BookModal(props) {
   }
 
   // Create variable for last day of next month
-  // const newDate = new Date();
-  // const lastDay = new Date(newDate.getFullYear(), newDate.getMonth() + 2, 0);
+  const newDate = new Date();
+  const lastDay = new Date(newDate.getFullYear(), newDate.getMonth() + 2, 0);
 
   // Return Array of dates in hours in the booked intervals
   const validHours = bookingList
@@ -69,26 +73,19 @@ function BookModal(props) {
   const validateBookings = (sDate, eDate) => {
     // check whether the two dates are same
     if (isSameSecond(sDate, eDate)) {
-      Swal.fire(
-        getAlertToast(
-          'sucess',
-          'Please choose a different start date and end date'
-        )
-      );
+      Swal.fire(getAlertToast(SUCCESS, bookedError));
+      // check starting date is greater than ending date
+    } else if (sDate > eDate) {
+      Swal.fire(getAlertToast(SUCCESS, validBooking));
     } else {
       // check the current booking date is not overlapping with other booked dates
-
       const overlap = allHoursRange.map((date) =>
         isWithinInterval(date, { start: sDate, end: eDate })
       );
-
       const validateChecking = overlap.some((val) => val === true);
-
       // if overlap warn the user
       if (validateChecking) {
-        Swal.fire(
-          getAlertToast('sucess', 'Please choose a valid Booking Date')
-        );
+        Swal.fire(getAlertToast(SUCCESS, validBooking));
         //  else go eith booking
       } else {
         bookingSuccess(sDate, eDate);
@@ -150,6 +147,13 @@ function BookModal(props) {
                 className="date-picker"
                 onChange={(currDate) => setStartDate(currDate)}
                 minDate={new Date()}
+                maxDate={lastDay}
+                minTime={
+                  isSameDay(startDate, new Date())
+                    ? new Date()
+                    : setHours(setMinutes(new Date(), 0), 0)
+                }
+                maxTime={setHours(setMinutes(new Date(), 0), 23)}
                 showTimeSelect
                 excludeTimes={excludeChoosedStartDate}
                 timeIntervals={60}
@@ -164,7 +168,14 @@ function BookModal(props) {
                 endDate={endDate}
                 className="date-picker"
                 onChange={(currDate) => setEndDate(currDate)}
-                minDate={new Date()}
+                minDate={startDate}
+                maxDate={lastDay}
+                minTime={
+                  isSameDay(endDate, new Date())
+                    ? new Date()
+                    : setHours(setMinutes(new Date(), 0), 0)
+                }
+                maxTime={setHours(setMinutes(new Date(), 0), 23)}
                 showTimeSelect
                 excludeTimes={excludeChoosedEndDate}
                 timeIntervals={60}
@@ -269,11 +280,3 @@ BookModal.propTypes = {
 };
 
 export default BookModal;
-
-// selected={startDate}
-// onChange={(date) => setStartDate(date)}
-// showTimeSelect
-// timeIntervals={30}
-// placeholderText="Weeks start on Monday"
-// timeFormat="p"
-// dateFormat="Pp"

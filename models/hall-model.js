@@ -23,6 +23,10 @@ const hallSchema = new Schema(
       type: String,
       required: [true, errors.hallType]
     },
+    address: {
+      type: String,
+      required: [true, errors.address]
+    },
     status: {
       type: String,
       enum: ['Available', 'Selected', 'Booked'],

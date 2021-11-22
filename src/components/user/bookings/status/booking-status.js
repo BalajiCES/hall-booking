@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import Bookings from '../../../common/booking/bookings';
 import bookingStatus from '../data/booking-status-action';
-import { AuthID } from '../../../../util/helper-functions';
+import { AuthID, AuthHeader } from '../../../../util/helper-functions';
 import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
 import CustomLoader from '../../../../util/common';
 
@@ -12,16 +12,29 @@ import CustomLoader from '../../../../util/common';
 dayjs.extend(isSameOrAfter);
 
 // Destructuring
-const { BOOKING_STATUS_REQUEST } = bookingStatus;
+const { BOOKING_STATUS_REQUEST, BOOKING_DELETE_REQUEST } = bookingStatus;
 
 // Booking Status component
 function BookingStatus() {
   const [authId] = useState(AuthID());
+  const [authHeader] = useState(AuthHeader());
   const dispatch = useDispatch();
 
   const { loading = false, data = [] } = useSelector(
     (state) => state.bookingStatusReducer.bookingData
   );
+
+  const cancelBooking = (bookingId) => {
+    dispatch({
+      type: BOOKING_DELETE_REQUEST,
+      payload: bookingId,
+      auth: authHeader
+    });
+    dispatch({
+      type: BOOKING_STATUS_REQUEST,
+      payload: authId
+    });
+  };
 
   useEffect(() => {
     dispatch({
@@ -44,11 +57,13 @@ function BookingStatus() {
           })
           .map((bookingData) => {
             const {
+              _id,
               startDate,
               endDate,
               bookingStatus: status,
               hallId,
-              userId
+              userId,
+              createdAt
             } = bookingData;
             const { hallName, ownedBy } = hallId;
             const { firstName, lastName } = ownedBy;
@@ -60,9 +75,12 @@ function BookingStatus() {
                 ownerName={firstName + lastName}
                 userName={userFirstName + userLastName}
                 startDate={startDate}
+                created={createdAt}
                 endDate={endDate}
                 status={status}
+                id={_id}
                 userType="User"
+                cancelBooking={cancelBooking}
               />
             );
           })

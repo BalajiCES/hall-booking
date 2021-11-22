@@ -22,6 +22,26 @@ Input.propTypes = {
   label: PropTypes.string.isRequired
 };
 
+function TextArea(props) {
+  const { name, className, label, ...rest } = props;
+
+  return (
+    <div className="form-group">
+      <label htmlFor={name}> {label} </label>
+      <Field as="textarea" name={name} className={className} {...rest} />
+      <div className="error">
+        <ErrorMessage name={name} />
+      </div>
+    </div>
+  );
+}
+
+TextArea.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
+};
+
 function RadioButtons(props) {
   const { label, className, name, options, ...rest } = props;
   return (
@@ -141,4 +161,4 @@ Checkboxes.propTypes = {
   ).isRequired
 };
 
-export { Input, RadioButtons, Select, Checkboxes };
+export { Input, RadioButtons, Select, Checkboxes, TextArea };

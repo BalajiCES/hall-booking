@@ -10,7 +10,16 @@ function registerReducer(state = intialState, actions) {
         ...state,
         registerData: {
           loading: true,
-          data: {},
+          data: {
+            hallName: '',
+            price: '',
+            capacity: '',
+            address: '',
+            event: '',
+            type: '',
+            custom: '',
+            onwedBy: ''
+          },
           error: false
         }
       };
@@ -18,7 +27,7 @@ function registerReducer(state = intialState, actions) {
     case register.REGISTER_DATA_SUCCESS: {
       const { data = {} } = payload;
       const { hall = {} } = data;
-      const { hallName, price, type, event, custom, capacity } = hall;
+      const { hallName, price, type, event, custom, capacity, address } = hall;
       return {
         ...state,
         loading: true,
@@ -31,7 +40,8 @@ function registerReducer(state = intialState, actions) {
             event,
             type,
             custom,
-            onwedBy: ''
+            onwedBy: '',
+            address
           },
           error: false
         }
@@ -46,6 +56,7 @@ function registerReducer(state = intialState, actions) {
           data: {
             hallName: '',
             price: '',
+            address: '',
             capacity: '',
             event: '',
             type: '',

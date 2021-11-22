@@ -60,4 +60,21 @@ const fetchGET = async (url, queryData = {}) => {
   return data;
 };
 
-export { fetchPOST, fetchGET, fetchPATCH };
+// Custom Delete Method
+const fetchDELETE = async (url, auth) => {
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
+    }
+  });
+  const data = await response.json();
+  if (response.status >= 400) {
+    throw new Error(JSON.stringify(data));
+  }
+  return data;
+};
+
+export { fetchPOST, fetchGET, fetchPATCH, fetchDELETE };

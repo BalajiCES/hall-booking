@@ -3,14 +3,15 @@ import Swal from 'sweetalert2';
 import bookingStatus from './booking-status-action';
 import {
   bookingListByUserID,
-  listAllBookings
+  listAllBookings,
+  deleteBooking
 } from '../../../../api/booking_api';
 import endPoint from '../../../../endpoints';
 import { getAlertToast } from '../../../../util/helper-functions';
 import constant from '../../../../const/const';
 
 // Destructuring
-const { BOOK_USER, BOOKINGS_HALL } = endPoint;
+const { BOOK_USER, BOOKINGS_HALL, BOOK } = endPoint;
 const { WARNING } = constant;
 const {
   BOOKING_STATUS_DATA_LOADING,
@@ -18,7 +19,8 @@ const {
   BOOKING_STATUS_DATA_ERROR,
   BOOKINGS_SUCCESS_ALL_REQUEST,
   BOOKING_STATUS_REQUEST,
-  BOOKINGS_ALL_REQUEST
+  BOOKINGS_ALL_REQUEST,
+  BOOKING_DELETE_REQUEST
 } = bookingStatus;
 
 // Booking status Chnage SAGA
@@ -51,9 +53,23 @@ function* allBookings(action) {
   }
 }
 
+// Delete Booking
+function* deleteBookingAPI(action) {
+  const { payload = {}, auth } = action;
+
+  try {
+    yield call(deleteBooking, `${BOOK}/${payload}`, auth);
+
+    Swal.fire(getAlertToast(WARNING, 'Booking deleted Sucessfully'));
+  } catch (err) {
+    Swal.fire(getAlertToast(WARNING, err));
+  }
+}
+
 function* watcherBookingStatusSaga() {
   yield takeEvery(BOOKING_STATUS_REQUEST, bookingStatusAPICall);
   yield takeEvery(BOOKINGS_ALL_REQUEST, allBookings);
+  yield takeEvery(BOOKING_DELETE_REQUEST, deleteBookingAPI);
 }
 
 export default watcherBookingStatusSaga;

@@ -41,7 +41,7 @@ function OwnerDashboard() {
       <center>{loading && <CustomLoader loading={loading} />}</center>
       {!loading &&
         hall.map((hallData) => {
-          const { _id, hallName, capacity, price, type } = hallData;
+          const { _id, hallName, capacity, price, type, address } = hallData;
           return (
             // Custom Hall Card
             <HallCard
@@ -49,6 +49,7 @@ function OwnerDashboard() {
               hallName={hallName}
               capacity={capacity}
               price={price}
+              address={address}
               type={type}
               hallEdit={() => hallEdit(_id)}
               user={OWNER}

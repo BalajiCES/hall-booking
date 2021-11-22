@@ -39,7 +39,7 @@ function UserDashBaord() {
 
   const { data = {} } = hallData;
   const { halls = [] } = data;
-  const [hallLisitingData, sethallLisitingData] = useState(halls);
+  const [hallFilterData, setHallFilterData] = useState(halls);
 
   // Side Menu Functions
   const closeBooking = () => {
@@ -149,13 +149,26 @@ function UserDashBaord() {
   const searchQueryName = (event) => {
     const { value } = event.target;
     if (value === '') {
-      sethallLisitingData(halls);
+      setHallFilterData(halls);
     } else {
       const searchTerm = value.toLowerCase();
       const filterData = halls.filter((hallObj) =>
         hallObj.hallName.toLowerCase().match(new RegExp(searchTerm, 'g'))
       );
-      sethallLisitingData(filterData);
+      setHallFilterData(filterData);
+    }
+  };
+
+  const searchHallAddress = (event) => {
+    const { value } = event.target;
+    if (value === '') {
+      setHallFilterData(halls);
+    } else {
+      const searchTerm = value.toLowerCase();
+      const filterData = halls.filter((hallObj) =>
+        hallObj.address?.toLowerCase().match(new RegExp(searchTerm, 'g'))
+      );
+      setHallFilterData(filterData);
     }
   };
 
@@ -175,7 +188,7 @@ function UserDashBaord() {
 
   useEffect(() => {
     if (halls) {
-      sethallLisitingData(halls);
+      setHallFilterData(halls);
     }
   }, [hallData]);
 
@@ -205,12 +218,22 @@ function UserDashBaord() {
             {() => (
               <div className="filter">
                 <div className="cd-filter-block">
-                  <h4>Search</h4>
+                  <h4>Search Hall</h4>
                   <div className="cd-filter-content">
                     <Input
                       name="hallName"
                       id="hallName"
                       onChange={searchQueryName}
+                      className="filter-input"
+                    />
+                  </div>
+
+                  <div className="cd-filter-content">
+                    <h4>Search Address</h4>
+                    <Input
+                      name="address"
+                      id="address"
+                      onChange={searchHallAddress}
                       className="filter-input"
                     />
                   </div>
@@ -275,9 +298,10 @@ function UserDashBaord() {
       <div className={`${openMenu ? 'main' : 'close-main'}`}>
         <center>{loading && <CustomLoader loading={loading} />}</center>
         {!loading &&
-          hallLisitingData &&
-          hallLisitingData.map((list) => {
-            const { _id, hallName, capacity, price, status, type } = list;
+          hallFilterData &&
+          hallFilterData.map((list) => {
+            const { _id, hallName, capacity, price, status, type, address } =
+              list;
             return (
               <HallCard
                 key={_id}
@@ -285,6 +309,7 @@ function UserDashBaord() {
                 hallName={hallName}
                 capacity={capacity}
                 price={price}
+                address={address}
                 status={status}
                 intiateBooking={intiateBooking}
                 type={type}

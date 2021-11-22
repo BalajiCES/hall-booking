@@ -12,7 +12,12 @@ import {
   getAlertToast,
   getConfirm
 } from '../../../../util/helper-functions';
-import { Input, Select, RadioButtons } from '../../../common/Fields/fields';
+import {
+  Input,
+  Select,
+  RadioButtons,
+  TextArea
+} from '../../../common/Fields/fields';
 import constant from '../../../../const/const';
 import CustomLoader from '../../../../util/common';
 import errors from '../../../../const/error';
@@ -25,7 +30,7 @@ const {
   REGISTER_LOADING_REQUEST,
   REGISTER_RESET_DATA
 } = register;
-const { hallName, price, capacity, event, type, update } = errors;
+const { hallName, price, capacity, event, type, update, address } = errors;
 
 // RegisterHall component
 function RegisterHall() {
@@ -44,6 +49,7 @@ function RegisterHall() {
   const validationSchema = yup.object().shape({
     hallName: yup.string().required(hallName),
     price: yup.number().required(price),
+    address: yup.string().required(address),
     capacity: yup.number().required(capacity),
     event: yup.string().required(event),
     type: yup.string().required(type)
@@ -154,6 +160,19 @@ function RegisterHall() {
                   </div>
 
                   <div className="input-wrapper">
+                    <TextArea
+                      label="Address"
+                      className="form-control"
+                      type="number"
+                      name="address"
+                      id="address"
+                      placeholder="Enter Address"
+                      rows="4"
+                      cols="50"
+                    />
+                  </div>
+
+                  <div className="input-wrapper">
                     <Select
                       label="Choose Event Type"
                       name="event"
@@ -173,6 +192,7 @@ function RegisterHall() {
                         id="custom"
                         placeholder="Enter here..."
                         disabled={id}
+                        required
                       />
                     </div>
                   )}

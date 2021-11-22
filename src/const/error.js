@@ -3,6 +3,7 @@ const errors = {};
 errors.hallName = 'Hall Name is Required';
 errors.price = 'Price is Required';
 errors.capacity = 'Capacity is Required';
+errors.address = 'Address is Required';
 errors.phoneNumber = 'Phone Number is Required';
 errors.event = 'Event type is requiured';
 errors.hallType = 'Please choose your Hall Type';
@@ -27,5 +28,7 @@ errors.errorBooked = 'Please select the date and Book';
 errors.confirmBook = 'Are you sure do you want to book?';
 errors.profileSucess = 'Your profile is succesfully updated';
 errors.hallSuccess = 'Your hall is succesfully created';
+errors.bookedError = 'Please choose a different start date and end date';
+errors.validBooking = 'Please choose a valid Booking Date';
 
 export default errors;
