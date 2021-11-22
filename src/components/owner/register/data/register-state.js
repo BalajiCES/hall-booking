@@ -1,7 +1,16 @@
 const registerState = {
   registerData: {
     loading: false,
-    data: {},
+    data: {
+      hallName: '',
+      price: '',
+      capacity: '',
+      address: '',
+      event: '',
+      type: '',
+      custom: '',
+      onwedBy: ''
+    },
     error: false
   },
   listHalls: {

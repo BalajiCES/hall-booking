@@ -17,7 +17,6 @@ function profileReducer(state = intialState, actions) {
     case profile.PROFILE_DATA_SUCCESS: {
       const { data = {} } = payload;
       const { user = {} } = data;
-      console.log('User', user);
       const {
         firstName = '',
         lastName = '',
@@ -52,7 +51,6 @@ function profileReducer(state = intialState, actions) {
     case profile.PROFILE_UPDATE_SUCCESS: {
       const { data = {} } = payload;
       const { user = {} } = data;
-      console.log('User', user);
       const {
         firstName = '',
         lastName = '',

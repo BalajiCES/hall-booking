@@ -1,8 +1,38 @@
 import Book from '../models/book-model';
-import Hall from '../models/hall-model';
+import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
-import constant from '../src/const/const';
 
+// Create a new Bookings
+const createBooking = catchAsync(async (req, res, next) => {
+  // check this booking is already in database
+  const data = await Book.findOne(req.body);
+  if (data) {
+    return next(new AppError('This Hall is already booked by you'));
+  }
+  // create a new booking
+  const newBooking = await Book.create(req.body);
+  return res.status(201).json({
+    status: 'success',
+    data: {
+      hall: newBooking
+    }
+  });
+});
+
+// list bookings by hallID
+const listBookingbyHallId = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  const bookingList = await Book.find({ hallId: id });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bookings: bookingList
+    }
+  });
+});
+
+// List all Bookings
 const listBooking = catchAsync(async (req, res) => {
   const bookingList = await Book.find();
   res.status(200).json({
@@ -13,8 +43,11 @@ const listBooking = catchAsync(async (req, res) => {
   });
 });
 
+// List Bookings related to particular user(userID)
 const listBookingByUserId = catchAsync(async (req, res) => {
-  const bookingList = await Book.find({ userId: req.params.id });
+  const { params = {} } = req;
+  const { id } = params;
+  const bookingList = await Book.find({ userId: id });
   res.status(200).json({
     status: 'success',
     data: {
@@ -23,56 +56,70 @@ const listBookingByUserId = catchAsync(async (req, res) => {
   });
 });
 
-const listBookingByOwnerId = catchAsync(async (req, res) => {
-  const hall = await Hall.find({ onwedBy: req.params.id });
-  // console.log('Owner Halls', hall);
-  const bookingList = hall.map(async (val) => {
-    const { _id } = val;
-    const bookingDetails = await Book.findOne({ hallId: _id });
-    return bookingDetails;
+// Delete booking
+const deleteBooking = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  // Not to send any data to client in delete operation
+  const data = await Book.findByIdAndDelete({ _id: id });
+  if (!data) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'No item Found'
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: null
   });
-  const filterdValue = await Promise.all(bookingList);
-  const list = filterdValue.filter((data) => data != null);
+});
+
+// List Bookings related to particular owner(ownerId)
+const listBookingByOwnerId = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+
+  const data = await Book.find();
+
+  // Here we filter the booked halls only related to owner id
+  const halls = data.filter((singleHall) => {
+    const { hallId } = singleHall;
+    const { ownedBy } = hallId;
+    const { _id } = ownedBy;
+    return _id.equals(id);
+  });
+
   res.status(200).json({
     status: 'success',
     data: {
-      bookings: list
+      bookings: halls
     }
   });
 });
 
+// Change the booking status to owner wish
 const changeBookingStatus = catchAsync(async (req, res) => {
-  const { bookingStatus } = req.body;
-  console.log('Req Body', req.body.bookingStatus);
+  // changing all other Booking on this booked date to reject
+  const currId = await Book.findOne({ _id: req.params.id });
+  const { hallId, startDate, endDate } = currId;
+  const { _id } = hallId;
 
-  if (bookingStatus === constant.APPROVED) {
-    const currBooking = await Book.findOne(
-      { _id: req.params.id },
-      {
-        hallId: 1
-      }
-    );
-    const { _id } = currBooking.hallId;
-    console.log('CurrBooking', currBooking, _id);
-    await Hall.findByIdAndUpdate(
-      _id,
-      {
-        status: 'Booked'
-      },
-      {
-        new: true,
-        runValidators: true
-      }
-    );
-  }
+  const rejectStatus = await Book.updateMany(
+    { hallId: _id, startDate, endDate },
+    { bookingStatus: 'Rejected' },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
 
-  // it will be applicable to all the case
+  // Update the current Booking to Approve or Reject
   const booking = await Book.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
   });
 
-  // console.log('Booking Status', booking);
+  // send the status to the client
   res.status(201).json({
     status: 'success',
     data: {
@@ -81,35 +128,12 @@ const changeBookingStatus = catchAsync(async (req, res) => {
   });
 });
 
-const createBooking = catchAsync(async (req, res) => {
-  const newBooking = await Book.create(req.body);
-
-  Hall.findByIdAndUpdate(
-    req.body.hallId,
-    { status: 'Selected' },
-    {
-      new: true,
-      runValidators: true
-    },
-    (err) => {
-      if (err) throw err;
-    }
-  );
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      hall: newBooking
-    }
-  });
-
-  console.log('ReqId', req.body.hallId);
-});
-
 export {
   createBooking,
+  deleteBooking,
   listBooking,
   listBookingByUserId,
   listBookingByOwnerId,
-  changeBookingStatus
+  changeBookingStatus,
+  listBookingbyHallId
 };

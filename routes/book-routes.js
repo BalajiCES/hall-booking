@@ -4,16 +4,19 @@ import {
   listBooking,
   listBookingByUserId,
   listBookingByOwnerId,
-  changeBookingStatus
+  changeBookingStatus,
+  listBookingbyHallId,
+  deleteBooking
 } from '../controller/book-controller';
+import { protect } from '../controller/auth-controllers';
 
 const router = express.Router();
 
-router.route('/:id').patch(changeBookingStatus);
-
+// Booking Route Handler
+router.route('/').get(listBooking).post(protect, createBooking);
+router.route('/:id').patch(protect, changeBookingStatus).delete(deleteBooking);
 router.route('/user/:id').get(listBookingByUserId);
 router.route('/owner/:id').get(listBookingByOwnerId);
-
-router.route('/').get(listBooking).post(createBooking);
+router.route('/halls/:id').get(listBookingbyHallId);
 
 export default router;

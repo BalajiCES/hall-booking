@@ -16,7 +16,6 @@ function bookingRequestReducer(state = intialState, actions) {
     case bookingRequests.BOOKING_REQUEST_DATA_SUCCESS: {
       const { data = {} } = payload;
       const { bookings = [] } = data;
-      // console.log('Bookings', bookings);
       return {
         bookingData: {
           loading: false,

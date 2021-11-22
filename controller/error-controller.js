@@ -1,21 +1,11 @@
-const sendError = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  });
-};
-
-const globalErrorHanlder = (err, req, res) => {
+const globalErrorHanlder = (err, req, res, next) => {
   const error = { ...err };
-  error.statusCode = err.statusCode || 500;
-  error.status = err.status || 'error';
-  // res.status(err.statusCode).json({
-  //   status: err.status,
-  //   message: err.message
-  // });
-  sendError(error, res);
+  error.message = err.message;
+
+  res.status(error.statusCode || 500).json({
+    status: false,
+    message: error.message || 'Server Error'
+  });
 };
 
 export default globalErrorHanlder;

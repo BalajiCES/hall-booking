@@ -77,7 +77,6 @@ This proposal has set out the following objectives to accomplish in this project
 #### `UI`
 
     React
-    Bootstrap
     SASS
     Redux
 
@@ -90,6 +89,16 @@ This proposal has set out the following objectives to accomplish in this project
 #### `MIDDLEWARE`
 
      Redux-Saga
+
+#### `VERSIONS`
+
+     Node      - 14.17.6
+     Npm       - 6.14.15
+     React     - 17.0.2
+     Redux     - 4.1.1
+     Express   - 4.17.1
+     Mongoose  - 6.0.9
+     ReduxSaga - 1.1.3
 
 ### `Tasks`
 

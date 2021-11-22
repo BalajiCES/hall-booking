@@ -1,0 +1,44 @@
+$ownerColor: #eaff4d;
+$userColor: #55ff88;
+$adminColor: #ff7766;
+
+.users-count {
+  margin-left: 30px;
+  color: $adminColor;
+}
+
+.user-profile {
+  margin: 30px;
+  background-color: #fcffa6;
+  padding: 20px;
+
+  .user-name {
+    text-transform: uppercase;
+  }
+
+  .user-role {
+    text-transform: uppercase;
+    width: 80px;
+    border-radius: 0.2rem;
+    padding: 2px;
+    text-align: center;
+    font-size: 17px;
+    float: right;
+  }
+
+  .user-email {
+    font-size: 18px;
+  }
+
+  .Owner {
+    background-color: $ownerColor;
+  }
+
+  .User {
+    background-color: $userColor;
+  }
+
+  .Admin {
+    background-color: $adminColor;
+  }
+}

@@ -1,11 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, ErrorMessage } from 'formik';
-// import './fields.scss';
 
 function Input(props) {
-  // console.log('Props', props);
   const { name, className, label, ...rest } = props;
 
   return (
@@ -25,6 +22,26 @@ Input.propTypes = {
   label: PropTypes.string.isRequired
 };
 
+function TextArea(props) {
+  const { name, className, label, ...rest } = props;
+
+  return (
+    <div className="form-group">
+      <label htmlFor={name}> {label} </label>
+      <Field as="textarea" name={name} className={className} {...rest} />
+      <div className="error">
+        <ErrorMessage name={name} />
+      </div>
+    </div>
+  );
+}
+
+TextArea.propTypes = {
+  name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
+};
+
 function RadioButtons(props) {
   const { label, className, name, options, ...rest } = props;
   return (
@@ -33,7 +50,6 @@ function RadioButtons(props) {
       <Field name={name}>
         {(formik) => {
           const { field } = formik;
-          // console.log('Field', field);
           return options.map((option) => (
             <div key={option.key} className="form-group ">
               <label htmlFor={option.value}>
@@ -118,7 +134,7 @@ function Checkboxes(props) {
                   {...field}
                   {...rest}
                   value={option.value}
-                  checked={field.value.includes(option.value)}
+                  checked={field?.value?.includes(option.value)}
                 />
                 {option.key}
               </label>
@@ -145,4 +161,4 @@ Checkboxes.propTypes = {
   ).isRequired
 };
 
-export { Input, RadioButtons, Select, Checkboxes };
+export { Input, RadioButtons, Select, Checkboxes, TextArea };

@@ -1,18 +1,39 @@
-import { fetchGET, fetchPOST } from './fetchAPI';
+import { fetchGET, fetchPATCH, fetchPOST } from './fetchAPI';
 
-const registerHallAPI = async (url, data) => {
-  const response = await fetchPOST(url, data);
+// Register New Hall
+const registerHallAPI = async (url, data, auth) => {
+  const response = await fetchPOST(url, data, auth);
   return response;
 };
 
-const listAllHalls = async (url) => {
+// List All Halls
+const listAllHalls = async (url, payload) => {
+  const response = await fetchGET(url, payload);
+  return response;
+};
+
+// List Particular Hall By Id
+const listHallById = async (url) => {
   const response = await fetchGET(url);
   return response;
 };
 
-const listHallById = async (url, data) => {
-  const response = await fetchGET(url, data);
+// List Single Hall By Id
+const listSingleHallById = async (url) => {
+  const response = await fetchGET(url);
   return response;
 };
 
-export { registerHallAPI, listHallById, listAllHalls };
+// update single Hall By Id
+const updateSingleHallById = async (url, data, auth) => {
+  const response = await fetchPATCH(url, data, auth);
+  return response;
+};
+
+export {
+  registerHallAPI,
+  listHallById,
+  listAllHalls,
+  listSingleHallById,
+  updateSingleHallById
+};

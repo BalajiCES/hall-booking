@@ -6,7 +6,9 @@ import watcherProfileSaga from '../components/common/profile/data/profile-saga';
 import watcherHallListingSaga from '../components/user/dashboard/data/user-dashbaord-saga';
 import watcherBookingStatusSaga from '../components/user/bookings/data/booking-status-saga';
 import watcherBookingRequestSaga from '../components/owner/bookings/data/booking-requests-saga';
+import watcherAdminSaga from '../components/admin/dashboard/data/admin-dashboard-saga';
 
+// combine all sagas
 export default function* rootSaga() {
   yield all([
     watcherSignUpSaga(),
@@ -15,6 +17,7 @@ export default function* rootSaga() {
     watcherProfileSaga(),
     watcherHallListingSaga(),
     watcherBookingStatusSaga(),
-    watcherBookingRequestSaga()
+    watcherBookingRequestSaga(),
+    watcherAdminSaga()
   ]);
 }

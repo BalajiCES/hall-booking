@@ -1,0 +1,101 @@
+$sideNavColor: #111;
+$filterColor: #ccc;
+$navColor: #eee;
+$navLinkColor: #f2f2f2;
+$navHoverColor: #ddd;
+
+#sideMenu {
+  width: 250px;
+}
+
+#close-sidemenu {
+  width: 0px;
+}
+
+.main {
+  margin-left: 250px;
+}
+
+.close-main {
+  margin-left: 0px;
+}
+
+.icon {
+  color: black;
+}
+
+.navbar {
+  background-color: $navColor;
+  overflow: hidden;
+  height: 65px;
+
+  a {
+    float: left;
+    color: $navLinkColor;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 17px;
+    padding: 14px 10px;
+  }
+
+  a:hover {
+    background-color: $navHoverColor;
+    color: black;
+  }
+
+  .filter-text {
+    color: black;
+    cursor: pointer;
+  }
+}
+
+.sidebar-content {
+  position: relative;
+}
+
+.side-nav {
+  height: 100rem;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: $sideNavColor;
+  opacity: 0.9;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.3s;
+
+  .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0px;
+  }
+
+  .external {
+    background-color: green;
+  }
+
+  .filter {
+    padding: 10px 20px 10px 30px;
+    font-size: 20px;
+    color: $filterColor;
+    display: block;
+    transition: 0.2s;
+
+    .filter-input {
+      height: 30px;
+    }
+
+    .filter-select {
+      height: 25px;
+      width: 100%;
+      font-size: 14px;
+    }
+  }
+}
+
+.main {
+  transition: margin-left 0.5s;
+  overflow: hidden;
+}

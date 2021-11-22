@@ -1,47 +1,79 @@
-$primary-color: #0d6efd;
+$primaryColor: #f56038;
+$titleColor: #660000;
+$warning: #dc3545;
+$formColor: #fcffa6;
+$selectControl: #ccc;
 
-.form-group {
-  margin: 10px 0;
+label {
+  font-size: 16px;
+  font-weight: 600;
+}
+.ml-2 {
+  margin-left: 10px;
+  color: $titleColor;
 }
 
 .form-control {
+  margin-top: 10px;
   display: block;
-  margin-top: 1rem;
   height: 2.5rem;
   width: 100%;
   border-radius: 0.2rem;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(163, 155, 155);
   padding: 0.5rem;
   box-sizing: border-box;
 }
 
+.profile-container {
+  max-width: 750px;
+  margin: 10px auto;
+  padding: 25px;
+
+  h2 {
+    text-transform: uppercase;
+    color: $titleColor;
+  }
+}
+
 button {
   display: inline-block;
-  margin: 10px;
+  margin: 10px 5px;
   border: none;
-  height: 2rem;
+  height: 2.5rem;
   padding: 10px;
   color: white;
-  background-color: $primary-color;
   border-radius: 0.2rem;
+}
+
+.primary {
+  background-color: $primaryColor;
 }
 
 .form-container {
   margin: 10px;
   padding: 20px;
-  background-color: #e3e2e2;
+  background-color: $formColor;
   flex-basis: 50%;
   border-radius: 0.2rem;
 
-  h1 {
-    text-align: center;
+  h2 {
     text-transform: uppercase;
+    color: $titleColor;
+  }
+
+  p {
+    margin-left: 30px;
+    font-size: 18px;
+
+    .profile-signin {
+      margin-left: 10px;
+    }
   }
 }
 
 .radio-control {
   display: inline-block;
-  margin-right: 0.5rem;
+  margin-top: 10px;
 
   input {
     margin-left: 0.5rem;
@@ -53,8 +85,8 @@ button {
 .select-control {
   display: block;
   margin: 0.5rem 0;
-  height: 30px;
-  border: 1px solid #ccc;
+  height: 2.5rem;
+  border: 1px solid $selectControl;
   width: 100%;
   padding: 0.2rem;
 }
@@ -62,7 +94,7 @@ button {
 .error {
   margin: 0.5rem 0;
   font-size: small;
-  color: #dc3545;
+  color: $warning;
   font-weight: bold;
 }
 

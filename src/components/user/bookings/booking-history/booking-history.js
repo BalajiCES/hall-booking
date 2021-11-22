@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import bookingStatus from '../data/booking-status-action';
 import Bookings from '../../../common/booking/bookings';
 import { AuthID } from '../../../../util/helper-functions';
+import { ReactComponent as NotFound } from '../../../../assets/not-found.svg';
+import CustomLoader from '../../../../util/common';
 
+// Destructuring
+const { BOOKING_STATUS_REQUEST } = bookingStatus;
+
+// Booking History Component
 function BookingHistory() {
-  const [authId, setauthId] = useState(AuthID());
+  const [authId] = useState(AuthID());
   const dispatch = useDispatch();
 
   const { loading = false, data = [] } = useSelector(
     (state) => state.bookingStatusReducer.bookingData
   );
-  // console.log('Data Status ', data, typeof data, Array.isArray(data));
 
   useEffect(() => {
     dispatch({
-      type: bookingStatus.BOOKING_STATUS_REQUEST,
+      type: BOOKING_STATUS_REQUEST,
       payload: authId
     });
   }, []);
@@ -23,29 +29,41 @@ function BookingHistory() {
   return (
     <div>
       <h2 className="hall-title">All BOOKING HISTORY</h2>
-      {!loading &&
-        data.map((bookingData) => {
-          const {
-            bookedDate,
-            bookingStatus: status,
-            hallId,
-            userId
-          } = bookingData;
-          const { hallName, onwedBy } = hallId;
-          const { firstName } = onwedBy;
-          const { firstName: userFirstName } = userId;
-          return (
-            <Bookings
-              key={hallId}
-              hallName={hallName}
-              ownerName={firstName}
-              userName={userFirstName}
-              date={bookedDate}
-              status={status}
-              userType="User"
-            />
-          );
-        })}
+      <center>{loading && <CustomLoader loading={loading} />}</center>
+      {!loading && data ? (
+        data
+          .filter((bookingData) => {
+            const { startDate } = bookingData;
+            return dayjs(startDate).isBefore(dayjs(new Date().toDateString()));
+          })
+          .map((bookingData) => {
+            const {
+              startDate,
+              endDate,
+              bookingStatus: status,
+              hallId,
+              userId
+            } = bookingData;
+            const { hallName, ownedBy } = hallId;
+            const { firstName, lastName } = ownedBy;
+            const { firstName: userFirstName, lastName: userLastName } = userId;
+            return (
+              // custom Bookings Component
+              <Bookings
+                key={hallId}
+                hallName={hallName}
+                ownerName={firstName + lastName}
+                userName={userFirstName + userLastName}
+                startDate={startDate}
+                endDate={endDate}
+                status={status}
+                userType="User"
+              />
+            );
+          })
+      ) : (
+        <NotFound style={{ height: '300px', width: '100%' }} />
+      )}
     </div>
   );
 }

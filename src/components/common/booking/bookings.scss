@@ -1,5 +1,51 @@
 .booking-container {
-  background-color: #e3e2e2;
+  max-width: 1000px;
+  margin: 10px auto;
+  background-color: azure;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 10px;
-  margin: 10px;
+
+  h1 {
+    color: #f56038;
+  }
+}
+
+.top {
+  float: right;
+}
+
+.status {
+  max-width: 150px;
+  color: black;
+  font-size: 15px;
+  padding: 5px;
+  border-radius: 0.2rem;
+  text-align: center;
+}
+
+.cancel {
+  float: right;
+  position: relative;
+  bottom: 100px;
+}
+
+.time {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+}
+
+.Pending {
+  background-color: #eaff4d;
+}
+
+.Approved {
+  background-color: #55ff88;
+}
+
+.Rejected {
+  background-color: #ff7766;
+}
+
+.Booked {
+  background-color: #ff7766;
 }

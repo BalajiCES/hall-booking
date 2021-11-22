@@ -3,19 +3,20 @@ import User from '../models/user-model';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 
+// Creating Token
 const signToken = (id) =>
-  // eslint-disable-next-line implicit-arrow-linebreak
   jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRED_IN
   });
 
-// 1) SIGN UP
-const signUp = catchAsync(async (req, res) => {
+// SIGN UP
+const signUp = catchAsync(async (req, res, next) => {
+  // creating a new user
   const newUser = await User.create(req.body);
   const { _id } = newUser;
   const token = signToken(_id);
 
-  res.status(201).json({
+  return res.status(201).json({
     status: 'success',
     token,
     data: {
@@ -24,7 +25,7 @@ const signUp = catchAsync(async (req, res) => {
   });
 });
 
-// 2) LOGIN
+// LOGIN
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -34,7 +35,6 @@ const login = catchAsync(async (req, res, next) => {
   }
   // 2) check if user exist and pasword is correct
   const user = await User.findOne({ email }).select('+password');
-  // console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
@@ -51,35 +51,33 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
-// 3) PROTECT ROUTES
+// Protecting Routes Authorization
 const protect = catchAsync(async (req, res, next) => {
+  const { headers = {} } = req;
+  const { authorization } = headers;
+
   // 1) Getting token and check if its there
   let token;
-  if (req.headers.authorization) {
-    token = req.headers.authorization;
+  if (authorization && authorization.startsWith('Bearer')) {
+    const validToken = authorization.split(' ')[1];
+    token = validToken;
   }
+
   if (!token) {
-    return next(new AppError('You are not logged in to get Access', 401));
+    return next(new AppError('Not authorize to access this route', 401));
   }
 
   // 2) validate token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  console.log(decoded);
-
-  // 3)Check if user still exists
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return new new AppError(
-      'The user belonging to the user is no longer exist.',
-      401
-    )();
-  }
-  req.user = currentUser;
+  req.user = await User.findById(decoded.id);
   return next();
 });
 
-const updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+// Update User
+const updateUser = catchAsync(async (req, res) => {
+  const { params = {}, body = {} } = req;
+  const { id } = params;
+  const user = await User.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true
   });
@@ -91,7 +89,8 @@ const updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
-const getSingleUser = catchAsync(async (req, res, next) => {
+// Get Single User
+const getSingleUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
   res.status(200).json({
@@ -102,4 +101,15 @@ const getSingleUser = catchAsync(async (req, res, next) => {
   });
 });
 
-export { signUp, login, protect, getSingleUser, updateUser };
+// list All User
+const listAllUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
+    }
+  });
+});
+
+export { signUp, login, getSingleUser, updateUser, listAllUsers, protect };

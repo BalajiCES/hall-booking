@@ -22,12 +22,15 @@
         "no-console":"off",
         "linebreak-style":"off",
         "no-unused-vars":"warn",
-        "object-curly-newline": ["off", { "ObjectPattern": {"multiline": true }, "ImportDeclaration": "never", "ExportDeclaration": "never" }],
+        "object-curly-newline": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "comma-dangle": ["error", "never"],
         "operator-linebreak": "off",
         "react/jsx-one-expression-per-line": ["off",{ "allow": "single-child" }],
         "implicit-arrow-linebreak": "off",
-        "prefer-template": "off"
+        "prefer-template": "off",
+        "jsx-curly-newline": "off",
+        "react/jsx-props-no-spreading": "off",
+        "function-paren-newline": "off"
     }
 }

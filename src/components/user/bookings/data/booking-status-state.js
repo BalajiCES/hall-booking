@@ -3,6 +3,9 @@ const intialState = {
     loading: false,
     data: [],
     error: {}
+  },
+  allBookings: {
+    data: []
   }
 };
 

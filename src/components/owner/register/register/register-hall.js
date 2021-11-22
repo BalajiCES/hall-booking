@@ -1,110 +1,217 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Formik } from 'formik';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import './register-hall.scss';
 import register from '../data/register-actions';
-import { AuthID } from '../../../../util/helper-functions';
-import { Input, Checkboxes } from '../../../common/Fields/fields';
+import {
+  AuthID,
+  AuthHeader,
+  getAlertToast,
+  getConfirm
+} from '../../../../util/helper-functions';
+import {
+  Input,
+  Select,
+  RadioButtons,
+  TextArea
+} from '../../../common/Fields/fields';
+import constant from '../../../../const/const';
+import CustomLoader from '../../../../util/common';
+import errors from '../../../../const/error';
 
+// Destructuring
+const { SUCCESS, CUSTOM } = constant;
+const {
+  REGISTER_UPDATE_REQUEST,
+  REGISTER_REQUEST,
+  REGISTER_LOADING_REQUEST,
+  REGISTER_RESET_DATA
+} = register;
+const { hallName, price, capacity, event, type, update, address } = errors;
+
+// RegisterHall component
 function RegisterHall() {
-  const [initialValues, setinitialValues] = useState({
-    hallName: '',
-    price: '',
-    capacity: '',
-    phoneNumber: '',
-    type: '',
-    onwedBy: AuthID()
-  });
+  const {
+    loading = false,
+    data = {},
+    error = false
+  } = useSelector((state) => state.registerReducer.registerData);
   const dispatch = useDispatch();
   const history = useHistory();
 
+  // Register View
+  const { id } = useParams();
+
+  // validation Schema
   const validationSchema = yup.object().shape({
-    hallName: yup.string().required('Hall Name is Required'),
-    price: yup.number().required('Price is Required'),
-    capacity: yup.number().required('Capacity is Required'),
-    phoneNumber: yup.number().required('Phone Number is Required'),
-    type: yup
-      .array()
-      .min(1, 'You can not leave this blank')
-      .required('Please choose your Hall Type')
-      .nullable()
+    hallName: yup.string().required(hallName),
+    price: yup.number().required(price),
+    address: yup.string().required(address),
+    capacity: yup.number().required(capacity),
+    event: yup.string().required(event),
+    type: yup.string().required(type)
   });
 
+  // onSubmit
   const handleSubmit = (values) => {
-    console.log('values', values);
-    dispatch({
-      type: register.REGISTER_REQUEST,
-      payload: values,
-      history
-    });
+    const newValue = { ...values, ownedBy: AuthID() };
+    if (id) {
+      Swal.fire(getConfirm(SUCCESS, update)).then((result) => {
+        const { value } = result;
+        if (value) {
+          dispatch({
+            type: REGISTER_UPDATE_REQUEST,
+            payload: newValue,
+            id,
+            history,
+            auth: AuthHeader()
+          });
+        }
+      });
+    } else {
+      dispatch({
+        type: REGISTER_REQUEST,
+        payload: newValue,
+        history,
+        auth: AuthHeader()
+      });
+    }
   };
 
   const hallTypeChoices = [
     { key: 'Ac', value: 'ac' },
-    { key: 'Non/Ac', value: 'non-ac' }
+    { key: 'Non/Ac', value: 'nonAc' }
   ];
+
+  const eventTypeChoices = [
+    { key: 'Choose', value: '' },
+    { key: 'Marriage', value: 'Marriage' },
+    { key: 'Birthday', value: 'Birthday' },
+    { key: 'Custom', value: 'Custom' }
+  ];
+
+  useEffect(() => {
+    if (id) {
+      dispatch({
+        type: REGISTER_LOADING_REQUEST,
+        payload: id
+      });
+    } else {
+      dispatch({
+        type: REGISTER_RESET_DATA
+      });
+    }
+  }, [id]);
 
   return (
     <div>
       <div className="register-container">
+        {loading && (
+          <center>{loading && <CustomLoader loading={loading} />}</center>
+        )}
+        {error && <center>{Swal.fire(getAlertToast('error', error))}</center>}
         <div className="form-container">
-          <h1>Register Hall</h1>
+          <h2>Register Hall</h2>
 
           <Formik
-            initialValues={initialValues}
+            initialValues={data}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            enableReinitialize
           >
-            {() => (
-              <Form>
-                <Input
-                  label="Hall name"
-                  className="form-control"
-                  type="text"
-                  name="hallName"
-                  id="hallName"
-                  placeholder="Enter First Name"
-                />
+            {(formik) => {
+              const { values } = formik;
+              const { event: events } = values;
+              return (
+                <Form>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Hall name"
+                      className="form-control"
+                      type="text"
+                      name="hallName"
+                      id="hallName"
+                      placeholder="Enter First Name"
+                      disabled={id}
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Price"
+                      className="form-control"
+                      type="number"
+                      name="price"
+                      id="price"
+                      placeholder="Enter Last Name"
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <Input
+                      label="Capacity"
+                      className="form-control"
+                      type="number"
+                      name="capacity"
+                      id="capacity"
+                      placeholder="Enter Capacity"
+                    />
+                  </div>
 
-                <Input
-                  label="Price"
-                  className="form-control"
-                  type="number"
-                  name="price"
-                  id="price"
-                  placeholder="Enter Last Name"
-                />
+                  <div className="input-wrapper">
+                    <TextArea
+                      label="Address"
+                      className="form-control"
+                      type="number"
+                      name="address"
+                      id="address"
+                      placeholder="Enter Address"
+                      rows="4"
+                      cols="50"
+                    />
+                  </div>
 
-                <Input
-                  label="Capacity"
-                  className="form-control"
-                  type="number"
-                  name="capacity"
-                  id="capacity"
-                  placeholder="Enter Capacity"
-                />
+                  <div className="input-wrapper">
+                    <Select
+                      label="Choose Event Type"
+                      name="event"
+                      options={eventTypeChoices}
+                      className="select-control"
+                      disabled={id}
+                    />
+                  </div>
 
-                <Input
-                  label="Phone Number"
-                  className="form-control"
-                  type="number"
-                  name="phoneNumber"
-                  id="phoneNumber"
-                  placeholder="Enter PhoneNumber"
-                />
+                  {events === CUSTOM && (
+                    <div className="input-wrapper">
+                      <Input
+                        label="Enter Event Name"
+                        className="form-control"
+                        type="text"
+                        name="custom"
+                        id="custom"
+                        placeholder="Enter here..."
+                        disabled={id}
+                        required
+                      />
+                    </div>
+                  )}
+                  <div className="input-wrapper">
+                    <RadioButtons
+                      label="Choose Hall Type"
+                      className="radio-control"
+                      name="type"
+                      options={hallTypeChoices}
+                      disabled={id}
+                    />
+                  </div>
 
-                <Checkboxes
-                  label="Choose Hall Type"
-                  className="radio-control"
-                  name="type"
-                  options={hallTypeChoices}
-                />
-
-                <button type="submit">Register</button>
-              </Form>
-            )}
+                  <button type="submit" className="primary">
+                    {id ? 'Update' : 'Register'}
+                  </button>
+                </Form>
+              );
+            }}
           </Formik>
         </div>
       </div>

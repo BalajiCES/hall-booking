@@ -1,11 +1,21 @@
+$siginContainer: #f5f5fb;
+$primaryColor: #f56038;
+
 .signin-container {
   max-width: 750px;
   margin: 10px auto;
-  background-color: #f5f5fb;
+  background-color: $siginContainer;
   padding: 25px;
 }
 
 .link {
   text-decoration: none;
   color: white;
+}
+
+.active {
+  margin: 2px;
+  background-color: $primaryColor;
+  padding: 5px;
+  border-radius: 0.2rem;
 }

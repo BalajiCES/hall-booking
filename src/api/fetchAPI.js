@@ -1,10 +1,17 @@
-const fetchPOST = async (url, bodyData) => {
-  console.log('fetch API', url, bodyData);
+function objectToQueryString(obj) {
+  return Object.keys(obj)
+    .map((key) => key + '=' + obj[key])
+    .join('&');
+}
+
+// Custom POST Method
+const fetchPOST = async (url, bodyData, auth) => {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
     },
     body: JSON.stringify(bodyData)
   });
@@ -16,13 +23,14 @@ const fetchPOST = async (url, bodyData) => {
   return data;
 };
 
-const fetchPATCH = async (url, bodyData) => {
-  console.log('fetch API', url, bodyData);
+// Custom PATCH Method
+const fetchPATCH = async (url, bodyData, auth) => {
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
     },
     body: JSON.stringify(bodyData)
   });
@@ -34,9 +42,10 @@ const fetchPATCH = async (url, bodyData) => {
   return data;
 };
 
-const fetchGET = async (url) => {
-  console.log('fetch GET API', url);
-  const response = await fetch(url, {
+// Custom GET Method
+const fetchGET = async (url, queryData = {}) => {
+  const queryObj = objectToQueryString(queryData);
+  const response = await fetch(url + '?' + queryObj, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -51,4 +60,21 @@ const fetchGET = async (url) => {
   return data;
 };
 
-export { fetchPOST, fetchGET, fetchPATCH };
+// Custom Delete Method
+const fetchDELETE = async (url, auth) => {
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${auth}`
+    }
+  });
+  const data = await response.json();
+  if (response.status >= 400) {
+    throw new Error(JSON.stringify(data));
+  }
+  return data;
+};
+
+export { fetchPOST, fetchGET, fetchPATCH, fetchDELETE };

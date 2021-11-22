@@ -7,15 +7,22 @@ import NavBar from '../components/user/navbar/navbar';
 import BookingHistory from '../components/user/bookings/booking-history/booking-history';
 import routes from '../routes';
 
+// Destructuring
+const { DASHBOARD, BOOKING_STATUS, BOOKING_HISTORY, PROFILE } = routes;
+
+// User Layout Structure
 function UserRouterControl() {
   return (
     <div>
+      {/* Custom User Dashboard */}
       <NavBar />
+
       <Switch>
-        <Route exact path={routes.DASHBOARD} component={UserDashBaord} />
-        <Route exact path={routes.BOOKING_STATUS} component={BookingStatus} />
-        <Route exact path={routes.BOOKING_HISTORY} component={BookingHistory} />
-        <Route exact path={routes.PROFILE} component={Profile} />
+        <Route exact path={DASHBOARD} component={UserDashBaord} />
+        <Route exact path={BOOKING_STATUS} component={BookingStatus} />
+        <Route exact path={BOOKING_HISTORY} component={BookingHistory} />
+        <Route exact path={PROFILE} component={Profile} />
+
         {/* Custom 404 Error page */}
         <Route path="*" component={() => '404 PAGE NOT FOUND'} />
       </Switch>

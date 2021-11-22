@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import signin from './data/signin-actions';
 import { Input } from '../common/Fields/fields';
+import signin from './data/signin-actions';
+import errors from '../../const/error';
+import routes from '../../routes';
 import './signin.scss';
 
+// destructuring
+const { SIGNUP } = routes;
+const { SIGNIN_REQUEST } = signin;
+const { email, validEmail, password } = errors;
+
 function Signin() {
-  const [initialValues, setinitialValues] = useState({
+  const [initialValues] = useState({
     email: '',
     password: ''
   });
   const dispatch = useDispatch();
   const history = useHistory();
-  const signinReducer = useSelector((state) => state.signinReducer);
 
-  const { loading = false } = signinReducer;
-
+  // validation schema
   const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .email('Email is Not Valid')
-      .required('Email is Required'),
-    password: yup.string().required('Password is Required')
+    email: yup.string().email(email).required(validEmail),
+    password: yup.string().required(password)
   });
 
+  // onsubmit
   const handleSubmit = (values) => {
-    console.log('values', values);
     dispatch({
-      type: signin.SIGNIN_REQUEST,
+      type: SIGNIN_REQUEST,
       payload: values,
       history
     });
@@ -67,9 +69,11 @@ function Signin() {
                 placeholder="Enter Password"
               />
 
-              <button type="submit">Submit</button>
+              <button type="submit" className="primary">
+                Submit
+              </button>
               <button type="button" className="secondary">
-                <Link to="/signup" className="link">
+                <Link to={SIGNUP} className="link">
                   Create Account
                 </Link>
               </button>

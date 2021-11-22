@@ -1,0 +1,59 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+$modalBody: #eee;
+
+.modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .modal-content {
+    width: 500px;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 10px;
+  }
+
+  .modal-title {
+    margin: 0;
+  }
+
+  .modal-body {
+    padding: 10px;
+    border-top: 1px solid $modalBody;
+    border-bottom: 1px solid $modalBody;
+  }
+}
+
+.bold {
+  margin-left: 5px;
+  font-size: larger;
+  font-weight: bold;
+  color: green;
+}
+
+.hall-type {
+  text-transform: uppercase;
+}
+
+.date-conatiner {
+  .date-picker {
+    width: 220px;
+    height: 30px;
+    padding: 2px 5px;
+  }
+
+  .starting-container {
+    margin-bottom: 10px;
+  }
+}

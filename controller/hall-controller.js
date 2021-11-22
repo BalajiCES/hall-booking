@@ -2,8 +2,10 @@ import Hall from '../models/hall-model';
 import APIFeatures from '../utils/apiFeatures';
 import catchAsync from '../utils/catchAsync';
 
+// Register a new Hall
 const createHall = catchAsync(async (req, res) => {
-  const newHall = await Hall.create(req.body);
+  const { body = {} } = req;
+  const newHall = await Hall.create(body);
   res.status(201).json({
     status: 'success',
     data: {
@@ -12,27 +14,30 @@ const createHall = catchAsync(async (req, res) => {
   });
 });
 
+// GET All Halls
 const getAllHalls = catchAsync(async (req, res) => {
-  const features = new APIFeatures(Hall, req.query)
-    .filter()
-    .sort()
-    .limitFileds()
-    .pagination();
+  const { query = {} } = req;
+  const features = new APIFeatures(Hall.find({}), query)
+    .filterByStrength()
+    .filterByEvent()
+    .filterByPrice()
+    .filterByType();
 
   const halls = await features.query;
 
   res.status(200).json({
     status: 'success',
-    results: halls.length,
     data: {
       halls
     }
   });
 });
 
-const getHall = catchAsync(async (req, res) => {
-  // Tour.findOne({_id:req.params.id});
-  const hall = await Hall.find({ onwedBy: req.params.id });
+// GET All Halls Related to owner
+const getHallByOwnerId = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  const hall = await Hall.find({ ownedBy: id });
   res.status(200).json({
     status: 'success',
     data: {
@@ -41,8 +46,24 @@ const getHall = catchAsync(async (req, res) => {
   });
 });
 
+// GET Single Halls
+const getSingleHall = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
+  const singleHall = await Hall.findOne({ _id: id });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      hall: singleHall
+    }
+  });
+});
+
+// Update Single Halls
 const updateHall = catchAsync(async (req, res) => {
-  const hall = await Hall.findByIdAndUpdate(req.params.id, req.body, {
+  const { params = {}, body = {} } = req;
+  const { id } = params;
+  const hall = await Hall.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true
   });
@@ -54,13 +75,23 @@ const updateHall = catchAsync(async (req, res) => {
   });
 });
 
+// Delete Single Halls
 const deleteHall = catchAsync(async (req, res) => {
+  const { params = {} } = req;
+  const { id } = params;
   // Not to send any data to client in delete operation
-  await Hall.findByIdAndDelete(req.params.id);
+  await Hall.findByIdAndDelete(id);
   res.status(204).json({
     status: 'success',
     data: null
   });
 });
 
-export { createHall, getAllHalls, getHall, updateHall, deleteHall };
+export {
+  createHall,
+  getAllHalls,
+  getHallByOwnerId,
+  updateHall,
+  deleteHall,
+  getSingleHall
+};
