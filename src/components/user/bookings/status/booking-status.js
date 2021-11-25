@@ -63,7 +63,8 @@ function BookingStatus() {
               bookingStatus: status,
               hallId,
               userId,
-              createdAt
+              createdAt,
+              paymentAmount
             } = bookingData;
             const { hallName, ownedBy } = hallId;
             const { firstName, lastName } = ownedBy;
@@ -81,6 +82,7 @@ function BookingStatus() {
                 id={_id}
                 userType="User"
                 cancelBooking={cancelBooking}
+                paymentAmount={paymentAmount}
               />
             );
           })

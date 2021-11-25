@@ -1,0 +1,77 @@
+$navColor: #4b63b5;
+
+.main-navbar {
+  background-color: $navColor;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .brand-title {
+    margin-left: 20px;
+    font-size: 2rem;
+    font-family: monospace;
+  }
+
+  .navbar-links ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-links li {
+    list-style: none;
+    padding: 1rem;
+    display: block;
+  }
+
+  .toogle-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: none;
+    justify-content: space-between;
+  }
+}
+
+$small: 480px;
+$medium: 720px;
+
+.main-navbar {
+  @media screen and (max-width: $small) {
+    flex-direction: column;
+    align-items: flex-start;
+    // mobile screen nav bars
+    .toogle-button {
+      display: flex;
+    }
+
+    .navbar-links {
+      display: none;
+      width: 100%;
+    }
+
+    .navbar-links ul {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    .navbar-links li {
+      padding: 0.5rem 1rem;
+    }
+
+    .navbar-links.activenav {
+      display: flex;
+    }
+  }
+
+  @media screen and (max-width: $medium) {
+    flex-direction: column;
+    align-items: center;
+
+    .navbar-links ul {
+      flex-direction: column;
+    }
+  }
+}

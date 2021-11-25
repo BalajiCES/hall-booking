@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import constant from '../../../const/const';
 import errors from '../../../const/error';
 import routes from '../../../routes';
 import { AuthID, getConfirm, signOut } from '../../../util/helper-functions';
+import './navbar.scss';
 
 // Destructuring
 const { ACTIVE, LINK, WARNING, DASHBOARD, PROFILE, HISTORY, STATUS } = constant;
@@ -12,9 +15,14 @@ const { DASHBOARD: USER_DASHBOARD, BOOKING_STATUS, BOOKING_HISTORY } = routes;
 
 function NavBar() {
   const [id] = useState(AuthID());
+  const [toogleNav, setToogleNav] = useState(false);
   const [activeMenu, setactiveMenu] = useState(DASHBOARD);
   const history = useHistory();
   const location = useLocation();
+
+  const toggleNavFun = () => {
+    setToogleNav(!toogleNav);
+  };
 
   useEffect(() => {
     const currentMenu = location.pathname;
@@ -22,54 +30,64 @@ function NavBar() {
   }, [location]);
 
   return (
-    <nav>
-      <ul>
-        <Link
-          to={USER_DASHBOARD}
-          className={`${
-            activeMenu.includes(DASHBOARD) ? `${ACTIVE}` : ''
-          } ${LINK}`}
-        >
-          <li>Dashboard</li>
-        </Link>
-        <Link
-          to={`/profile/${id}`}
-          className={`${
-            activeMenu.includes(PROFILE) ? `${ACTIVE}` : ''
-          } ${LINK}`}
-        >
-          <li>Profile</li>
-        </Link>
-        <Link
-          to={BOOKING_STATUS}
-          className={`${
-            activeMenu.includes(STATUS) ? `${ACTIVE}` : ''
-          } ${LINK} `}
-        >
-          <li>Booking Status</li>
-        </Link>
-        <Link
-          to={BOOKING_HISTORY}
-          className={`${
-            activeMenu.includes(HISTORY) ? `${LINK} ${ACTIVE}` : ''
-          } ${LINK}`}
-        >
-          <li>Booking History</li>
-        </Link>
-        <button
-          className="secondary"
-          type="button"
-          onClick={() => {
-            Swal.fire(getConfirm(WARNING, errors.signOut)).then((result) => {
-              if (result.value) {
-                signOut(history);
-              }
-            });
-          }}
-        >
-          SignOut
-        </button>
-      </ul>
+    <nav className="main-navbar">
+      <div className="brand-title">Hall Booking</div>
+      <div role="presentation" onClick={toggleNavFun}>
+        <FontAwesomeIcon
+          icon={faBars}
+          size="2x"
+          className="mr-2 toogle-button"
+        />
+      </div>
+      <div className={`navbar-links ${toogleNav ? 'activenav' : ''}`}>
+        <ul>
+          <Link
+            to={USER_DASHBOARD}
+            className={`${
+              activeMenu.includes(DASHBOARD) ? `${ACTIVE}` : ''
+            } ${LINK}`}
+          >
+            <li>Dashboard</li>
+          </Link>
+          <Link
+            to={`/profile/${id}`}
+            className={`${
+              activeMenu.includes(PROFILE) ? `${ACTIVE}` : ''
+            } ${LINK}`}
+          >
+            <li>Profile</li>
+          </Link>
+          <Link
+            to={BOOKING_STATUS}
+            className={`${
+              activeMenu.includes(STATUS) ? `${ACTIVE}` : ''
+            } ${LINK} `}
+          >
+            <li>Booking Status</li>
+          </Link>
+          <Link
+            to={BOOKING_HISTORY}
+            className={`${
+              activeMenu.includes(HISTORY) ? `${LINK} ${ACTIVE}` : ''
+            } ${LINK}`}
+          >
+            <li>Booking History</li>
+          </Link>
+          <button
+            className="secondary"
+            type="button"
+            onClick={() => {
+              Swal.fire(getConfirm(WARNING, errors.signOut)).then((result) => {
+                if (result.value) {
+                  signOut(history);
+                }
+              });
+            }}
+          >
+            SignOut
+          </button>
+        </ul>
+      </div>
     </nav>
   );
 }

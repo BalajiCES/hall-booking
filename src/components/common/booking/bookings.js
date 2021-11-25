@@ -24,7 +24,8 @@ function Bookings(props) {
     statusChange,
     userName,
     created,
-    cancelBooking
+    cancelBooking,
+    paymentAmount
   } = props;
   const [showCancel, setshowCancel] = useState(false);
 
@@ -41,7 +42,8 @@ function Bookings(props) {
       if (value.includes('seconds')) {
         setshowCancel(true);
       } else if (value.includes('minute')) {
-        const relatedArray = value.split(' ')[0];
+        const relatedArray =
+          value.split(' ')[0] !== 'a' ? value.split(' ')[0] : 1;
         if (relatedArray <= 30) {
           setshowCancel(true);
           timer = setTimeout(() => {
@@ -70,16 +72,21 @@ function Bookings(props) {
         Booking End Date: {dayjs(endDate).format('dddd, MMMM D, YYYY h:mm A')}
       </h4>
 
-      {userType === constant.USER && showCancel && (
-        <button
-          type="button"
-          className="secondary cancel"
-          onClick={() => cancelBooking(id)}
-        >
-          Cancel Booking
-        </button>
-      )}
+      {userType === constant.USER &&
+        status !== constant.APPROVED &&
+        showCancel && (
+          <button
+            type="button"
+            className="secondary cancel"
+            onClick={() => cancelBooking(id)}
+          >
+            Cancel Booking
+          </button>
+          // eslint-disable-next-line indent
+        )}
 
+      <h4>Payment Amount : &#x20b9; {paymentAmount}</h4>
+      <h4 className="time">Requested on : {dayjs(created).fromNow()}</h4>
       {userType === constant.OWNER && status === constant.PENDING && (
         <Formik>
           {() => (
@@ -92,8 +99,6 @@ function Bookings(props) {
           )}
         </Formik>
       )}
-
-      <h4 className="time">Requested on : {dayjs(created).fromNow()}</h4>
     </div>
   );
 }
@@ -109,6 +114,7 @@ Bookings.propTypes = {
   bookingId: PropTypes.string,
   status: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
+  paymentAmount: PropTypes.number.isRequired,
   statusChange: PropTypes.func,
   cancelBooking: PropTypes.func
 };

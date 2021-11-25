@@ -84,7 +84,9 @@ function BookingRequest() {
               endDate,
               bookingStatus: status,
               hallId,
-              userId
+              userId,
+              createdAt,
+              paymentAmount
             } = bookingData;
             const { hallName, ownedBy } = hallId;
             const { firstName, lastName } = ownedBy;
@@ -102,6 +104,8 @@ function BookingRequest() {
                 status={status}
                 userType="Owner"
                 statusChange={statusChange}
+                created={createdAt}
+                paymentAmount={paymentAmount}
               />
             );
           })

@@ -8,7 +8,11 @@ import {
   isWithinInterval,
   isSameSecond,
   setMinutes,
-  setHours
+  setHours,
+  differenceInHours,
+  millisecondsToHours,
+  setSeconds,
+  setMilliseconds
 } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import bookingStatusAction from '../data/booking-status-action';
@@ -16,7 +20,6 @@ import './book-modal.scss';
 import constant from '../../../../const/const';
 import { getAlertToast } from '../../../../util/helper-functions';
 import errors from '../../../../const/error';
-
 // Destructuring
 const { APPROVED, SUCCESS } = constant;
 const { validBooking, bookedError } = errors;
@@ -26,8 +29,17 @@ const { BOOKINGS_ALL_REQUEST } = bookingStatusAction;
 function BookModal(props) {
   const { show, closeBooking, hallState, bookingSuccess } = props;
   const { hallName, price, capacity, type, id } = hallState;
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    setMilliseconds(
+      setSeconds(
+        setHours(setMinutes(new Date(), 0), new Date().getHours() + 1),
+        0
+      ),
+      0
+    )
+  );
   const [endDate, setEndDate] = useState();
+  const [paymentAmount, setPaymentAmount] = useState(0);
   const dispatch = useDispatch();
   const { data = [] } = useSelector(
     (state) => state.bookingStatusReducer.allBookings
@@ -88,7 +100,7 @@ function BookModal(props) {
         Swal.fire(getAlertToast(SUCCESS, validBooking));
         //  else go eith booking
       } else {
-        bookingSuccess(sDate, eDate);
+        bookingSuccess(sDate, eDate, paymentAmount);
       }
     }
   };
@@ -105,6 +117,17 @@ function BookModal(props) {
       setBookingList(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    const payable =
+      (price / 24) *
+      millisecondsToHours(
+        new Date(endDate).getTime() - new Date(startDate).getTime()
+      );
+    setPaymentAmount(parseFloat(payable || 0).toFixed(2));
+  }, [startDate, endDate]);
+
+  console.log('Res', paymentAmount);
 
   return (
     <div
@@ -126,7 +149,7 @@ function BookModal(props) {
         </div>
         <div className="modal-body">
           <p>
-            The Price of the hall is
+            The Price of the hall is &#x20b9;
             <span className="bold">{price}</span>
           </p>
           <p>
@@ -183,79 +206,16 @@ function BookModal(props) {
                 dateFormat="MMMM d, yyyy h:mm aa"
               />
             </div>
-
-            {/* <div className="starting-container">
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => {
-                  setstartTimer(true);
-                  setStartDate(date);
-                }}
-                minDate={new Date()}
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText="please choose a starting date"
-                className="date-picker"
-                maxDate={lastDay}
-              />
-              <div className="start-time">
-                {startTimer && (
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => {
-                      // setstartTimer(!startTimer);
-                      setStartDate(date);
-                    }}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={60}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    className="time-picker"
-                    excludeTimes={excludeChoosedStartDate}
-                  />
-                )}
-              </div>
-            </div> */}
-            {/* <div className="ending-container">
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => {
-                  setendTimer(true);
-                  setEndDate(date);
-                }}
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                placeholderText="please choose a ending date"
-                className="date-picker"
-                maxDate={lastDay}
-              />
-              <div className="end-time">
-                {endTimer && (
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => {
-                      // setendTimer(!endTimer);
-                      setEndDate(date);
-                    }}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={60}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    className="time-picker"
-                    excludeTimes={excludeChoosedEndDate}
-                  />
-                )}
-              </div>
-            </div> */}
           </div>
         </div>
         <div className="modal-footer">
+          <h4 className="payment-amount">
+            Total Amount is : &#x20b9;
+            {paymentAmount}
+          </h4>
           <button
             type="button"
-            className="primary"
+            className="primary payment-button"
             onClick={() => validateBookings(startDate, endDate)}
           >
             Book Now

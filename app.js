@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import userRoutes from './routes/user-routes';
 import hallRoutes from './routes/hall-routes';
 import AppError from './utils/appError';
@@ -22,6 +23,16 @@ app.use(express.json());
 app.use('/halls', hallRoutes);
 app.use('/user', userRoutes);
 app.use('/book', bookRoutes);
+
+// Serve static Assests if in Production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+  });
+}
 
 // GLobal Error Handler
 app.use(globalErrorHanlder);

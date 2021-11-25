@@ -22,38 +22,44 @@ function HallCard({
 }) {
   return (
     <div className="hall-tile">
-      <h3 className="title">{hallName}</h3>
-      <h3 className="price">
-        <FontAwesomeIcon icon={faRupeeSign} className="mr-2" /> {price}
-      </h3>
-      <h3 className="capacity">
-        <FontAwesomeIcon icon={faUsers} className="mr-2" />
-        {capacity}
-      </h3>
-      <h3 className="type">{type}</h3>
-      {/* show book now button for only User */}
-      {user === USER && (
-        <div className="button-container">
-          <button
-            className="primary"
-            type="button"
-            onClick={() => {
-              intiateBooking({ id, hallName, price, capacity, status, type });
-            }}
-          >
-            Book Hall
+      <div className="section-1">
+        <h3 className="title">{hallName}</h3>
+        <h3 className="price">
+          <FontAwesomeIcon icon={faRupeeSign} className="mr-2" /> {price}
+        </h3>
+      </div>
+      <div className="section-2">
+        <h3 className="capacity">
+          <FontAwesomeIcon icon={faUsers} className="mr-2" />
+          {capacity}
+        </h3>
+        <h3 className="type">{type}</h3>
+        {/* show book now button for only User */}
+        {user === USER && (
+          <div className="button-container">
+            <button
+              className="primary"
+              type="button"
+              onClick={() => {
+                intiateBooking({ id, hallName, price, capacity, status, type });
+              }}
+            >
+              Book Hall
+            </button>
+          </div>
+        )}
+        {/* show edit halls button for only owner */}
+        {user === OWNER && (
+          <button className="edit primary" type="button" onClick={hallEdit}>
+            Edit
           </button>
-        </div>
-      )}
-      {/* show edit halls button for only owner */}
-      {user === OWNER && (
-        <button className="edit primary" type="button" onClick={hallEdit}>
-          Edit
-        </button>
-      )}
+        )}
+      </div>
 
       {/* Address */}
-      <h3 className="address">{address}</h3>
+      <div className="section-3">
+        <h3 className="address">{address}</h3>
+      </div>
     </div>
   );
 }

@@ -16,27 +16,24 @@ const bookingSchema = new Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Hall'
     },
-    // bookedDate: {
-    //   type: Date,
-    //   required: [true, errors.bookedDate],
-    //   validate: [validator.isDate, errors.validateDate]
-    // },
     startDate: {
       type: Date,
       required: [true, errors.bookedDate],
       validate: [validator.isDate, errors.validateDate]
     },
-
     endDate: {
       type: Date,
       required: [true, errors.bookedDate],
       validate: [validator.isDate, errors.validateDate]
     },
-
     bookingStatus: {
       type: String,
       enum: [constant.PENDING, constant.APPROVED, constant.REJECTED],
       default: constant.PENDING
+    },
+    paymentAmount: {
+      type: Number,
+      required: [true, errors.paymentAmount]
     }
   },
   { timestamps: true }

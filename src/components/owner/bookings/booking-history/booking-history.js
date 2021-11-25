@@ -46,7 +46,9 @@ function OwnerBookingHistory() {
               endDate,
               bookingStatus: status,
               hallId,
-              userId
+              userId,
+              createdAt,
+              paymentAmount
             } = bookingData;
             const { hallName, ownedBy } = hallId;
             const { firstName, lastName } = ownedBy;
@@ -62,7 +64,9 @@ function OwnerBookingHistory() {
                 startDate={startDate}
                 endDate={endDate}
                 status={status}
-                userType="User"
+                userType="Owner"
+                created={createdAt}
+                paymentAmount={paymentAmount}
               />
             );
           })

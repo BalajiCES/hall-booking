@@ -71,7 +71,8 @@ function UserDashBaord() {
     setHallState(datas);
   };
 
-  const bookingSuccess = (startDate, endDate) => {
+  const bookingSuccess = (startDate, endDate, paymentAmount) => {
+    console.log('payment', paymentAmount);
     if (!startDate) {
       Swal.fire(getAlertToast(SUCCESS, errorBooked));
       return;
@@ -84,7 +85,8 @@ function UserDashBaord() {
             userId: AuthID(),
             hallId: hallState.id,
             startDate,
-            endDate
+            endDate,
+            paymentAmount
           },
           auth: AuthHeader(),
           closeBooking,
@@ -204,8 +206,8 @@ function UserDashBaord() {
       </div>
       <div className="sidebar-content">
         <div
-          id={`${openMenu ? 'side-menu' : 'close-sidemenu'}`}
           className="side-nav"
+          id={`${openMenu ? 'side-menu' : 'close-sidemenu'}`}
         >
           <button
             type="button"

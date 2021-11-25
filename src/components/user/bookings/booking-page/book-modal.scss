@@ -33,6 +33,14 @@ $modalBody: #eee;
     border-top: 1px solid $modalBody;
     border-bottom: 1px solid $modalBody;
   }
+
+  .payment-amount {
+    float: left;
+  }
+
+  .payment-button {
+    float: right;
+  }
 }
 
 .bold {

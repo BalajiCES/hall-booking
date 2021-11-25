@@ -19,5 +19,6 @@ errors.validatePassword = 'Password are not the same!';
 errors.bookedDate = 'Please Provide Your Booked Date!';
 errors.validateDate = 'Please Provide a valid Date';
 errors.custom = 'No custom Type';
+errors.paymentAmount = 'Please provide a Payment Amount';
 
 export default errors;
